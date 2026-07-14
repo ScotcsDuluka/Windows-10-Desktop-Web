@@ -259,31 +259,25 @@ function AppWindow({
   const animTransform = `scale(${animScale})`
 
   // ====== Duration ตามสถานการณ์ ======
-  // - open (เข้า ปกติ)        → 600ms (transform + opacity เริ่มพร้อมกัน)
+  // - open (เข้า ปกติ)        → 600ms
   // - close (ออก ปกติ)        → 600ms
   // - minimize               → 600ms
-  // - switchOut (สลับออก)    → คงที่ 300ms แล้ว fade 300ms (รวม 600ms)
-  // - switchIn  (สลับเข้า)   → 600ms
-  const D_OPEN = 600      // open / close / minimize
-  const D_SWITCH_IN = 600 // switchIn
-  const D_SWITCH_OUT = 600 // switchOut รวม
-  const SWITCH_OUT_DELAY = 300 // ตอน switchOut: คงที่ 300ms ก่อน fade
+  // - switchOut (App 1 ออก) → 300ms (transform + fade เริ่มพร้อมกัน)
+  // - switchIn  (App 2 เข้า) → 600ms (เริ่มตอน 250ms — overlap 50ms กับ App 1)
+  const D_OPEN = 600        // open / close / minimize
+  const D_SWITCH_IN = 600   // switchIn (App 2)
+  const D_SWITCH_OUT = 300  // switchOut (App 1) — ลดจาก 600ms
 
   let duration = D_OPEN
-  let opacityDelayMs = 0
   if (state.switchIn) {
     duration = D_SWITCH_IN
   } else if (state.switchOut) {
     duration = D_SWITCH_OUT
-    opacityDelayMs = SWITCH_OUT_DELAY // รอ 300ms ก่อน fade
   }
 
   const transformDuration = `${duration}ms`
-  // opacity: ถ้า switchOut → delay 300ms + fade 300ms; อื่น ๆ → fade เต็ม duration
-  const opacityDuration = state.switchOut
-    ? `${duration - opacityDelayMs}ms`
-    : `${duration}ms`
-  const opacityDelay = `${opacityDelayMs}ms`
+  const opacityDuration = `${duration}ms`
+  const opacityDelay = '0ms'
   // Easing: ease-out-expo (เร็ว→ช้า) — default สำหรับทุกแอป
   const easing = 'cubic-bezier(0.16, 1, 0.3, 1)'
   // Easing พิเศษ: App 1 (แอปเก่า) ตอน switchOut zoom → ease-in-cubic (ช้า→เร็ว)
@@ -1047,8 +1041,8 @@ export default function Home() {
       return next
     })
 
-    // unlock หลัง animation จบ — sequential: switchOut 600 + switchIn 600 = 1200ms
-    setTrackedTimeout(() => { isAnimatingRef.current = false }, 1300)
+    // unlock หลัง animation จบ — overlap switch: 250ms + max(300, 600) = 850ms
+    setTrackedTimeout(() => { isAnimatingRef.current = false }, 900)
 
     if (w.open && !w.minimized) {
       // เปิดอยู่ → ไม่ทำอะไร
@@ -1058,27 +1052,34 @@ export default function Home() {
       // minimized → restore + minimize แอปอื่นที่เปิดอยู่
       const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
       if (otherOpenIds.length > 0) {
-        // ====== Sequential switch ======
-        // Phase 1 (0-600ms): app เก่า switchOut, app ใหม่ยัง invisible (switchWaiting)
+        // ====== Overlap switch ======
+        // Phase 1 (0-300ms): App 1 switchOut 300ms, App 2 ยัง invisible
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
           next[id] = { ...next[id], minimized: false, switchWaiting: true, focused: true }
           return next
         })
-        // Phase 2 (600-1200ms): app เก่า minimized, app ใหม่ switchIn
+        // Phase 2 (250ms): App 2 เริ่ม switchIn (overlap 50ms กับ App 1 ที่ยัง switchOut อยู่)
+        setTrackedTimeout(() => {
+          setWindows((prev) => {
+            const next = { ...prev }
+            next[id] = { ...next[id], switchWaiting: false, switchIn: true }
+            return next
+          })
+        }, 250)
+        // Phase 3 (300ms): App 1 หายไป (minimized)
         setTrackedTimeout(() => {
           setWindows((prev) => {
             const next = { ...prev }
             otherOpenIds.forEach((k) => { next[k] = { ...next[k], minimized: true, switchOut: false } })
-            next[id] = { ...next[id], switchWaiting: false, switchIn: true }
             return next
           })
-        }, 600)
-        // Phase 3 (1200ms): เคลียร์ switchIn
+        }, 300)
+        // Phase 4 (850ms): เคลียร์ switchIn (250 + 600)
         setTrackedTimeout(() => {
           updateWindow(id, { switchIn: false })
-        }, 1200)
+        }, 850)
       } else {
         // restore ปกติ — 600ms
         updateWindow(id, { minimized: false, opening: true, focused: true })
@@ -1089,27 +1090,34 @@ export default function Home() {
       const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
 
       if (otherOpenIds.length > 0) {
-        // ====== Sequential switch ======
-        // Phase 1 (0-600ms): app เก่า switchOut, app ใหม่ยัง invisible (switchWaiting)
+        // ====== Overlap switch ======
+        // Phase 1 (0-300ms): App 1 switchOut 300ms, App 2 ยัง invisible
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
           next[id] = { ...next[id], open: true, minimized: false, switchWaiting: true, focused: true }
           return next
         })
-        // Phase 2 (600-1200ms): app เก่า minimized, app ใหม่ switchIn
+        // Phase 2 (250ms): App 2 เริ่ม switchIn (overlap 50ms กับ App 1)
+        setTrackedTimeout(() => {
+          setWindows((prev) => {
+            const next = { ...prev }
+            next[id] = { ...next[id], switchWaiting: false, switchIn: true }
+            return next
+          })
+        }, 250)
+        // Phase 3 (300ms): App 1 หายไป (minimized)
         setTrackedTimeout(() => {
           setWindows((prev) => {
             const next = { ...prev }
             otherOpenIds.forEach((k) => { next[k] = { ...next[k], minimized: true, switchOut: false } })
-            next[id] = { ...next[id], switchWaiting: false, switchIn: true }
             return next
           })
-        }, 600)
-        // Phase 3 (1200ms): เคลียร์ switchIn
+        }, 300)
+        // Phase 4 (850ms): เคลียร์ switchIn (250 + 600)
         setTrackedTimeout(() => {
           updateWindow(id, { switchIn: false })
-        }, 1200)
+        }, 850)
       } else {
         // Open ปกติ — 600ms
         updateWindow(id, { open: true, minimized: false, opening: true, focused: true })
