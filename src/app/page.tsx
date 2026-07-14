@@ -47,7 +47,6 @@ interface AppDef {
   defaultSize: { w: number; h: number }
   defaultPosition: { x: number; y: number }
   pinned: boolean  // แสดงใน taskbar เสมอ แม้ปิด
-  animDuration?: number  // ms — default 600
 }
 
 const APPS: AppDef[] = [
@@ -86,7 +85,6 @@ const APPS: AppDef[] = [
     defaultSize: { w: 480, h: 360 },
     defaultPosition: { x: 150, y: 100 },
     pinned: true,
-    animDuration: 400,
   },
   {
     id: 'app2',
@@ -96,7 +94,6 @@ const APPS: AppDef[] = [
     defaultSize: { w: 480, h: 360 },
     defaultPosition: { x: 250, y: 140 },
     pinned: true,
-    animDuration: 600,
   },
   // เพิ่มแอปใหม่ตรงนี้
 ]
@@ -211,7 +208,6 @@ function AppWindow({
   onMinimize, onMaximize, onClose, onFocus,
   onDragStart, onDragMove, onDragEnd,
   onResizeStart, onResizeMove, onResizeEnd,
-  animDuration = 600,
   children,
 }: {
   state: WindowState
@@ -227,7 +223,6 @@ function AppWindow({
   onResizeStart: (edge: string, e: React.MouseEvent) => void
   onResizeMove: (e: React.MouseEvent) => void
   onResizeEnd: () => void
-  animDuration?: number
   children: React.ReactNode
 }) {
   // tablet mode = maximize
@@ -281,12 +276,23 @@ function AppWindow({
 
   const animTransform = `scale(${animScale})`
 
-  // ทุกอย่างใช้ animDuration (default 600ms) ease-out-expo (เร็ว→ช้า นุ่ม ๆ)
-  const transformDuration = `${animDuration}ms`
-  const opacityDuration = `${animDuration}ms`
+  // ====== Duration ตามสถานการณ์ ======
+  // - open (เข้า ปกติ)        → 400ms
+  // - close (ออก ปกติ)        → 400ms
+  // - minimize               → 400ms
+  // - switchOut (สลับออก)    → 400ms  (แอปเก่า)
+  // - switchIn  (สลับเข้า)   → 600ms  (แอปใหม่)  ← ต่างจาก open ปกติ
+  const D_OPEN = 400      // open / close / minimize / switchOut
+  const D_SWITCH_IN = 600 // switchIn (เข้าใหม่จากการสลับ)
+
+  let duration = D_OPEN
+  if (state.switchIn) duration = D_SWITCH_IN
+
+  const transformDuration = `${duration}ms`
+  const opacityDuration = `${duration}ms`
   const opacityDelay = '0ms'
   const easing = 'cubic-bezier(0.16, 1, 0.3, 1)'
-  const posDuration = `${animDuration}ms`
+  const posDuration = `${duration}ms`
 
   return (
     <div
@@ -1043,7 +1049,7 @@ export default function Home() {
       return next
     })
 
-    // unlock หลัง animation จบ (600ms)
+    // unlock หลัง animation จบ — ใช้ค่าสูงสุด 600+buffer (switchIn 600ms)
     setTrackedTimeout(() => { isAnimatingRef.current = false }, 650)
 
     if (w.open && !w.minimized) {
@@ -1054,7 +1060,8 @@ export default function Home() {
       // minimized → restore + minimize แอปอื่นที่เปิดอยู่
       const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
       if (otherOpenIds.length > 0) {
-        // Switch — crossfade พร้อมกัน 600ms
+        // Switch — app เก่า switchOut 400ms, app ใหม่ switchIn 600ms
+        // รอ 600ms (switchIn ใช้นานกว่า)
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
@@ -1070,16 +1077,16 @@ export default function Home() {
           })
         }, 600)
       } else {
-        // restore ปกติ
+        // restore ปกติ — 400ms
         updateWindow(id, { minimized: false, opening: true, focused: true })
-        setTrackedTimeout(() => updateWindow(id, { opening: false }), 600)
+        setTrackedTimeout(() => updateWindow(id, { opening: false }), 400)
       }
     } else {
       // ปิด → เปิดใหม่
       const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
 
       if (otherOpenIds.length > 0) {
-        // Switch — crossfade พร้อมกัน 600ms
+        // Switch — app เก่า switchOut 400ms, app ใหม่ switchIn 600ms
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
@@ -1095,9 +1102,9 @@ export default function Home() {
           })
         }, 600)
       } else {
-        // Open ปกติ
+        // Open ปกติ — 400ms
         updateWindow(id, { open: true, minimized: false, opening: true, focused: true })
-        setTrackedTimeout(() => updateWindow(id, { opening: false }), 600)
+        setTrackedTimeout(() => updateWindow(id, { opening: false }), 400)
       }
     }
   }, [windows, updateWindow, clearAllAnimTimeouts, setTrackedTimeout])
@@ -1110,12 +1117,12 @@ export default function Home() {
       // reset state เมื่อปิดแอป (data หายไป กลับเป็นค่า default)
       updateWindow(id, { open: false, closing: false, data: {} })
       isAnimatingRef.current = false
-    }, 600)
+    }, 400)
   }, [updateWindow, clearAllAnimTimeouts, setTrackedTimeout])
 
   const minimizeApp = useCallback((id: string) => {
     updateWindow(id, { minAnim: true, focused: false })
-    setTrackedTimeout(() => updateWindow(id, { minimized: true, minAnim: false }), 600)
+    setTrackedTimeout(() => updateWindow(id, { minimized: true, minAnim: false }), 400)
   }, [updateWindow, setTrackedTimeout])
 
   const maximizeApp = useCallback((id: string) => {
@@ -1327,7 +1334,6 @@ export default function Home() {
             onResizeStart={(edge, e) => onResizeStart(app.id, edge, e)}
             onResizeMove={() => {}}
             onResizeEnd={() => { resizeRef.current = null }}
-            animDuration={app.animDuration}
           >
             {app.id === 'settings' && (
               <SettingsContent
