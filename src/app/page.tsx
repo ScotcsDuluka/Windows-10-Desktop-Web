@@ -277,12 +277,12 @@ function AppWindow({
   const animTransform = `scale(${animScale})`
 
   // ====== Duration ตามสถานการณ์ ======
-  // - open (เข้า ปกติ)        → 400ms
-  // - close (ออก ปกติ)        → 400ms
-  // - minimize               → 400ms
-  // - switchOut (สลับออก)    → 400ms  (แอปเก่า)
-  // - switchIn  (สลับเข้า)   → 600ms  (แอปใหม่)  ← ต่างจาก open ปกติ
-  const D_OPEN = 400      // open / close / minimize / switchOut
+  // - open (เข้า ปกติ)        → 600ms
+  // - close (ออก ปกติ)        → 600ms
+  // - minimize               → 600ms
+  // - switchOut (สลับออก)    → 600ms  (แอปเก่า)
+  // - switchIn  (สลับเข้า)   → 600ms  (แอปใหม่)
+  const D_OPEN = 600      // open / close / minimize / switchOut
   const D_SWITCH_IN = 600 // switchIn (เข้าใหม่จากการสลับ)
 
   let duration = D_OPEN
@@ -1060,8 +1060,7 @@ export default function Home() {
       // minimized → restore + minimize แอปอื่นที่เปิดอยู่
       const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
       if (otherOpenIds.length > 0) {
-        // Switch — app เก่า switchOut 400ms, app ใหม่ switchIn 600ms
-        // รอ 600ms (switchIn ใช้นานกว่า)
+        // Switch — app เก่า switchOut 600ms, app ใหม่ switchIn 600ms
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
@@ -1077,16 +1076,16 @@ export default function Home() {
           })
         }, 600)
       } else {
-        // restore ปกติ — 400ms
+        // restore ปกติ — 600ms
         updateWindow(id, { minimized: false, opening: true, focused: true })
-        setTrackedTimeout(() => updateWindow(id, { opening: false }), 400)
+        setTrackedTimeout(() => updateWindow(id, { opening: false }), 600)
       }
     } else {
       // ปิด → เปิดใหม่
       const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
 
       if (otherOpenIds.length > 0) {
-        // Switch — app เก่า switchOut 400ms, app ใหม่ switchIn 600ms
+        // Switch — app เก่า switchOut 600ms, app ใหม่ switchIn 600ms
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
@@ -1102,9 +1101,9 @@ export default function Home() {
           })
         }, 600)
       } else {
-        // Open ปกติ — 400ms
+        // Open ปกติ — 600ms
         updateWindow(id, { open: true, minimized: false, opening: true, focused: true })
-        setTrackedTimeout(() => updateWindow(id, { opening: false }), 400)
+        setTrackedTimeout(() => updateWindow(id, { opening: false }), 600)
       }
     }
   }, [windows, updateWindow, clearAllAnimTimeouts, setTrackedTimeout])
@@ -1117,12 +1116,12 @@ export default function Home() {
       // reset state เมื่อปิดแอป (data หายไป กลับเป็นค่า default)
       updateWindow(id, { open: false, closing: false, data: {} })
       isAnimatingRef.current = false
-    }, 400)
+    }, 600)
   }, [updateWindow, clearAllAnimTimeouts, setTrackedTimeout])
 
   const minimizeApp = useCallback((id: string) => {
     updateWindow(id, { minAnim: true, focused: false })
-    setTrackedTimeout(() => updateWindow(id, { minimized: true, minAnim: false }), 400)
+    setTrackedTimeout(() => updateWindow(id, { minimized: true, minAnim: false }), 600)
   }, [updateWindow, setTrackedTimeout])
 
   const maximizeApp = useCallback((id: string) => {
