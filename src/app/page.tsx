@@ -77,6 +77,24 @@ const APPS: AppDef[] = [
     defaultPosition: { x: 300, y: 100 },
     pinned: true,
   },
+  {
+    id: 'app1',
+    title: 'App 1',
+    icon: '📦',
+    iconType: 'emoji',
+    defaultSize: { w: 480, h: 360 },
+    defaultPosition: { x: 150, y: 100 },
+    pinned: true,
+  },
+  {
+    id: 'app2',
+    title: 'App 2',
+    icon: '🎯',
+    iconType: 'emoji',
+    defaultSize: { w: 480, h: 360 },
+    defaultPosition: { x: 250, y: 140 },
+    pinned: true,
+  },
   // เพิ่มแอปใหม่ตรงนี้
 ]
 
@@ -258,10 +276,10 @@ function AppWindow({
 
   const animTransform = `scale(${animScale})`
 
-  // ทุกอย่าง 500ms ease-out-expo (เร็ว→ช้า นุ่ม ๆ)
-  const transformDuration = '0.5s'
-  const opacityDuration = '0.5s'
-  const opacityDelay = '0s'
+  // ทุกอย่าง 400ms ease-out-expo (เร็ว→ช้า นุ่ม ๆ)
+  const transformDuration = '400ms'
+  const opacityDuration = '400ms'
+  const opacityDelay = '0ms'
   const easing = 'cubic-bezier(0.16, 1, 0.3, 1)'
 
   return (
@@ -275,7 +293,7 @@ function AppWindow({
         fontFamily: 'Segoe UI, sans-serif', overflow: 'hidden',
         transform: animTransform, opacity: animOpacity,
         transformOrigin: 'center center',
-        transition: `transform ${transformDuration} ${easing}, opacity ${opacityDuration} ${easing} ${opacityDelay}, left 0.18s cubic-bezier(0.16, 1, 0.3, 1), top 0.18s cubic-bezier(0.16, 1, 0.3, 1), width 0.18s cubic-bezier(0.16, 1, 0.3, 1), height 0.18s cubic-bezier(0.16, 1, 0.3, 1)`,
+        transition: `transform ${transformDuration} ${easing}, opacity ${opacityDuration} ${easing} ${opacityDelay}, left 400ms cubic-bezier(0.16, 1, 0.3, 1), top 400ms cubic-bezier(0.16, 1, 0.3, 1), width 400ms cubic-bezier(0.16, 1, 0.3, 1), height 400ms cubic-bezier(0.16, 1, 0.3, 1)`,
         willChange: 'transform, opacity, left, top, width, height',
         userSelect: 'none',
       }}
@@ -1336,6 +1354,36 @@ export default function Home() {
                 data={w.data?.calc || {}}
                 onDataChange={(d) => updateWindow(app.id, { data: { ...w.data, calc: d } })}
               />
+            )}
+            {app.id === 'app1' && (
+              <div style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                height: '100%', padding: 24, backgroundColor: '#fafafa',
+                fontFamily: 'Segoe UI, sans-serif', textAlign: 'center',
+              }}>
+                <div style={{ fontSize: 64, marginBottom: 16 }}>📦</div>
+                <div style={{ fontSize: 22, fontWeight: 600, color: '#1F1F1F', marginBottom: 8 }}>
+                  Hello from App 1
+                </div>
+                <div style={{ fontSize: 13, color: '#666', maxWidth: 320 }}>
+                  This is a placeholder app. Add your content here.
+                </div>
+              </div>
+            )}
+            {app.id === 'app2' && (
+              <div style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                height: '100%', padding: 24, backgroundColor: '#fafafa',
+                fontFamily: 'Segoe UI, sans-serif', textAlign: 'center',
+              }}>
+                <div style={{ fontSize: 64, marginBottom: 16 }}>🎯</div>
+                <div style={{ fontSize: 22, fontWeight: 600, color: '#1F1F1F', marginBottom: 8 }}>
+                  Hello from App 2
+                </div>
+                <div style={{ fontSize: 13, color: '#666', maxWidth: 320 }}>
+                  This is a placeholder app. Add your content here.
+                </div>
+              </div>
             )}
             {/* เพิ่ม content ของแอปอื่น ๆ ตรงนี้ */}
           </AppWindow>
