@@ -262,22 +262,28 @@ function AppWindow({
   // - open (เข้า ปกติ)        → 600ms
   // - close (ออก ปกติ)        → 600ms
   // - minimize               → 600ms
-  // - switchOut (App 1 ออก) → 500ms
-  // - switchIn  (App 2 เข้า) → 600ms (เริ่มตอน 250ms — overlap 250ms กับ App 1)
-  const D_OPEN = 600        // open / close / minimize
-  const D_SWITCH_IN = 600   // switchIn (App 2)
-  const D_SWITCH_OUT = 500  // switchOut (App 1)
+  // - switchOut (App 1 ออก) → 3500ms (คงที่ 2500ms + fade 1000ms)
+  // - switchIn  (App 2 เข้า) → 600ms (เริ่มตอน 250ms — overlap 3250ms กับ App 1)
+  const D_OPEN = 600         // open / close / minimize
+  const D_SWITCH_IN = 600    // switchIn (App 2)
+  const D_SWITCH_OUT = 3500  // switchOut (App 1) — รวมช่วงคงที่ + fade
+  const SWITCH_OUT_HOLD = 2500 // App 1 คงที่ (visible เต็ม) ก่อนเริ่ม fade
 
   let duration = D_OPEN
+  let opacityDelayMs = 0
   if (state.switchIn) {
     duration = D_SWITCH_IN
   } else if (state.switchOut) {
     duration = D_SWITCH_OUT
+    opacityDelayMs = SWITCH_OUT_HOLD
   }
 
   const transformDuration = `${duration}ms`
-  const opacityDuration = `${duration}ms`
-  const opacityDelay = '0ms'
+  // opacity: switchOut → hold 2500ms + fade 1000ms; อื่น ๆ → fade เต็ม duration
+  const opacityDuration = state.switchOut
+    ? `${duration - opacityDelayMs}ms`
+    : `${duration}ms`
+  const opacityDelay = `${opacityDelayMs}ms`
   // Easing: ease-out-expo (เร็ว→ช้า) — default สำหรับทุกแอป
   const easing = 'cubic-bezier(0.16, 1, 0.3, 1)'
   // Easing พิเศษ: App 1 (แอปเก่า) ตอน switchOut zoom → ease-in-cubic (ช้า→เร็ว)
