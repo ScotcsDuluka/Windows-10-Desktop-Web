@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/apps/develop/ui/controls/breadcrumbbar",
+    "name": "BreadcrumbBar - Windows apps - Microsoft Learn",
+    "snippet": "The BreadcrumbBar control provides the direct path of pages or folders to the current location. It adapts to a variety of screen sizes.",
+    "host_name": "learn.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://blog.logrocket.com/ux-design/breadcrumbs-vs-back-arrow-ux-best-practices",
+    "name": "Can breadcrumbs replace back arrows in UX design?",
+    "snippet": "In this article, I'll break down the role of breadcrumbs in UX, compare them with simple back arrow-based navigation, and explore how to create ...",
+    "host_name": "blog.logrocket.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://vwo.com/blog/why-use-breadcrumbs",
+    "name": "What is Breadcrumb & How It Eases Navigation? (With Examples)",
+    "snippet": "A breadcrumb is a secondary navigation aid that improves customer experience by helping users understand their location on a website or mobile application.",
+    "host_name": "vwo.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=_WjdXlxpvGs",
+    "name": "Windows UI 3: Navigation - Breadcrumb Bar | Controls in WinUI 3",
+    "snippet": "... app demonstrates all of the Windows UI 3 library controls and styles available to make a WinUI 3 app with the Windows App SDK. To learn more ...",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.nngroup.com/articles/breadcrumbs",
+    "name": "Breadcrumbs: 11 Design Guidelines for Desktop and Mobile - NN/G",
+    "snippet": "Guidelines for Using Breadcrumbs on Desktop. Breadcrumbs should not replace the global navigation bar or the local navigation within a section.",
+    "host_name": "www.nngroup.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

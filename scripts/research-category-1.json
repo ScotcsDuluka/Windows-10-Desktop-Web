@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://ux.stackexchange.com/questions/48214/best-layout-for-a-settings-page",
+    "name": "Best layout for a settings page - User Experience Stack Exchange",
+    "snippet": "I see two alternative solutions to your question: 1) Keep the the current design. It's good since you expose all settings at once. Design settings page for wide layout? - User Experience Stack Exchange What is a good way to let the user change screen layout? More results from ux.stackexchange.com",
+    "host_name": "ux.stackexchange.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=3VTnboV_3eA",
+    "name": "How to Create Navigation with Subpages in Power BI - YouTube",
+    "snippet": "Learn Figma design for Power BI https://yourownkpi.gumroad.com/l/powerbi-design-with-figma Advanced Course Figma for Power BI (waitlist) ...",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://support.microsoft.com/en-us/windows/experience/personalization/customize-the-windows-start-menu",
+    "name": "Customize the Windows Start Menu | Microsoft Support",
+    "snippet": "Learn how to customize the Windows Start menu, pin or unpin apps, adjust the layout, and personalize its appearance to enhance your productivity and user ...",
+    "host_name": "support.microsoft.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://ixdf.org/literature/topics/page-structure",
+    "name": "What is Page Structure in UX Design? — updated 2026 - IxDF",
+    "snippet": "Page structure refers to the organization and layout of elements within a website and determines how pages and information relate to one another—encompassing ...",
+    "host_name": "ixdf.org",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://uxplanet.org/best-ux-practices-for-designing-a-sidebar-9174ee0ecaa2",
+    "name": "Best UX Practices for Designing a Sidebar | by Dmitry Sergushkin",
+    "snippet": "#1 Optimal Sidebar Width Keep the width functional: 240–300px for expanded mode, 48–64px for collapsed mode. It ensures clarity without taking up too much ...",
+    "host_name": "uxplanet.org",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
