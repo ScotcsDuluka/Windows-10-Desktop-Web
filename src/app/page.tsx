@@ -38,6 +38,13 @@ const DEFAULT_WALLPAPER: WallpaperConfig = { type: 'image', src: '/win10-wallpap
 const MIN_W = 400
 const MIN_H = 300
 
+// ====== Animation timing constants (ใช้ทั้ง AppWindow และ openApp) ======
+const D_OPEN = 600         // open / close / minimize
+const D_SWITCH_IN = 600    // switchIn (App 2)
+const D_SWITCH_OUT = 400   // switchOut (App 1) — รวมช่วงคงที่ + fade
+const SWITCH_OUT_HOLD = 300 // App 1 คงที่ (visible เต็ม) 300ms ก่อนเริ่ม fade
+const SWITCH_IN_START = 300 // App 2 เริ่มตอน 300ms
+
 // ---------- App definitions ----------
 interface AppDef {
   id: string
@@ -213,8 +220,10 @@ function AppWindow({
   // ถ้า minimized และไม่อยู่ใน animation ย่อ → ไม่ render (ยกเว้น switchWaiting — ยัง render แต่ invisible)
   if (state.minimized && !state.minAnim && !state.switchWaiting) return null
 
-  // Local state สำหรับ opening/switchIn animation (เริ่มที่ 80% + opacity 0 → 100% + opacity 1)
-  const [localStarting, setLocalStarting] = useState(state.opening || state.switchIn)
+  // Local state สำหรับ opening/switchIn/switchWaiting animation
+  // - opening/switchIn: เริ่มที่ scale 0.8 + opacity 0 → 1
+  // - switchWaiting: invisible รอ switchIn
+  const [localStarting, setLocalStarting] = useState(state.opening || state.switchIn || state.switchWaiting)
   useEffect(() => {
     if (state.opening || state.switchIn) {
       const t = requestAnimationFrame(() => {
@@ -258,18 +267,7 @@ function AppWindow({
 
   const animTransform = `scale(${animScale})`
 
-  // ====== Duration ตามสถานการณ์ ======
-  // - open (เข้า ปกติ)        → 600ms
-  // - close (ออก ปกติ)        → 600ms
-  // - minimize               → 600ms
-  // - switchOut (App 1 ออก) → 400ms (คงที่ 300ms + fade 100ms ในช่วง 300-400ms)
-  // - switchIn  (App 2 เข้า) → 600ms (เริ่มตอน 300ms — overlap 100ms กับ App 1)
-  const D_OPEN = 600         // open / close / minimize
-  const D_SWITCH_IN = 600    // switchIn (App 2)
-  const D_SWITCH_OUT = 400   // switchOut (App 1) — รวมช่วงคงที่ + fade
-  const SWITCH_OUT_HOLD = 300 // App 1 คงที่ (visible เต็ม) 300ms ก่อนเริ่ม fade
-  const SWITCH_IN_START = 300 // App 2 เริ่มตอน 300ms
-
+  // ====== Duration ตามสถานการณ์ (constants อยู่ที่ top-level) ======
   let duration = D_OPEN
   let opacityDelayMs = 0
   if (state.switchIn) {
@@ -1048,8 +1046,15 @@ export default function Home() {
       return next
     })
 
-    // unlock หลัง animation จบ — overlap switch: 300ms + max(400, 600) = 900ms
-    setTrackedTimeout(() => { isAnimatingRef.current = false }, 950)
+    // คำนวณว่าจะเป็น switch หรือ open ปกติ
+    const otherOpenIds = (w.open && w.minimized)
+      ? Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
+      : (!w.open)
+        ? Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
+        : []
+    const isSwitch = otherOpenIds.length > 0
+    // unlock: open ปกติ 650ms, switch 950ms (300+600+50 buffer)
+    setTrackedTimeout(() => { isAnimatingRef.current = false }, isSwitch ? 950 : 650)
 
     if (w.open && !w.minimized) {
       // เปิดอยู่ → ไม่ทำอะไร
@@ -1057,17 +1062,14 @@ export default function Home() {
       return
     } else if (w.open && w.minimized) {
       // minimized → restore + minimize แอปอื่นที่เปิดอยู่
-      const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
-      if (otherOpenIds.length > 0) {
+      if (isSwitch) {
         // ====== Overlap switch ======
-        // Phase 1 (0-400ms): App 1 switchOut 400ms (hold 300ms + fade 100ms ในช่วง 300-400ms), App 2 ยัง invisible
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
           next[id] = { ...next[id], minimized: false, switchWaiting: true, focused: true }
           return next
         })
-        // Phase 2 (300ms): App 2 เริ่ม switchIn (overlap 100ms กับ App 1 ที่กำลัง fade ในช่วง 300-400ms)
         setTrackedTimeout(() => {
           setWindows((prev) => {
             const next = { ...prev }
@@ -1075,7 +1077,6 @@ export default function Home() {
             return next
           })
         }, SWITCH_IN_START)
-        // Phase 3 (400ms): App 1 หายไป (minimized)
         setTrackedTimeout(() => {
           setWindows((prev) => {
             const next = { ...prev }
@@ -1083,7 +1084,6 @@ export default function Home() {
             return next
           })
         }, D_SWITCH_OUT)
-        // Phase 4 (900ms): เคลียร์ switchIn (300 + 600)
         setTrackedTimeout(() => {
           updateWindow(id, { switchIn: false })
         }, SWITCH_IN_START + D_SWITCH_IN)
@@ -1094,18 +1094,14 @@ export default function Home() {
       }
     } else {
       // ปิด → เปิดใหม่
-      const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
-
-      if (otherOpenIds.length > 0) {
+      if (isSwitch) {
         // ====== Overlap switch ======
-        // Phase 1 (0-400ms): App 1 switchOut 400ms (hold 300ms + fade 100ms ในช่วง 300-400ms), App 2 ยัง invisible
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
           next[id] = { ...next[id], open: true, minimized: false, switchWaiting: true, focused: true }
           return next
         })
-        // Phase 2 (300ms): App 2 เริ่ม switchIn (overlap 100ms กับ App 1)
         setTrackedTimeout(() => {
           setWindows((prev) => {
             const next = { ...prev }
@@ -1113,7 +1109,6 @@ export default function Home() {
             return next
           })
         }, SWITCH_IN_START)
-        // Phase 3 (400ms): App 1 หายไป (minimized)
         setTrackedTimeout(() => {
           setWindows((prev) => {
             const next = { ...prev }
@@ -1121,7 +1116,6 @@ export default function Home() {
             return next
           })
         }, D_SWITCH_OUT)
-        // Phase 4 (900ms): เคลียร์ switchIn (300 + 600)
         setTrackedTimeout(() => {
           updateWindow(id, { switchIn: false })
         }, SWITCH_IN_START + D_SWITCH_IN)
