@@ -302,7 +302,8 @@ function AppWindow({
     ? `${duration - opacityDelayMs}ms`
     : `${duration}ms`
   const opacityDelay = `${opacityDelayMs}ms`
-  const easing = 'cubic-bezier(0.16, 1, 0.3, 1)'
+  // Easing: ช้า→ช้า→เร็ว (ease-in-cubic) — เริ่มนุ่ม ๆ แล้วเร่งเข้าท้าย
+  const easing = 'cubic-bezier(0.55, 0.055, 0.675, 0.19)'
   const posDuration = `${duration}ms`
 
   return (
@@ -316,7 +317,7 @@ function AppWindow({
         fontFamily: 'Segoe UI, sans-serif', overflow: 'hidden',
         transform: animTransform, opacity: animOpacity,
         transformOrigin: 'center center',
-        transition: `transform ${transformDuration} ${easing}, opacity ${opacityDuration} ${easing} ${opacityDelay}, left ${posDuration} cubic-bezier(0.16, 1, 0.3, 1), top ${posDuration} cubic-bezier(0.16, 1, 0.3, 1), width ${posDuration} cubic-bezier(0.16, 1, 0.3, 1), height ${posDuration} cubic-bezier(0.16, 1, 0.3, 1)`,
+        transition: `transform ${transformDuration} ${easing}, opacity ${opacityDuration} ${easing} ${opacityDelay}, left ${posDuration} ${easing}, top ${posDuration} ${easing}, width ${posDuration} ${easing}, height ${posDuration} ${easing}`,
         willChange: 'transform, opacity, left, top, width, height',
         userSelect: 'none',
       }}
