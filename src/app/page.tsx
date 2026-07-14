@@ -1037,9 +1037,8 @@ export default function Home() {
       return next
     })
 
-    // unlock หลัง animation จบ (600ms = switch, 300ms = open, 150ms = close)
-    // ตั้งเผื่อไว้ 700ms
-    setTrackedTimeout(() => { isAnimatingRef.current = false }, 700)
+    // unlock หลัง animation จบ (400ms)
+    setTrackedTimeout(() => { isAnimatingRef.current = false }, 450)
 
     if (w.open && !w.minimized) {
       // เปิดอยู่ → ไม่ทำอะไร
@@ -1049,7 +1048,7 @@ export default function Home() {
       // minimized → restore + minimize แอปอื่นที่เปิดอยู่
       const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
       if (otherOpenIds.length > 0) {
-        // Switch — crossfade พร้อมกัน 500ms
+        // Switch — crossfade พร้อมกัน 400ms
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
@@ -1063,18 +1062,18 @@ export default function Home() {
             next[id] = { ...next[id], switchIn: false }
             return next
           })
-        }, 500)
+        }, 400)
       } else {
         // restore ปกติ
         updateWindow(id, { minimized: false, opening: true, focused: true })
-        setTrackedTimeout(() => updateWindow(id, { opening: false }), 500)
+        setTrackedTimeout(() => updateWindow(id, { opening: false }), 400)
       }
     } else {
       // ปิด → เปิดใหม่
       const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
 
       if (otherOpenIds.length > 0) {
-        // Switch — crossfade พร้อมกัน 500ms
+        // Switch — crossfade พร้อมกัน 400ms
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
@@ -1088,11 +1087,11 @@ export default function Home() {
             next[id] = { ...next[id], switchIn: false }
             return next
           })
-        }, 500)
+        }, 400)
       } else {
         // Open ปกติ
         updateWindow(id, { open: true, minimized: false, opening: true, focused: true })
-        setTrackedTimeout(() => updateWindow(id, { opening: false }), 500)
+        setTrackedTimeout(() => updateWindow(id, { opening: false }), 400)
       }
     }
   }, [windows, updateWindow, clearAllAnimTimeouts, setTrackedTimeout])
@@ -1105,13 +1104,13 @@ export default function Home() {
       // reset state เมื่อปิดแอป (data หายไป กลับเป็นค่า default)
       updateWindow(id, { open: false, closing: false, data: {} })
       isAnimatingRef.current = false
-    }, 500)
+    }, 400)
   }, [updateWindow, clearAllAnimTimeouts, setTrackedTimeout])
 
   const minimizeApp = useCallback((id: string) => {
     updateWindow(id, { minAnim: true, focused: false })
-    setTimeout(() => updateWindow(id, { minimized: true, minAnim: false }), 500)
-  }, [updateWindow])
+    setTrackedTimeout(() => updateWindow(id, { minimized: true, minAnim: false }), 400)
+  }, [updateWindow, setTrackedTimeout])
 
   const maximizeApp = useCallback((id: string) => {
     setWindows((prev) => ({ ...prev, [id]: { ...prev[id], maximized: !prev[id].maximized } }))
