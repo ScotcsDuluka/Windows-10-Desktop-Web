@@ -1,0 +1,56 @@
+[
+  {
+    "url": "https://fluent2.microsoft.design/motion",
+    "name": "Motion - Fluent 2 Design System",
+    "snippet": "Duration and easing describe how long an object moves and how its speed changes along the way. use a quick fade transition instead of moving or sliding UI ...",
+    "host_name": "fluent2.microsoft.design",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/apps/develop/motion/motion-in-practice",
+    "name": "Motion in practice - animation in Windows apps - Microsoft Learn",
+    "snippet": "Learn how Fluent motion fundamentals like timing, easing, directionality, and gravity come together in your app.",
+    "host_name": "learn.microsoft.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/archive/msdn-magazine/2018/april/fluent-design-using-fluent-swipe-gesture-action-and-connected-animations",
+    "name": "Using Fluent: Swipe Gesture Action and Connected Animations",
+    "snippet": "Connected animations aid the user by providing visual context when navigating between pages, while at the same time enabling an engaging experience. From a ...",
+    "host_name": "learn.microsoft.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/apps/design/signature-experiences/motion",
+    "name": "Motion in Windows - Windows apps | Microsoft Learn",
+    "snippet": "This article describes how the Fluent Design language is applied to Windows apps. For more information, see Fluent Design - Motion. Motion ...",
+    "host_name": "learn.microsoft.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.motiontheagency.com/blog/microsoft-shift-from-flat-ui-to-dynamic-immersive-experiences",
+    "name": "Microsoft's Fluent Design: The Shift from Flat UI to Dynamic, Immersive",
+    "snippet": "Microsoft's Fluent Design uses motion, layers, and interactivity to create immersive, responsive UI for modern digital products.",
+    "host_name": "www.motiontheagency.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://dribbble.com/shots/11436459-Fluent-UI-Animation",
+    "name": "Fluent UI: Animation - Microsoft Design - Dribbble",
+    "snippet": "We playfully animated how we expressed the effects of Fluent UI, our newest design-to-code system. Check out the complete video here.",
+    "host_name": "dribbble.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  }
+]

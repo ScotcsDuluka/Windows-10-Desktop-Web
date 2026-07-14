@@ -153,7 +153,7 @@ function TaskbarIconButton({
       style={{
         width, height: 45, border: 'none', background: 'transparent',
         cursor: 'default', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        transition: 'background-color 0.18s ease', flexShrink: 0, position: 'relative', padding: 0,
+        transition: 'background-color 83ms linear', flexShrink: 0, position: 'relative', padding: 0,
       }}
     >
       <div
@@ -161,7 +161,7 @@ function TaskbarIconButton({
           position: 'absolute', left: '50%', top: 0,
           width: `${overlaySize * 100}%`, height: '100%',
           transform: 'translateX(-50%)', backgroundColor: overlayBg,
-          transition: 'background-color 0.18s ease, width 0.18s ease',
+          transition: 'background-color 83ms linear, width 83ms linear',
           pointerEvents: 'none', zIndex: 0,
         }}
       >
@@ -170,7 +170,7 @@ function TaskbarIconButton({
             style={{
               position: 'absolute', bottom: 0, left: 0, right: 0, height: 3,
               backgroundColor: highlightColor,
-              transition: 'height 0.18s ease, background-color 0.18s ease',
+              transition: 'background-color 83ms linear, height 83ms linear, background-color 83ms linear',
             }}
           />
         )}
@@ -230,39 +230,60 @@ function AppWindow({
   const winTop = isMaximized ? 0 : state.position.y
 
   // ====== Compute animation transform ======
-  // Default: 100% scale + opacity 1
+  // ตาม Microsoft Motion specs (https://learn.microsoft.com/en-us/windows/apps/design/motion/)
+  // - Direct Entrance: cubic-bezier(0,0,0,1) 167/250/333ms — scale 0.95→1 + fade 0→1
+  // - Direct Exit:     cubic-bezier(0,0,0,1) 167ms — scale 1→0.95 + fade 1→0 (ALWAYS combine with fade)
+  // - Gentle Exit:     cubic-bezier(1,0,1,1) 167ms — scale →0.85 + fade (minimize)
+  // - Point to Point:  cubic-bezier(0.55,0.55,0,1) 167/250/333ms — position/scale only
+  // - Fade:            linear 83ms — opacity only
+
   let animScale = 1
   let animOpacity = 1
+  let animTranslateY = 0
+  let easing = 'cubic-bezier(0, 0, 0, 1)'        // Direct Entrance / Exit (default)
+  let transformDuration = '250ms'                  // MS default entrance
+  let opacityDuration = '83ms'                     // MS bare minimum fade
+  let opacityDelay = '0ms'
 
-  // switchWaiting → invisible + scale 80% ระหว่างรอ switchIn
   if (state.switchWaiting) {
+    // รอ switch — invisible + scale 0.9
     animOpacity = 0
-    animScale = 0.8
+    animScale = 0.9
+    easing = 'linear'
+    transformDuration = '0ms'
+    opacityDuration = '0ms'
   } else if (state.closing) {
-    // ปิด: zoom 100→95% + fade 100→0, 500ms
+    // Direct Exit (Fast-Out): scale 1→0.95 + fade 1→0, 167ms
     animScale = 0.95
     animOpacity = 0
+    easing = 'cubic-bezier(0, 0, 0, 1)'
+    transformDuration = '167ms'
+    opacityDuration = '167ms'
   } else if (state.minAnim) {
-    // Minimize: เหมือนปิด
+    // Gentle Exit (Soft-Out): scale →0.85 + fade + translateY 20px, 167ms
+    animScale = 0.85
+    animOpacity = 0
+    animTranslateY = 20
+    easing = 'cubic-bezier(1, 0, 1, 1)'
+    transformDuration = '167ms'
+    opacityDuration = '167ms'
+  } else if (state.switchOut) {
+    // Switch out: scale 1→1.05 + fade 1→0, 167ms (subtle, not 1.2 which is too jarring)
+    animScale = 1.05
+    animOpacity = 0
+    easing = 'cubic-bezier(0, 0, 0, 1)'
+    transformDuration = '167ms'
+    opacityDuration = '167ms'
+  } else if (localStarting) {
+    // Direct Entrance: scale 0.95→1 + fade 0→1, 250ms
     animScale = 0.95
     animOpacity = 0
-  } else if (state.switchOut) {
-    // สลับแอป (app1 ออก): zoom 100→120% + fade 100→0, 500ms
-    animScale = 1.2
-    animOpacity = 0
-  } else if (localStarting) {
-    // เปิด/สลับเข้า (app2): zoom 80→100% + fade 0→100%, 500ms
-    animScale = 0.8
-    animOpacity = 0
+    easing = 'cubic-bezier(0, 0, 0, 1)'
+    transformDuration = '250ms'
+    opacityDuration = '167ms'
   }
 
-  const animTransform = `scale(${animScale})`
-
-  // ทุกอย่าง 500ms ease-out-expo (เร็ว→ช้า นุ่ม ๆ)
-  const transformDuration = '0.5s'
-  const opacityDuration = '0.5s'
-  const opacityDelay = '0s'
-  const easing = 'cubic-bezier(0.16, 1, 0.3, 1)'
+  const animTransform = `translateY(${animTranslateY}px) scale(${animScale})`
 
   return (
     <div
@@ -275,7 +296,9 @@ function AppWindow({
         fontFamily: 'Segoe UI, sans-serif', overflow: 'hidden',
         transform: animTransform, opacity: animOpacity,
         transformOrigin: 'center center',
-        transition: `transform ${transformDuration} ${easing}, opacity ${opacityDuration} ${easing} ${opacityDelay}, left 0.18s cubic-bezier(0.16, 1, 0.3, 1), top 0.18s cubic-bezier(0.16, 1, 0.3, 1), width 0.18s cubic-bezier(0.16, 1, 0.3, 1), height 0.18s cubic-bezier(0.16, 1, 0.3, 1)`,
+        // MS Motion: transform/opacity ใช้ Direct Entrance/Exit easing
+        // position/size ใช้ Point-to-Point easing (cubic-bezier(0.55,0.55,0,1) 167ms)
+        transition: `transform ${transformDuration} ${easing}, opacity ${opacityDuration} ${easing} ${opacityDelay}, left 167ms cubic-bezier(0.55, 0.55, 0, 1), top 167ms cubic-bezier(0.55, 0.55, 0, 1), width 167ms cubic-bezier(0.55, 0.55, 0, 1), height 167ms cubic-bezier(0.55, 0.55, 0, 1)`,
         willChange: 'transform, opacity, left, top, width, height',
         userSelect: 'none',
       }}
@@ -941,7 +964,7 @@ function QuickActionTile({
           : (hover ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.5)'),
         color: active ? '#fff' : '#1F1F1F',
         cursor: 'default', fontFamily: 'inherit',
-        transition: 'background-color 0.15s ease', textAlign: 'center',
+        transition: 'background-color 83ms linear, color 83ms linear', textAlign: 'center',
       }}
     >
       <span style={{ fontSize: 18 }}>{icon}</span>
@@ -971,7 +994,7 @@ function ContextMenuItem({
         cursor: onClick ? 'default' : 'default',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         backgroundColor: hover ? 'rgba(0,120,215,0.12)' : 'transparent',
-        transition: 'background-color 0.1s ease',
+        transition: 'background-color 83ms linear',
       }}
     >
       <span>{label}</span>
@@ -1100,9 +1123,9 @@ export default function Home() {
       return next
     })
 
-    // unlock หลัง animation จบ (600ms = switch, 300ms = open, 150ms = close)
-    // ตั้งเผื่อไว้ 700ms
-    setTrackedTimeout(() => { isAnimatingRef.current = false }, 700)
+    // MS Motion specs: 167ms entrance, 167ms exit, 250ms switch
+    // ตั้งเผื่อไว้ 350ms
+    setTrackedTimeout(() => { isAnimatingRef.current = false }, 350)
 
     if (w.open && !w.minimized) {
       // เปิดอยู่ → ไม่ทำอะไร
@@ -1126,18 +1149,18 @@ export default function Home() {
             next[id] = { ...next[id], switchIn: false }
             return next
           })
-        }, 500)
+        }, 250)
       } else {
-        // restore ปกติ
+        // restore ปกติ — Direct Entrance 250ms
         updateWindow(id, { minimized: false, opening: true, focused: true })
-        setTrackedTimeout(() => updateWindow(id, { opening: false }), 500)
+        setTrackedTimeout(() => updateWindow(id, { opening: false }), 250)
       }
     } else {
       // ปิด → เปิดใหม่
       const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
 
       if (otherOpenIds.length > 0) {
-        // Switch — crossfade พร้อมกัน 500ms
+        // Switch — crossfade พร้อมกัน 250ms (MS Direct Entrance)
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
@@ -1151,11 +1174,11 @@ export default function Home() {
             next[id] = { ...next[id], switchIn: false }
             return next
           })
-        }, 500)
+        }, 250)
       } else {
-        // Open ปกติ
+        // Open ปกติ — Direct Entrance 250ms
         updateWindow(id, { open: true, minimized: false, opening: true, focused: true })
-        setTrackedTimeout(() => updateWindow(id, { opening: false }), 500)
+        setTrackedTimeout(() => updateWindow(id, { opening: false }), 250)
       }
     }
   }, [windows, updateWindow, clearAllAnimTimeouts, setTrackedTimeout])
@@ -1164,17 +1187,19 @@ export default function Home() {
     clearAllAnimTimeouts()
     isAnimatingRef.current = true
     updateWindow(id, { closing: true, focused: false })
+    // MS Direct Exit: 167ms
     setTrackedTimeout(() => {
       // reset state เมื่อปิดแอป (data หายไป กลับเป็นค่า default)
       updateWindow(id, { open: false, closing: false, data: {} })
       isAnimatingRef.current = false
-    }, 500)
+    }, 167)
   }, [updateWindow, clearAllAnimTimeouts, setTrackedTimeout])
 
   const minimizeApp = useCallback((id: string) => {
     updateWindow(id, { minAnim: true, focused: false })
-    setTimeout(() => updateWindow(id, { minimized: true, minAnim: false }), 500)
-  }, [updateWindow])
+    // MS Gentle Exit: 167ms
+    setTrackedTimeout(() => updateWindow(id, { minimized: true, minAnim: false }), 167)
+  }, [updateWindow, setTrackedTimeout])
 
   const maximizeApp = useCallback((id: string) => {
     setWindows((prev) => ({ ...prev, [id]: { ...prev[id], maximized: !prev[id].maximized } }))
@@ -1602,7 +1627,7 @@ export default function Home() {
                   border: '1px solid rgba(0, 0, 0, 0.15)', borderRadius: 0,
                   padding: '12px 10px', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
                   display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-                  zIndex: 1001, animation: 'fadeInUp 0.18s ease-out',
+                  zIndex: 1001, animation: 'msFadeIn 83ms linear',
                 }}
               >
                 <div style={{ fontSize: 11, color: '#666', fontWeight: 500 }}>{muted ? 'Muted' : `${volume}%`}</div>
@@ -1629,7 +1654,7 @@ export default function Home() {
               height: 45, display: 'flex', alignItems: 'center', padding: '0 12px',
               color: '#1F1F1F', fontSize: 12, userSelect: 'none', cursor: 'default',
               textAlign: 'right', lineHeight: 1.25,
-              transition: 'background-color 0.15s ease',
+              transition: 'background-color 83ms linear',
             }}
             onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.06)' }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
@@ -1656,7 +1681,7 @@ export default function Home() {
             borderTop: 'none', borderLeft: 'none',
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
             display: 'flex', flexDirection: 'column',
-            zIndex: 2000, animation: 'fadeInUp 0.18s ease-out',
+            zIndex: 2000, animation: 'msSlideUpEntrance 250ms cubic-bezier(0, 0, 0, 1)',
           }}
         >
           {/* Search bar */}
@@ -1685,7 +1710,7 @@ export default function Home() {
                     display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px',
                     border: 'none', backgroundColor: 'rgba(255,255,255,0.6)',
                     cursor: 'default', textAlign: 'left',
-                    transition: 'background-color 0.15s ease',
+                    transition: 'background-color 83ms linear',
                     fontFamily: 'inherit', fontSize: 13, color: '#1F1F1F',
                   }}
                   onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,120,215,0.15)' }}
@@ -1775,7 +1800,7 @@ export default function Home() {
             borderRight: 'none', borderBottom: 'none',
             boxShadow: '-8px 0 32px rgba(0, 0, 0, 0.3)',
             display: 'flex', flexDirection: 'column',
-            zIndex: 2000, animation: 'slideInRight 0.22s ease-out',
+            zIndex: 2000, animation: 'msSlideRightEntrance 250ms cubic-bezier(0, 0, 0, 1)',
           }}
         >
           {/* Quick actions grid */}
@@ -1878,7 +1903,7 @@ export default function Home() {
             border: '1px solid rgba(0, 0, 0, 0.15)',
             boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
             padding: '4px 0', zIndex: 3000,
-            animation: 'fadeInUp 0.12s ease-out',
+            animation: 'msDirectEntrance 167ms cubic-bezier(0, 0, 0, 1)',
           }}
         >
           <ContextMenuItem label="View" submenu="›" />
@@ -1904,6 +1929,35 @@ export default function Home() {
 
       {/* ====== Styles ====== */}
       <style>{`
+        /* ====== Microsoft Motion specs (https://learn.microsoft.com/en-us/windows/apps/design/motion/) ====== */
+        /* Direct Entrance — cubic-bezier(0,0,0,1) 167/250/333ms */
+        @keyframes msDirectEntrance {
+          from { opacity: 0; transform: scale(0.95); }
+          to   { opacity: 1; transform: scale(1); }
+        }
+        /* Direct Entrance — slide up (Start Menu, popups from bottom) */
+        @keyframes msSlideUpEntrance {
+          from { opacity: 0; transform: translateY(8px) scale(0.98); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        /* Direct Entrance — slide from right (Action Center) */
+        @keyframes msSlideRightEntrance {
+          from { opacity: 0; transform: translateX(40px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+        /* Strong Entrance — elastic 3-keyframes (167+167+333ms = 667ms total) */
+        @keyframes msStrongEntrance {
+          0%   { opacity: 0; transform: scale(0.85); }
+          25%  { opacity: 1; transform: scale(1.05); }
+          50%  { opacity: 1; transform: scale(0.98); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+        /* Bare Minimum Fade — linear 83ms */
+        @keyframes msFadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        /* Legacy aliases for backward compat */
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(4px); }
           to { opacity: 1; transform: translateY(0); }
@@ -1916,6 +1970,14 @@ export default function Home() {
         /* ปิด text selection ทั้งหน้า ยกเว้น input/textarea */
         * { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
         input, textarea { -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; }
+        /* MS Motion: respect prefers-reduced-motion */
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+          }
+        }
       `}</style>
     </div>
   )

@@ -1,0 +1,56 @@
+[
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/apps/design/motion/timing-and-easing",
+    "name": "Timing and easing - Windows apps | Microsoft Learn",
+    "snippet": "Learn the importance of timing and easing in making motion feel natural for objects entering, exiting, or moving within the UI.",
+    "host_name": "learn.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.media.animation.easingfunctionbase?view=winrt-28000",
+    "name": "EasingFunctionBase Class (Windows.UI.Xaml.Media.Animation)",
+    "snippet": "Easing functions allow you to apply custom mathematical formulas to your animations. Mathematical operations are often useful to produce animations that ...",
+    "host_name": "learn.microsoft.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://fluent2.microsoft.design/motion",
+    "name": "Motion - Fluent 2 Design System",
+    "snippet": "Duration and easing describe how long an object moves and how its speed changes along the way. Getting duration and easing right",
+    "host_name": "fluent2.microsoft.design",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/uwp/api/windows.ui.composition.compositioneasingfunction?view=winrt-28000",
+    "name": "CompositionEasingFunction Class (Windows.UI.Composition)",
+    "snippet": "Easing functions are used to describe how the system interpolates between two different keyframes. For a list of supported easing functions, see the types in ...",
+    "host_name": "learn.microsoft.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.fabric.microsoft.com/t5/Data-Stories-Gallery/Visualizing-Animation-Easing/m-p/3304607",
+    "name": "Visualizing Animation Easing - Fabric Community - Microsoft",
+    "snippet": "The objective is to visually represent the most commonly used animation easing techniques by leveraging the Power BI Visual API and d3.js.",
+    "host_name": "community.fabric.microsoft.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://m3.material.io/styles/motion/easing-and-duration",
+    "name": "Easing and duration – Material Design 3",
+    "snippet": "Material easing and durations create responsive and expressive motion. Easing Duration Transition type Emphasized 500ms. Durations are slightly longer compared ...",
+    "host_name": "m3.material.io",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  }
+]
