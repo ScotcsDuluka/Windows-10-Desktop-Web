@@ -1017,6 +1017,7 @@ export default function Home() {
   const [muted, setMuted] = useState(false)
   const [showVolumeSlider, setShowVolumeSlider] = useState(false)
   const [tabletMode, setTabletMode] = useState(true) // Tablet Mode 100% by default
+  const [tabletModeAnimating, setTabletModeAnimating] = useState(false) // animation flag ตอน toggle tablet mode
 
   // Settings state (ใช้งานได้จริง)
   const [brightness, setBrightness] = useState(80)
@@ -1294,6 +1295,61 @@ export default function Home() {
     return () => clearInterval(t)
   }, [])
 
+  // ====== Tablet Mode toggle พร้อม animation ======
+  const toggleTabletMode = useCallback(() => {
+    setTabletModeAnimating(true)
+    setTabletMode((v) => !v)
+    // หลัง animation จบ (333ms = MS strong entrance duration)
+    window.setTimeout(() => setTabletModeAnimating(false), 333)
+  }, [])
+
+  // ====== Swipe gestures (tablet mode only — ตาม Microsoft specs) ======
+  // - swipe จากขอบขวา → Action Center
+  // - swipe จากขอบซ้าย → Task View (placeholder: close current focused window)
+  // - swipe จากขอบบนลงล่าง → close current focused window
+  const swipeRef = useRef<{ startX: number; startY: number; edge: string | null } | null>(null)
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    if (!tabletMode) return
+    const t = e.touches[0]
+    const w = window.innerWidth
+    const h = window.innerHeight
+    let edge: string | null = null
+    if (t.clientX <= 20) edge = 'left'
+    else if (t.clientX >= w - 20) edge = 'right'
+    else if (t.clientY <= 20) edge = 'top'
+    if (edge) {
+      swipeRef.current = { startX: t.clientX, startY: t.clientY, edge }
+    } else {
+      swipeRef.current = null
+    }
+  }, [tabletMode])
+
+  const onTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!tabletMode || !swipeRef.current) return
+    const t = e.changedTouches[0]
+    const dx = t.clientX - swipeRef.current.startX
+    const dy = t.clientY - swipeRef.current.startY
+    const edge = swipeRef.current.edge
+    swipeRef.current = null
+
+    // threshold 50px
+    if (edge === 'right' && dx < -50) {
+      // swipe จากขอบขวา → Action Center
+      setActionCenterOpen((v) => !v)
+      setStartMenuOpen(false)
+      setContextMenu(null)
+    } else if (edge === 'left' && dx > 50) {
+      // swipe จากขอบซ้าย → Task View (ปิดแอป focused ปัจจุบัน)
+      const focused = Object.keys(windows).find((k) => windows[k].focused)
+      if (focused) minimizeApp(focused)
+    } else if (edge === 'top' && dy > 50) {
+      // swipe จากขอบบนลงล่าง → close focused window
+      const focused = Object.keys(windows).find((k) => windows[k].focused)
+      if (focused) closeApp(focused)
+    }
+  }, [tabletMode, windows, minimizeApp, closeApp])
+
   // ====== Right-click: block globally, except on desktop (handled separately) ======
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -1399,12 +1455,27 @@ export default function Home() {
 
   return (
     <div
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
       style={{
         position: 'fixed', inset: 0, overflow: 'hidden', background: '#000',
         fontFamily: 'Segoe UI, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif',
         userSelect: 'none',
       }}
     >
+      {/* ====== Tablet Mode transition overlay ====== */}
+      {/* เมื่อ toggle tablet mode → fade overlay สั้น ๆ พร้อม scale windows */}
+      {tabletModeAnimating && (
+        <div
+          style={{
+            position: 'absolute', inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.15)',
+            zIndex: 9999, pointerEvents: 'none',
+            animation: 'msTabletModeTransition 333ms cubic-bezier(0.85, 0, 0, 1)',
+          }}
+        />
+      )}
+
       {/* ====== Desktop ====== */}
       <div
         style={{ position: 'absolute', inset: 0 }}
@@ -1458,7 +1529,7 @@ export default function Home() {
                 category={w.data?.category || 'System'}
                 onCategoryChange={(c) => updateWindow(app.id, { data: { ...w.data, category: c } })}
                 tabletMode={tabletMode}
-                onToggleTabletMode={() => setTabletMode((v) => !v)}
+                onToggleTabletMode={toggleTabletMode}
                 wallpaper={wallpaper.src}
                 onWallpaperChange={(wp) => setWallpaper({ type: 'image', src: wp })}
                 brightness={brightness}
@@ -1817,7 +1888,7 @@ export default function Home() {
                 label="Tablet mode"
                 icon="📱"
                 active={tabletMode}
-                onClick={() => setTabletMode((v) => !v)}
+                onClick={toggleTabletMode}
               />
               <QuickActionTile
                 label="Night light"
@@ -1956,6 +2027,23 @@ export default function Home() {
         @keyframes msFadeIn {
           from { opacity: 0; }
           to   { opacity: 1; }
+        }
+        /* Tablet Mode transition — 333ms fade + scale */
+        @keyframes msTabletModeTransition {
+          0%   { opacity: 0; transform: scale(1); }
+          30%  { opacity: 1; transform: scale(1); }
+          100% { opacity: 0; transform: scale(1); }
+        }
+        /* Swipe gesture visual feedback — subtle glow at edge */
+        @keyframes msSwipeHint {
+          0%   { opacity: 0; }
+          50%  { opacity: 0.4; }
+          100% { opacity: 0; }
+        }
+        /* Window snap animation (Point-to-Point 167ms) */
+        @keyframes msSnapAssist {
+          from { transform: scale(0.98); }
+          to   { transform: scale(1); }
         }
         /* Legacy aliases for backward compat */
         @keyframes fadeInUp {
