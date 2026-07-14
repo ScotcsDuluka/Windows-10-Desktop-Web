@@ -263,11 +263,12 @@ function AppWindow({
   // - close (ออก ปกติ)        → 600ms
   // - minimize               → 600ms
   // - switchOut (App 1 ออก) → 400ms (คงที่ 300ms + fade 100ms ในช่วง 300-400ms)
-  // - switchIn  (App 2 เข้า) → 600ms (เริ่มตอน 250ms — overlap 150ms กับ App 1)
+  // - switchIn  (App 2 เข้า) → 600ms (เริ่มตอน 300ms — overlap 100ms กับ App 1)
   const D_OPEN = 600         // open / close / minimize
   const D_SWITCH_IN = 600    // switchIn (App 2)
   const D_SWITCH_OUT = 400   // switchOut (App 1) — รวมช่วงคงที่ + fade
   const SWITCH_OUT_HOLD = 300 // App 1 คงที่ (visible เต็ม) 300ms ก่อนเริ่ม fade
+  const SWITCH_IN_START = 300 // App 2 เริ่มตอน 300ms
 
   let duration = D_OPEN
   let opacityDelayMs = 0
@@ -1047,8 +1048,8 @@ export default function Home() {
       return next
     })
 
-    // unlock หลัง animation จบ — overlap switch: 250ms + max(400, 600) = 850ms
-    setTrackedTimeout(() => { isAnimatingRef.current = false }, 900)
+    // unlock หลัง animation จบ — overlap switch: 300ms + max(400, 600) = 900ms
+    setTrackedTimeout(() => { isAnimatingRef.current = false }, 950)
 
     if (w.open && !w.minimized) {
       // เปิดอยู่ → ไม่ทำอะไร
@@ -1066,14 +1067,14 @@ export default function Home() {
           next[id] = { ...next[id], minimized: false, switchWaiting: true, focused: true }
           return next
         })
-        // Phase 2 (250ms): App 2 เริ่ม switchIn (overlap 150ms กับ App 1 ที่ยัง switchOut อยู่)
+        // Phase 2 (300ms): App 2 เริ่ม switchIn (overlap 100ms กับ App 1 ที่กำลัง fade ในช่วง 300-400ms)
         setTrackedTimeout(() => {
           setWindows((prev) => {
             const next = { ...prev }
             next[id] = { ...next[id], switchWaiting: false, switchIn: true }
             return next
           })
-        }, 250)
+        }, SWITCH_IN_START)
         // Phase 3 (400ms): App 1 หายไป (minimized)
         setTrackedTimeout(() => {
           setWindows((prev) => {
@@ -1081,11 +1082,11 @@ export default function Home() {
             otherOpenIds.forEach((k) => { next[k] = { ...next[k], minimized: true, switchOut: false } })
             return next
           })
-        }, 400)
-        // Phase 4 (850ms): เคลียร์ switchIn (250 + 600)
+        }, D_SWITCH_OUT)
+        // Phase 4 (900ms): เคลียร์ switchIn (300 + 600)
         setTrackedTimeout(() => {
           updateWindow(id, { switchIn: false })
-        }, 850)
+        }, SWITCH_IN_START + D_SWITCH_IN)
       } else {
         // restore ปกติ — 600ms
         updateWindow(id, { minimized: false, opening: true, focused: true })
@@ -1104,14 +1105,14 @@ export default function Home() {
           next[id] = { ...next[id], open: true, minimized: false, switchWaiting: true, focused: true }
           return next
         })
-        // Phase 2 (250ms): App 2 เริ่ม switchIn (overlap 150ms กับ App 1)
+        // Phase 2 (300ms): App 2 เริ่ม switchIn (overlap 100ms กับ App 1)
         setTrackedTimeout(() => {
           setWindows((prev) => {
             const next = { ...prev }
             next[id] = { ...next[id], switchWaiting: false, switchIn: true }
             return next
           })
-        }, 250)
+        }, SWITCH_IN_START)
         // Phase 3 (400ms): App 1 หายไป (minimized)
         setTrackedTimeout(() => {
           setWindows((prev) => {
@@ -1119,11 +1120,11 @@ export default function Home() {
             otherOpenIds.forEach((k) => { next[k] = { ...next[k], minimized: true, switchOut: false } })
             return next
           })
-        }, 400)
-        // Phase 4 (850ms): เคลียร์ switchIn (250 + 600)
+        }, D_SWITCH_OUT)
+        // Phase 4 (900ms): เคลียร์ switchIn (300 + 600)
         setTrackedTimeout(() => {
           updateWindow(id, { switchIn: false })
-        }, 850)
+        }, SWITCH_IN_START + D_SWITCH_IN)
       } else {
         // Open ปกติ — 600ms
         updateWindow(id, { open: true, minimized: false, opening: true, focused: true })
