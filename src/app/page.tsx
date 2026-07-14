@@ -47,6 +47,7 @@ interface AppDef {
   defaultSize: { w: number; h: number }
   defaultPosition: { x: number; y: number }
   pinned: boolean  // แสดงใน taskbar เสมอ แม้ปิด
+  easing?: string  // css easing — default ease-out-expo
 }
 
 const APPS: AppDef[] = [
@@ -85,6 +86,7 @@ const APPS: AppDef[] = [
     defaultSize: { w: 480, h: 360 },
     defaultPosition: { x: 150, y: 100 },
     pinned: true,
+    easing: 'cubic-bezier(0.55, 0.055, 0.675, 0.19)', // ease-in-cubic (ช้า→เร็ว)
   },
   {
     id: 'app2',
