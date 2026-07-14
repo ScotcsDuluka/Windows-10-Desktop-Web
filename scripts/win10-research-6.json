@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://www.asus.com/support/faq/1044487",
+    "name": "[Windows 11/10] Action center | Official Support | ASUS Global",
+    "snippet": "Add quick actions: Click ＋Add at the bottom of Action center, then it will list which apps or settings can be added. (If ＋Add highlights to gray ...",
+    "host_name": "www.asus.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.tenforums.com/tutorials/2594-open-action-center-windows-10-a.html",
+    "name": "Open Action Center in Windows 10",
+    "snippet": "This tutorial will show you how to open and use Action Center for notifications and quick actions in Windows 10. Enable or Disable Action Center in Windows 10 | Tutorials Add or Remove Quick Actions in Action Center in Windows 10 More results from www.tenforums.com\nIn Windows 10, action center is where to find your app notifications, as well as quick actions, which give you quick access to commonly used settings and apps. The action center will show you all of your past notifications until you clear them.",
+    "host_name": "www.tenforums.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.howtogeek.com/225345/how-to-configure-the-windows-10-action-panel-with-your-own-customized-buttons",
+    "name": "How to Use and Customize the Windows 10 Action Center",
+    "snippet": "Action Center, a slide-out pane that groups and displays notifications, and also provides access to quick actions like Wi-Fi, Quiet Hours, and ...",
+    "host_name": "www.howtogeek.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=KTc3faNqWtw",
+    "name": "How to Add, Remove/Arrange, Use Quick Actions Buttons  - YouTube",
+    "snippet": "Steps to Add, Remove or Rearrange and Use Quick Actions Buttons and Notifications in Action Center on Windows 10 • How to Access Action ...",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://winaero.com/quick-actions-action-center-windows-10",
+    "name": "Customize Quick Action Buttons in Action Center of Windows 10",
+    "snippet": "Open Settings. Go to System - Notifications & actions. On the right, click the Add or remove quick actions link below the Quick actions list.",
+    "host_name": "winaero.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

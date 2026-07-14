@@ -917,6 +917,74 @@ function CalculatorContent({
 }
 
 // ============================================================
+// QuickActionTile — Action Center quick action button
+// ============================================================
+function QuickActionTile({
+  label, icon, active, onClick,
+}: {
+  label: string
+  icon: string
+  active: boolean
+  onClick: () => void
+}) {
+  const [hover, setHover] = useState(false)
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        gap: 4, padding: '12px 8px', border: 'none',
+        backgroundColor: active
+          ? (hover ? '#0067C0' : '#0078D7')
+          : (hover ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.5)'),
+        color: active ? '#fff' : '#1F1F1F',
+        cursor: 'default', fontFamily: 'inherit',
+        transition: 'background-color 0.15s ease', textAlign: 'center',
+      }}
+    >
+      <span style={{ fontSize: 18 }}>{icon}</span>
+      <span style={{ fontSize: 11, fontWeight: 500, lineHeight: 1.2 }}>{label}</span>
+    </button>
+  )
+}
+
+// ============================================================
+// ContextMenuItem — desktop right-click menu item
+// ============================================================
+function ContextMenuItem({
+  label, onClick, submenu,
+}: {
+  label: string
+  onClick?: () => void
+  submenu?: string
+}) {
+  const [hover, setHover] = useState(false)
+  return (
+    <div
+      onClick={onClick}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        padding: '8px 16px', fontSize: 13, color: '#1F1F1F',
+        cursor: onClick ? 'default' : 'default',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        backgroundColor: hover ? 'rgba(0,120,215,0.12)' : 'transparent',
+        transition: 'background-color 0.1s ease',
+      }}
+    >
+      <span>{label}</span>
+      {submenu && <span style={{ color: '#666', fontSize: 14 }}>{submenu}</span>}
+    </div>
+  )
+}
+
+function ContextMenuSeparator() {
+  return <div style={{ height: 1, backgroundColor: 'rgba(0,0,0,0.08)', margin: '4px 0' }} />
+}
+
+// ============================================================
 // Main Page
 // ============================================================
 export default function Home() {
@@ -932,6 +1000,19 @@ export default function Home() {
   const [nightLight, setNightLight] = useState(false)
   const [autoTime, setAutoTime] = useState(true)
   const [darkMode, setDarkMode] = useState(false)
+
+  // ====== Start Menu + Action Center + Context Menu state ======
+  const [startMenuOpen, setStartMenuOpen] = useState(false)
+  const [actionCenterOpen, setActionCenterOpen] = useState(false)
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null)
+
+  // Quick Action toggles (Action Center)
+  const [wifi, setWifi] = useState(true)
+  const [bluetooth, setBluetooth] = useState(false)
+  const [airplane, setAirplane] = useState(false)
+  const [quietHours, setQuietHours] = useState(false)
+  const [location, setLocation] = useState(true)
+  const [batterySaver, setBatterySaver] = useState(false)
 
   // Windows state (window manager)
   const [windows, setWindows] = useState<Record<string, WindowState>>(() => {
@@ -1188,11 +1269,41 @@ export default function Home() {
     return () => clearInterval(t)
   }, [])
 
-  // ====== Block right-click ======
+  // ====== Right-click: block globally, except on desktop (handled separately) ======
   useEffect(() => {
-    const handler = (e: MouseEvent) => { e.preventDefault(); return false }
+    const handler = (e: MouseEvent) => {
+      // ปิด context menu ระบบปฏิบัติการทั้งหมด — desktop จะเปิดเองผ่าน onContextMenu ของ desktop div
+      e.preventDefault()
+      return false
+    }
     document.addEventListener('contextmenu', handler)
     return () => document.removeEventListener('contextmenu', handler)
+  }, [])
+
+  // ====== Close popups on outside click / Escape ======
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setStartMenuOpen(false)
+        setActionCenterOpen(false)
+        setContextMenu(null)
+      }
+    }
+    const onClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      // ถ้าคลิกนอก popup ทั้งหมด → ปิด
+      if (!target.closest('[data-popup="start-menu"], [data-popup="action-center"], [data-popup="context-menu"], [data-popup-trigger]')) {
+        setStartMenuOpen(false)
+        setActionCenterOpen(false)
+        setContextMenu(null)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    window.addEventListener('click', onClick)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('click', onClick)
+    }
   }, [])
 
   // ====== Volume control ======
@@ -1273,12 +1384,24 @@ export default function Home() {
       <div
         style={{ position: 'absolute', inset: 0 }}
         onClick={() => {
-          // คลิก desktop → unfocus ทุก window
+          // คลิก desktop → unfocus ทุก window + ปิด popups
           setWindows((prev) => {
             const next = { ...prev }
             Object.keys(next).forEach((k) => { next[k] = { ...next[k], focused: false } })
             return next
           })
+          setStartMenuOpen(false)
+          setActionCenterOpen(false)
+          setContextMenu(null)
+        }}
+        onContextMenu={(e) => {
+          // right-click บน desktop → เปิด context menu
+          e.preventDefault()
+          e.stopPropagation()
+          // ปรับตำแหน่งไม่ให้ล้นจอ
+          const x = Math.min(e.clientX, window.innerWidth - 230)
+          const y = Math.min(e.clientY, window.innerHeight - 320)
+          setContextMenu({ x, y })
         }}
       >
         {renderWallpaper()}
@@ -1357,13 +1480,15 @@ export default function Home() {
       >
         {/* ====== LEFT: Start | Search | Task View ====== */}
         <div style={{ display: 'flex', alignItems: 'center', height: '100%', flexShrink: 0 }}>
-          <TaskbarIconButton label="Start">
-            <img
-              src="/win10-start-icon.png" alt="Start" width={20} height={20}
-              style={{ objectFit: 'contain', transform: 'perspective(60px) rotateY(-12deg) translateX(-1px)', pointerEvents: 'none' }}
-              draggable={false}
-            />
-          </TaskbarIconButton>
+          <div data-popup-trigger="start-menu">
+            <TaskbarIconButton label="Start" onClick={() => { setStartMenuOpen((v) => !v); setActionCenterOpen(false); setContextMenu(null) }}>
+              <img
+                src="/win10-start-icon.png" alt="Start" width={20} height={20}
+                style={{ objectFit: 'contain', transform: 'perspective(60px) rotateY(-12deg) translateX(-1px)', pointerEvents: 'none' }}
+                draggable={false}
+              />
+            </TaskbarIconButton>
+          </div>
 
           {/* Search box */}
           <div
@@ -1491,13 +1616,24 @@ export default function Home() {
             )}
           </div>
 
-          {/* Clock */}
+          {/* Clock / Notifications → เปิด Action Center */}
           <div
+            data-popup-trigger="action-center"
+            onClick={(e) => {
+              e.stopPropagation()
+              setActionCenterOpen((v) => !v)
+              setStartMenuOpen(false)
+              setContextMenu(null)
+            }}
             style={{
               height: 45, display: 'flex', alignItems: 'center', padding: '0 12px',
               color: '#1F1F1F', fontSize: 12, userSelect: 'none', cursor: 'default',
               textAlign: 'right', lineHeight: 1.25,
+              transition: 'background-color 0.15s ease',
             }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.06)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
+            title="Open Action Center"
           >
             <div>
               <div>{dateStr}</div>
@@ -1507,11 +1643,274 @@ export default function Home() {
         </div>
       </div>
 
+      {/* ====== Start Menu popup ====== */}
+      {startMenuOpen && (
+        <div
+          data-popup="start-menu"
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            position: 'absolute', left: 0, bottom: 45, width: 380, height: 540,
+            backgroundColor: 'rgba(243, 243, 243, 0.97)',
+            backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(0, 0, 0, 0.15)',
+            borderTop: 'none', borderLeft: 'none',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+            display: 'flex', flexDirection: 'column',
+            zIndex: 2000, animation: 'fadeInUp 0.18s ease-out',
+          }}
+        >
+          {/* Search bar */}
+          <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
+            <input
+              type="text" placeholder="Type here to search" aria-label="Start menu search"
+              autoFocus
+              style={{
+                width: '100%', height: 32, padding: '0 12px',
+                border: '1px solid rgba(0,0,0,0.2)', borderRadius: 0,
+                backgroundColor: 'rgba(255,255,255,0.95)', fontSize: 13,
+                outline: 'none', fontFamily: 'inherit', color: '#333',
+              }}
+            />
+          </div>
+
+          {/* Tiles */}
+          <div style={{ flex: 1, padding: 16, overflowY: 'auto' }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#666', marginBottom: 8 }}>Most used</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginBottom: 16 }}>
+              {APPS.map((app) => (
+                <button
+                  key={app.id}
+                  onClick={() => { openApp(app.id); setStartMenuOpen(false) }}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px',
+                    border: 'none', backgroundColor: 'rgba(255,255,255,0.6)',
+                    cursor: 'default', textAlign: 'left',
+                    transition: 'background-color 0.15s ease',
+                    fontFamily: 'inherit', fontSize: 13, color: '#1F1F1F',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,120,215,0.15)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.6)' }}
+                >
+                  <span style={{ fontSize: 20 }}>{renderAppIcon(app, 20)}</span>
+                  <span>{app.title}</span>
+                </button>
+              ))}
+            </div>
+
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#666', marginBottom: 8 }}>Live tiles</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+              <div style={{ backgroundColor: '#0078D7', height: 80, padding: 12, color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div style={{ fontSize: 11, opacity: 0.9 }}>Weather</div>
+                <div style={{ fontSize: 22, fontWeight: 600 }}>28°</div>
+              </div>
+              <div style={{ backgroundColor: '#107C10', height: 80, padding: 12, color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div style={{ fontSize: 11, opacity: 0.9 }}>Mail</div>
+                <div style={{ fontSize: 13 }}>3 new</div>
+              </div>
+              <div style={{ backgroundColor: '#D83B01', height: 80, padding: 12, color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div style={{ fontSize: 11, opacity: 0.9 }}>Calendar</div>
+                <div style={{ fontSize: 13 }}>No events</div>
+              </div>
+              <div style={{ backgroundColor: '#5C2D91', height: 80, padding: 12, color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div style={{ fontSize: 11, opacity: 0.9 }}>Photos</div>
+                <div style={{ fontSize: 11 }}>42 items</div>
+              </div>
+              <div style={{ backgroundColor: '#008272', height: 80, padding: 12, color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div style={{ fontSize: 11, opacity: 0.9 }}>Store</div>
+                <div style={{ fontSize: 11 }}>2 updates</div>
+              </div>
+              <div style={{ backgroundColor: '#E3008C', height: 80, padding: 12, color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div style={{ fontSize: 11, opacity: 0.9 }}>News</div>
+                <div style={{ fontSize: 11 }}>Top stories</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Power + user bar */}
+          <div style={{
+            height: 50, display: 'flex', alignItems: 'center',
+            padding: '0 16px', backgroundColor: 'rgba(255,255,255,0.5)',
+            borderTop: '1px solid rgba(0,0,0,0.08)',
+            justifyContent: 'space-between',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{
+                width: 32, height: 32, borderRadius: '50%',
+                backgroundColor: '#0078D7', color: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 13, fontWeight: 600,
+              }}>U</div>
+              <span style={{ fontSize: 13, color: '#1F1F1F' }}>User</span>
+            </div>
+            <button
+              title="Power"
+              onClick={() => { /* placeholder */ }}
+              style={{
+                border: 'none', background: 'transparent', cursor: 'default',
+                padding: 6, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.06)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F1F1F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18.36 6.64a9 9 0 11-12.73 0" />
+                <line x1="12" y1="2" x2="12" y2="12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ====== Action Center pane ====== */}
+      {actionCenterOpen && (
+        <div
+          data-popup="action-center"
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            position: 'absolute', right: 0, bottom: 45, width: 360,
+            maxHeight: 'calc(100vh - 45px)',
+            backgroundColor: 'rgba(243, 243, 243, 0.97)',
+            backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(0, 0, 0, 0.15)',
+            borderRight: 'none', borderBottom: 'none',
+            boxShadow: '-8px 0 32px rgba(0, 0, 0, 0.3)',
+            display: 'flex', flexDirection: 'column',
+            zIndex: 2000, animation: 'slideInRight 0.22s ease-out',
+          }}
+        >
+          {/* Quick actions grid */}
+          <div style={{ padding: 16, borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#666', marginBottom: 10 }}>Quick actions</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+              <QuickActionTile label="Wi-Fi" icon="📶" active={wifi} onClick={() => setWifi((v) => !v)} />
+              <QuickActionTile label="Bluetooth" icon="🔵" active={bluetooth} onClick={() => setBluetooth((v) => !v)} />
+              <QuickActionTile label="Airplane mode" icon="✈️" active={airplane} onClick={() => setAirplane((v) => !v)} />
+              <QuickActionTile label="Quiet hours" icon="🌙" active={quietHours} onClick={() => setQuietHours((v) => !v)} />
+              <QuickActionTile label="Location" icon="📍" active={location} onClick={() => setLocation((v) => !v)} />
+              <QuickActionTile label="Battery saver" icon="🔋" active={batterySaver} onClick={() => setBatterySaver((v) => !v)} />
+              <QuickActionTile
+                label="Tablet mode"
+                icon="📱"
+                active={tabletMode}
+                onClick={() => setTabletMode((v) => !v)}
+              />
+              <QuickActionTile
+                label="Night light"
+                icon="🌅"
+                active={nightLight}
+                onClick={() => setNightLight((v) => !v)}
+              />
+            </div>
+
+            {/* Brightness slider */}
+            <div style={{ marginTop: 12 }}>
+              <div style={{ fontSize: 11, color: '#666', marginBottom: 6 }}>Brightness</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: 14 }}>☀️</span>
+                <input
+                  type="range" min={0} max={100} value={brightness}
+                  onChange={(e) => setBrightness(Number(e.target.value))}
+                  style={{ flex: 1, accentColor: '#0078D7' }}
+                  aria-label="Brightness"
+                />
+                <span style={{ fontSize: 11, color: '#666', minWidth: 30 }}>{brightness}%</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Notifications */}
+          <div style={{ flex: 1, padding: 16, overflowY: 'auto' }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#666', marginBottom: 10 }}>
+              Notifications
+            </div>
+            <div style={{
+              padding: 12, backgroundColor: 'rgba(255,255,255,0.7)',
+              border: '1px solid rgba(0,0,0,0.08)', marginBottom: 8,
+            }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: '#1F1F1F', marginBottom: 4 }}>
+                💬 Welcome to Windows 10 Desktop (Web Edition)
+              </div>
+              <div style={{ fontSize: 11, color: '#666' }}>
+                All apps are working. Try clicking the Start button, opening Action Center, or right-clicking the desktop.
+              </div>
+              <div style={{ fontSize: 10, color: '#999', marginTop: 4 }}>Just now</div>
+            </div>
+            <div style={{
+              padding: 12, backgroundColor: 'rgba(255,255,255,0.7)',
+              border: '1px solid rgba(0,0,0,0.08)', marginBottom: 8,
+            }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: '#1F1F1F', marginBottom: 4 }}>
+                ⚙️ System
+              </div>
+              <div style={{ fontSize: 11, color: '#666' }}>
+                Tablet Mode is ON. Apps maximize by default. Toggle it in Quick actions.
+              </div>
+              <div style={{ fontSize: 10, color: '#999', marginTop: 4 }}>1 min ago</div>
+            </div>
+          </div>
+
+          {/* Clear button */}
+          <div style={{ padding: 12, borderTop: '1px solid rgba(0,0,0,0.08)', textAlign: 'right' }}>
+            <button
+              onClick={() => { /* clear notifications placeholder */ }}
+              style={{
+                border: 'none', background: 'transparent', cursor: 'default',
+                fontSize: 12, color: '#0078D7', padding: '6px 12px',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.textDecoration = 'underline' }}
+              onMouseLeave={(e) => { e.currentTarget.style.textDecoration = 'none' }}
+            >
+              Clear all
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ====== Desktop right-click context menu ====== */}
+      {contextMenu && (
+        <div
+          data-popup="context-menu"
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            position: 'absolute', left: contextMenu.x, top: contextMenu.y,
+            minWidth: 220, backgroundColor: 'rgba(243, 243, 243, 0.98)',
+            backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(0, 0, 0, 0.15)',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+            padding: '4px 0', zIndex: 3000,
+            animation: 'fadeInUp 0.12s ease-out',
+          }}
+        >
+          <ContextMenuItem label="View" submenu="›" />
+          <ContextMenuItem label="Sort by" submenu="›" />
+          <ContextMenuItem label="Refresh" onClick={() => setContextMenu(null)} />
+          <ContextMenuSeparator />
+          <ContextMenuItem
+            label="New"
+            submenu="›"
+            onClick={() => { openApp('notepad'); setContextMenu(null) }}
+          />
+          <ContextMenuSeparator />
+          <ContextMenuItem
+            label="Display settings"
+            onClick={() => { openApp('settings'); setContextMenu(null) }}
+          />
+          <ContextMenuItem
+            label="Personalize"
+            onClick={() => { openApp('settings'); setContextMenu(null) }}
+          />
+        </div>
+      )}
+
       {/* ====== Styles ====== */}
       <style>{`
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(4px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInRight {
+          from { opacity: 0; transform: translateX(40px); }
+          to { opacity: 1; transform: translateX(0); }
         }
         input[aria-label="Search"]::placeholder { color: #555; }
         /* ปิด text selection ทั้งหน้า ยกเว้น input/textarea */

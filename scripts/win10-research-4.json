@@ -1,0 +1,74 @@
+[
+  {
+    "url": "https://support.microsoft.com/en-us/accessibility/windows/understand-and-explore-windows-settings",
+    "name": "Understand and explore Windows Settings | Microsoft Support",
+    "snippet": "This covers categories such as System, Devices, Network & Internet, Personalization, Apps, Accounts, Time & Language, Gaming, Ease of Access, Search, Privacy, ...",
+    "host_name": "support.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=rgu4YBUc4dU",
+    "name": "System Configuration Tools in Windows: A Quick Guide - YouTube",
+    "snippet": "Windows provides a variety of configuration tools to meet the needs of different users. These built-in tools facilitate your device's ...",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://quizlet.com/559133813/windows-10-settings-app-flash-cards",
+    "name": "Windows 10 Settings App Flashcards - Quizlet",
+    "snippet": "Rating 5.0 (1) You manage your network settings when connecting the system to a network. This includes configuring the Windows Firewall and changing network adapter options.",
+    "host_name": "quizlet.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://superuser.com/questions/340932/how-to-list-all-computers-in-a-windows-wi-fi-network",
+    "name": "How to list all computers in a Windows Wi-Fi network? - Super User",
+    "snippet": "Open Run ( ⊞ Win + R ) Type cmd and click OK. Type the command arp -a . It will usually list down all the IP's and Computers with their Mac ...",
+    "host_name": "superuser.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.customguide.com/course/windows-10/settings-app-windows-10",
+    "name": "Settings App Windows | CustomGuide",
+    "snippet": "In the Settings app, there are a number of categories , such as Notifications & actions, to view it. Network & Internet Includes your network settings.",
+    "host_name": "www.customguide.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=7I92JfbNeLs",
+    "name": "Windows Parental Controls Setup Guide for Parents - YouTube",
+    "snippet": "... Microsoft Family Safety works across Windows 10, Windows 11, and Xbox — so one setup manages all your Microsoft devices. This Week's ...",
+    "host_name": "www.youtube.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://4sysops.com/archives/list-of-ms-settings-uri-commands-to-open-specific-settings-in-windows-10",
+    "name": "List of ms-settings URI commands to open specific  - 4sysops",
+    "snippet": "This wiki document lists ms-settings URI commands that you can use to open any settings page in Windows 10 Control Panel.",
+    "host_name": "4sysops.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.portableone.com/Tech-News/Understanding-Microsoft-Windows-10-Settings-App?srsltid=AfmBOoqLJBH6UXJiH3V94TDQQqoG4bgIioYjq4yhkrrHr0-ivPWTuBPg",
+    "name": "Understanding Microsoft Windows 10 Settings App - Portable One",
+    "snippet": "The Devices tab in the Settings app, on the other hand, focuses on very specific key areas, such as printers and scanners, wireless devices ...",
+    "host_name": "www.portableone.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  }
+]

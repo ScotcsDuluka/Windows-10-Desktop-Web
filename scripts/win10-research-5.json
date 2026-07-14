@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://www.reddit.com/r/Windows10/comments/1mhlutr/how_can_i_customize_the_new_context_menu",
+    "name": "r/Windows10 - How can I customize the “New” context menu (right-click",
+    "snippet": "I'd like to customize the list of items that appear when I right-click on the desktop or inside a folder and choose New (e.g., New > Text ...",
+    "host_name": "www.reddit.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://kleinembedded.com/adding-right-click-context-menu-items-in-windows-10",
+    "name": "Adding right-click context menu items in Windows 10 - Klein Embedded",
+    "snippet": "To add a context menu item when right-clicking on a folder, add a new key under HKEY_LOCAL_MACHINE\\SOFTWARE\\Classes\\Directory\\shell or HKEY_CURRENT_USER\\ ...",
+    "host_name": "kleinembedded.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=R9xo7MYcjOA&vl=en",
+    "name": "How to Quickly Enable the Classic Windows 10 Style Right  - YouTube",
+    "snippet": "If you have upgraded to Windows 11 and are not a fan of the new style right click context menu where you have to click on show more options ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.wikihow.com/Add-New-Options-to-Right-Click-Menu-in-Windows",
+    "name": "How to Add New Options to the Right Click Menu in Windows - wikiHow",
+    "snippet": "Navigate to the “ContextMenuHandlers” folder. This folder contains all of the applications, shortcuts and other options that are present in your right-click ...",
+    "host_name": "www.wikihow.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://superuser.com/questions/978678/windows-10-right-click-context-menu-on-screen",
+    "name": "Windows 10 Right-Click Context Menu on screen - Super User",
+    "snippet": "Since today I cannot open the Context Menu (right click) on the Windows 10 home screen. When I right click, nothing happens. There are no errors ...",
+    "host_name": "superuser.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
