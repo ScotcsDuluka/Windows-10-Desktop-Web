@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/apps/design",
+    "name": "Design Windows apps overview - Microsoft Learn",
+    "snippet": "Design guidelines and UI examples for creating Windows app experiences. Deep-dive guidance on layout, navigation, input, typography, motion, ...\nDesign guidelines and UI examples for creating Windows app experiences. on layout, navigation, input, typography, motion, and more.",
+    "host_name": "learn.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=xCrhKzyxp0M",
+    "name": "40 UI elements every designer needs to know - YouTube",
+    "snippet": "Do you know the most essential elements of UX design? In this video, you'll learn the 40 most important UI design elements that every ...",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.ics.uci.edu/~kobsa/courses/ICS104/course-notes/Microsoft_WindowsGuidelines.pdf",
+    "name": "[PDF] The Windows Interface Guidelines — A Guide for Designing Software - Donald Bren School of Information and Computer Sciences",
+    "snippet": "Many elements in the Windows interface use perspective, highlighting, and shading. You can access the system settings for many standard window ...",
+    "host_name": "www.ics.uci.edu",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=NRZtomxEGpI",
+    "name": "Modern Power Apps UI Design Tutorial for Beginners (Step-by-Step) - YouTube",
+    "snippet": "... user interfaces in Microsoft Power Apps — step by step. This hands-on PowerApps session covers essential design elements, including: Custom ...",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.setproduct.com/blog/settings-ui-design",
+    "name": "Settings UI design: Why users can't find what they need | Setproduct Blog",
+    "snippet": "The app settings section is a designated area where users can customize and adjust various preferences, options, or configurations to tailor the UX.",
+    "host_name": "www.setproduct.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

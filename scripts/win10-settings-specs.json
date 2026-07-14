@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/apps/design/signature-experiences/typography",
+    "name": "Typography in Windows - Windows apps - Microsoft Learn",
+    "snippet": "Segoe UI Variable is the new system font for Windows. It is a refreshed take on the classic Segoe and uses variable font technology to ...",
+    "host_name": "learn.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://fonts.adobe.com/fonts/segoe-ui",
+    "name": "Segoe UI | Adobe Fonts",
+    "snippet": "Segoe UI is a version of Microsoft's branding typeface Segoe that is designed specifically for use on screen. Segoe UI is especially clear and readable for ...",
+    "host_name": "fonts.adobe.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.facebook.com/WindowsCentral/posts/microsoft-introduces-new-segoe-ui-variant-font-in-latest-windows-10-preview-buil/4668275753187554",
+    "name": "Microsoft introduces new Segoe UI Variant font in latest Windows 10",
+    "snippet": "The other big design changes coming to Windows 10 affect app icons, which will be more colorful and curved.",
+    "host_name": "www.facebook.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=cF7LhImZ2YU",
+    "name": "How to install the newer Segoe UI font in Windows 7 - YouTube",
+    "snippet": "In this video, I go over the steps to give Windows 7 the updated Segoe font family featured in Windows 8.x and Windows 10.",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.windowscentral.com/microsoft-introduces-new-segoe-ui-variant-font-latest-windows-10-preview-build",
+    "name": "Microsoft introduces new Segoe UI Variant font in latest Windows 10",
+    "snippet": "A new Segoe UI Variant font is coming to Windows 10. improvements include changes to Auto HDR, a small update to the drag-and-drop cursor ...",
+    "host_name": "www.windowscentral.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

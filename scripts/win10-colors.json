@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://support.microsoft.com/en-us/windows/experience/personalization/personalize-your-colors-in-windows",
+    "name": "Personalize your Colors in Windows | Microsoft Support",
+    "snippet": "To change accent color: In the SettingsApp Settings app on your Windows device select Personalization > Colors. Open Color settings You can let Windows ...",
+    "host_name": "support.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=--MapmZK7lA",
+    "name": "Windows 10 - Personalization - Colors - YouTube",
+    "snippet": "... Settings App Personalize the Desktop Modify Screen Brightness and ... Background Image Insert Functions from the Formula Library Use ...",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.tenforums.com/customization/85539-change-app-background-color.html",
+    "name": "Change app background color - Windows 10 Forums",
+    "snippet": "You can only select between dark or light skin in settings app/personalization/color or on some UWP(Store) apps, in their own settings(gear icon). Change Accent Color in Windows 10 Turn On or Off Start, Taskbar, and Action Center Color in Windows 10 More results from www.tenforums.com",
+    "host_name": "www.tenforums.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/zen_browser/comments/1ow3rp7/how_do_i_make_the_sidebar_color_to_black_while",
+    "name": "How do I make the sidebar color to black while keeping the  - Reddit",
+    "snippet": "How do I make the sidebar color to black while keeping the background colored (which I unintentionally got the effect on the second image)?.",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://gpsearch.azurewebsites.net/default.aspx?policyid=10677&lang=en-US",
+    "name": "Force a specific background and accent color - Group Policy Search",
+    "snippet": "Forces Windows to use the specified colors for the background and accent. The color values are specified in hex as #RGB. By default, users can change the ...",
+    "host_name": "gpsearch.azurewebsites.net",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "url": "https://techcommunity.microsoft.com/discussions/windowsinsiderprogram/how-to-screen-capture-windows-10-without-the-built-in-snipping-tool/4405171",
+    "name": "How to screen capture windows 10 without the built-in snipping tool?",
+    "snippet": "1. Open the software in the ShareeX main window, tap Capture to select a screen capture area. You can also use the shortcut keys (default: Shift + Print Screen ...",
+    "host_name": "techcommunity.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=tirNbkEXZII",
+    "name": "How to Take a Screenshot on Windows 10 - YouTube",
+    "snippet": "For the Snipping Tool, you can choose where to save the screenshot. · Windows + Print screen saves screenshots to C:\\Users\\(YourName)\\Pictures\\ ...",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/WindowsHelp/comments/1gwx5d0/how_to_take_a_screenshot_in_windows_10",
+    "name": "How to take a screenshot in Windows 10 : r/WindowsHelp - Reddit",
+    "snippet": "go to Settings > \"System\" > \"About\" Normally pressing Win+Print Screen automatically saves the screenshot to %userprofile%\\Pictures\\Screenshots ... How to take a screenshot of the entire screen instantly : r/WindowsHelp TIL If you use Win + Shift + S to capture screenshots you ... - Reddit More results from www.reddit.com",
+    "host_name": "www.reddit.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.pcmag.com/how-to/take-screenshot-windows-10",
+    "name": "How to Take a Screenshot in Windows 10 | PCMag",
+    "snippet": "Press Windows Key-Shift-S, and you have a choice of capturing the full screen, a rectangular selection, a freehand selection, or an individual program window.",
+    "host_name": "www.pcmag.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.instagram.com/reel/DYb6gwJt7WZ",
+    "name": "️ Microsoft Settings You Should Review for Better Privacy (Windows",
+    "snippet": "Open Settings Click Privacy & Security Scroll down to App Permissions Tap Screenshots & Screen Recordings Turn OFF Let apps take screenshots and ...",
+    "host_name": "www.instagram.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://windowshelper.home.blog/2021/04/05/how-to-allow-or-prevent-apps-from-taking-screenshots-in-windows-10",
+    "name": "How to allow or prevent apps from taking screenshots in Windows 10",
+    "snippet": "Press the Windows key + I to open Settings. Click Privacy. On the left pane, scroll down and click Screenshots and apps. click on Change button.",
+    "host_name": "windowshelper.home.blog",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  }
+]
