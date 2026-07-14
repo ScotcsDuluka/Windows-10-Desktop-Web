@@ -1049,8 +1049,8 @@ export default function Home() {
       return next
     })
 
-    // unlock หลัง animation จบ — ใช้ค่าสูงสุด 600+buffer (switchIn 600ms)
-    setTrackedTimeout(() => { isAnimatingRef.current = false }, 650)
+    // unlock หลัง animation จบ — sequential: switchOut 600 + switchIn 600 = 1200ms
+    setTrackedTimeout(() => { isAnimatingRef.current = false }, 1300)
 
     if (w.open && !w.minimized) {
       // เปิดอยู่ → ไม่ทำอะไร
@@ -1060,21 +1060,27 @@ export default function Home() {
       // minimized → restore + minimize แอปอื่นที่เปิดอยู่
       const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
       if (otherOpenIds.length > 0) {
-        // Switch — app เก่า switchOut 600ms, app ใหม่ switchIn 600ms
+        // ====== Sequential switch ======
+        // Phase 1 (0-600ms): app เก่า switchOut, app ใหม่ยัง invisible (switchWaiting)
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
-          next[id] = { ...next[id], minimized: false, switchIn: true, focused: true }
+          next[id] = { ...next[id], minimized: false, switchWaiting: true, focused: true }
           return next
         })
+        // Phase 2 (600-1200ms): app เก่า minimized, app ใหม่ switchIn
         setTrackedTimeout(() => {
           setWindows((prev) => {
             const next = { ...prev }
             otherOpenIds.forEach((k) => { next[k] = { ...next[k], minimized: true, switchOut: false } })
-            next[id] = { ...next[id], switchIn: false }
+            next[id] = { ...next[id], switchWaiting: false, switchIn: true }
             return next
           })
         }, 600)
+        // Phase 3 (1200ms): เคลียร์ switchIn
+        setTrackedTimeout(() => {
+          updateWindow(id, { switchIn: false })
+        }, 1200)
       } else {
         // restore ปกติ — 600ms
         updateWindow(id, { minimized: false, opening: true, focused: true })
@@ -1085,21 +1091,27 @@ export default function Home() {
       const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
 
       if (otherOpenIds.length > 0) {
-        // Switch — app เก่า switchOut 600ms, app ใหม่ switchIn 600ms
+        // ====== Sequential switch ======
+        // Phase 1 (0-600ms): app เก่า switchOut, app ใหม่ยัง invisible (switchWaiting)
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
-          next[id] = { ...next[id], open: true, minimized: false, switchIn: true, focused: true }
+          next[id] = { ...next[id], open: true, minimized: false, switchWaiting: true, focused: true }
           return next
         })
+        // Phase 2 (600-1200ms): app เก่า minimized, app ใหม่ switchIn
         setTrackedTimeout(() => {
           setWindows((prev) => {
             const next = { ...prev }
             otherOpenIds.forEach((k) => { next[k] = { ...next[k], minimized: true, switchOut: false } })
-            next[id] = { ...next[id], switchIn: false }
+            next[id] = { ...next[id], switchWaiting: false, switchIn: true }
             return next
           })
         }, 600)
+        // Phase 3 (1200ms): เคลียร์ switchIn
+        setTrackedTimeout(() => {
+          updateWindow(id, { switchIn: false })
+        }, 1200)
       } else {
         // Open ปกติ — 600ms
         updateWindow(id, { open: true, minimized: false, opening: true, focused: true })
