@@ -277,20 +277,31 @@ function AppWindow({
   const animTransform = `scale(${animScale})`
 
   // ====== Duration ตามสถานการณ์ ======
-  // - open (เข้า ปกติ)        → 600ms
+  // - open (เข้า ปกติ)        → 600ms (transform + opacity เริ่มพร้อมกัน)
   // - close (ออก ปกติ)        → 600ms
   // - minimize               → 600ms
-  // - switchOut (สลับออก)    → 600ms  (แอปเก่า)
-  // - switchIn  (สลับเข้า)   → 600ms  (แอปใหม่)
-  const D_OPEN = 600      // open / close / minimize / switchOut
-  const D_SWITCH_IN = 600 // switchIn (เข้าใหม่จากการสลับ)
+  // - switchOut (สลับออก)    → คงที่ 300ms แล้ว fade 300ms (รวม 600ms)
+  // - switchIn  (สลับเข้า)   → 600ms
+  const D_OPEN = 600      // open / close / minimize
+  const D_SWITCH_IN = 600 // switchIn
+  const D_SWITCH_OUT = 600 // switchOut รวม
+  const SWITCH_OUT_DELAY = 300 // ตอน switchOut: คงที่ 300ms ก่อน fade
 
   let duration = D_OPEN
-  if (state.switchIn) duration = D_SWITCH_IN
+  let opacityDelayMs = 0
+  if (state.switchIn) {
+    duration = D_SWITCH_IN
+  } else if (state.switchOut) {
+    duration = D_SWITCH_OUT
+    opacityDelayMs = SWITCH_OUT_DELAY // รอ 300ms ก่อน fade
+  }
 
   const transformDuration = `${duration}ms`
-  const opacityDuration = `${duration}ms`
-  const opacityDelay = '0ms'
+  // opacity: ถ้า switchOut → delay 300ms + fade 300ms; อื่น ๆ → fade เต็ม duration
+  const opacityDuration = state.switchOut
+    ? `${duration - opacityDelayMs}ms`
+    : `${duration}ms`
+  const opacityDelay = `${opacityDelayMs}ms`
   const easing = 'cubic-bezier(0.16, 1, 0.3, 1)'
   const posDuration = `${duration}ms`
 
