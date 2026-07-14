@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://support.microsoft.com/en-us/accounts-billing/security/sign-in-options-in-windows",
+    "name": "Sign-In Options in Windows | Microsoft Support",
+    "snippet": "Set up Windows Hello to enable to sign in using face recognition, a fingerprint or a PIN, instead of a password. select Accounts > Sign-in options … ...",
+    "host_name": "support.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=rxbWOhiFoZY",
+    "name": "How to Set Up, Configure and Manage User Accounts on Windows 10 - YouTube",
+    "snippet": "During this Windows 10 video tutorial, we will cover the basics of managing user accounts. We will review user account settings, ...",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://superuser.com/questions/1113638/cant-enable-windows-hello-some-settings-are-managed-by-your-organization",
+    "name": "Can't enable Windows Hello - Some settings are managed by your organization",
+    "snippet": "Go to Windows Settings -> Accounts -> Access Work or School. Then click on \"Sign-in Options\". Click Connect and Enter the user's email address ...\nGo to Windows Settings -> Accounts -> Access Work or School. · Then click on \"Sign-in Options\". · Add the PIN, then the Fingerprint. · Go back to \" ...",
+    "host_name": "superuser.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.facebook.com/groups/captainsoftech/posts/568146944479581",
+    "name": "Windows 10 adding family members feature issue - Facebook",
+    "snippet": "I have some problems with the adding family members feature in Windows 10? It is a separate sign in. You can not sign into their account for ...\nI have some problems with the adding family members feature in Windows 10? I added my partner's email/account so that I can sign into their ...",
+    "host_name": "www.facebook.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.windowscentral.com/software-apps/windows-11/how-to-manage-user-account-settings-on-windows-11",
+    "name": "How to manage user account settings on Windows 11 and Windows 10",
+    "snippet": "Open Settings. Click on Accounts. Click on Family & other users. Click the \"Manage family settings online\" option under the \"Your family\" ...",
+    "host_name": "www.windowscentral.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

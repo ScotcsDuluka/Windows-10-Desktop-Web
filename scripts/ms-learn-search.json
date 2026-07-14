@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/apps/develop/launch/launch-settings",
+    "name": "Launch Windows Settings - Windows apps - Microsoft Learn",
+    "snippet": "The following sections describe different categories of. Accounts Apps Control Center Devices Ease of access Extras Family Group Gaming Network and internet ...",
+    "host_name": "learn.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/configuration/settings/page-visibility",
+    "name": "Configure the Settings Page Visibility in Windows - Microsoft Learn",
+    "snippet": "For the list of categories and page identifiers, see ms-settings: Examples Show only the About and Bluetooth pages. Settings - Page Visibility ...",
+    "host_name": "learn.microsoft.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/answers/questions/3752955/windows-settings-system-category-not-working",
+    "name": "Windows Settings System category not working - Microsoft Q&A",
+    "snippet": "Whenever I open settings, the system category doesn't open. The app freezes instead. Nonetheless, the rest of the categories do open up.",
+    "host_name": "learn.microsoft.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/configuration/start/policy-settings",
+    "name": "Start menu policy settings - Configuration - Microsoft Learn",
+    "snippet": "This reference article outlines the policy settings available for customizing the Start menu experience, using Configuration Service Provider (CSP) or group ...",
+    "host_name": "learn.microsoft.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/advanced-settings",
+    "name": "Advanced Windows Settings | Microsoft Learn",
+    "snippet": "Category Setting Description Taskbar End Task Enable end task in taskbar by right click File Explorer File Explorer Adjust settings",
+    "host_name": "learn.microsoft.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

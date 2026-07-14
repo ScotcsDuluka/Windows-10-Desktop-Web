@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://support.microsoft.com/en-us/windows/deployment/updates-lifecycle/troubleshoot-problems-updating-windows",
+    "name": "Troubleshoot problems updating Windows | Microsoft Support",
+    "snippet": "Select Start > Settings > System. Select Troubleshoot and choose Other troubleshooters. Locate Windows Update and select Run. Follow the on-screen instructions ...",
+    "host_name": "support.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.facebook.com/groups/PCPROBLEMSOLUTIONS/posts/8663929513707955",
+    "name": "Upgrading from Windows 10 to 11: missing recovery option? - Facebook",
+    "snippet": "One possible solution I keep seeing is to go into System Settings > Update & Security > Recovery > Fix problems using Windows Update How to fix a Windows update issue with a security update? - Facebook Why can't I install Windows 10 extended security update? More results from www.facebook.com",
+    "host_name": "www.facebook.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=gMaerOBmSYM",
+    "name": "Tips & Tricks - Windows 10 Settings: Update & Security - YouTube",
+    "snippet": "The update and security tab on the windows 10 settings lets you manage updates, security, troubleshooting, system recovery, find my device ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://askleo.com/how-i-fixed-a-failed-windows-10-update",
+    "name": "How I Fixed a Failed Windows 10 Update - Ask Leo!",
+    "snippet": "You can force Windows to enter a recovery mode by interrupting the boot process twice in a row. There you'll find available tools such as System Restore, Safe ...",
+    "host_name": "askleo.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.cnet.com/tech/computing/windows-10-settings-menu-the-update-recovery-tab",
+    "name": "Windows 10 Settings menu: The Update & security tab - CNET",
+    "snippet": "The Recovery section offers three options to help you fix your computer if something goes awry. Reset this PC allows you to reinstall Windows ...\nJun 6, 2016 — You can find Windows Update in the Update & security tab of the Settings menu (Start > Settings > Update & security), along with sections for Windows Defender, ... Read more",
+    "host_name": "www.cnet.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

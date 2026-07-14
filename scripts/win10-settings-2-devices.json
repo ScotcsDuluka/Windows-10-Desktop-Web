@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://support.lenovo.com/gb/en/videos/vid500106-tips-tricks-windows-10-settings-devices",
+    "name": "Tips & Tricks - Windows 10 Settings: Devices - Lenovo Support GB",
+    "snippet": "The Devices menu in your Windows 10 Settings allows you to set up Bluetooth devices, printers and scanners, customize mouse preferences, ...",
+    "host_name": "support.lenovo.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=2ckSy_iFbg8",
+    "name": "Tips & Tricks - Windows 10 Settings: Devices - YouTube",
+    "snippet": "... Bluetooth devices, printers and scanners, customize mouse preferences, customize touchpad settings and much more! http://support.lenovo.com.",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/answers/questions/5830297/bluetooth-configuration-setup-for-windows-10",
+    "name": "bluetooth configuration setup for windows 10 - Microsoft Q&A",
+    "snippet": "On the Windows 10 PC, select Start > Settings > Devices > Bluetooth & other devices. Or use Open Bluetooth & other devices. Select Add Bluetooth ...",
+    "host_name": "learn.microsoft.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=7duF0I1MAY4",
+    "name": "How to Add Bluetooth Devices & Printers - YouTube",
+    "snippet": "... Devices\" Section of the Windows 10 Settings menu. Including how to add Bluetooth Devices, Add Printers, Manage Keyboard & Mouse settings ...",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://h30434.www3.hp.com/t5/Notebook-Wireless-and-Networking/Bluetooth-device-mouse-shown-multiple-times-in-W10/td-p/9266182",
+    "name": "Bluetooth device (mouse) shown multiple times in W10",
+    "snippet": "Under the Bluetooth section, remove all instances of your mouse. · After removing the devices, restart ...",
+    "host_name": "h30434.www3.hp.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

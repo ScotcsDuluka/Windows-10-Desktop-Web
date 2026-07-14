@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://support.microsoft.com/en-us/windows/privacy/windows-camera-microphone-and-privacy",
+    "name": "Windows camera, microphone, and privacy - Microsoft Support",
+    "snippet": "Open Microsoft Edge, select Settings and more More and then select Settings. Select Privacy, search, and services on the left side, and then select Site ...",
+    "host_name": "support.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.tenforums.com/tutorials/102647-allow-deny-os-apps-access-microphone-windows-10-a.html",
+    "name": "Allow or Deny OS and Apps Access to Microphone in Windows 10",
+    "snippet": "This tutorial will show you how to change Privacy settings to allow or deny Windows and apps access to the microphone for all users or only your account in ...",
+    "host_name": "www.tenforums.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.giaspace.com/blog/how-to-protect-your-privacy-in-windows-10",
+    "name": "How to Protect Your Privacy in Windows 10 - GiaSpace",
+    "snippet": "To manage these permissions, navigate to: Start > Settings > Privacy > Camera and Start > Settings > Privacy > Microphone. Here's how to secure ...",
+    "host_name": "www.giaspace.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=X-KTivUK-WM",
+    "name": "Windows privacy settings you should change now - YouTube",
+    "snippet": "Your Windows computer collects all kinds of data about you. Although this is intended to enhance your experience, it can also raise privacy ...",
+    "host_name": "www.youtube.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.spiceworks.com/t/group-policy-windows-10-privacy-camera-mic-settings/658330",
+    "name": "Group Policy Windows 10 Privacy Camera/Mic Settings",
+    "snippet": "Open Local Group Policy Editor in Windows 10. Navigate to Computer Configuration/Administrative Templates/Windows Components/Camera “Allow Use ...",
+    "host_name": "community.spiceworks.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

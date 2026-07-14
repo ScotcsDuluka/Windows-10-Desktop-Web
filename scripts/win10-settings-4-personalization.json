@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://support.microsoft.com/en-us/windows/experience/personalization/personalize-your-windows-experience-with-themes",
+    "name": "Personalize Your Windows Experience With Themes",
+    "snippet": "Apply a theme · Customize and share a theme · Delete a theme · Color filters and contrast themes · You might also ...",
+    "host_name": "support.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=9hJpjkaiS2Y",
+    "name": "How to Change Windows 10 Start Screen Colors  - YouTube",
+    "snippet": "... of free themes. You can access this link in the Windows 10 Settings Window under \"Personalization\" settings (you will see this in my video).",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.samuelmerritt.edu/sites/default/files/2019-10/Settings%20and%20Personalization.pdf",
+    "name": "[PDF] SETTINGS AND PERSONLIZATION - Samuel Merritt University",
+    "snippet": "To customize your lock screen: 1. Go to Start, and then select Settings >. Personalization > Lock screen. 2. Change your device background and choose any ...",
+    "host_name": "www.samuelmerritt.edu",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.tenforums.com/customization/130228-how-can-i-get-back-default-personalization-backgrounds-colors-etc.html",
+    "name": "How can I get back to default personalization backgrounds colors, etc.",
+    "snippet": "You should be able to revert to the default 'Windows' theme using the Settings app (Settings > Personalisation > Themes > Apply a theme > Windows).",
+    "host_name": "www.tenforums.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.microsoftpressstore.com/articles/article.aspx?p=2916273&seqNum=5",
+    "name": "Customizing the appearance of Windows 10 | Microsoft Press Store",
+    "snippet": "In Settings, choose Personalization, and then click Themes. In the Current Theme section, click Background, Color, Sounds, and Mouse Cursor to ...",
+    "host_name": "www.microsoftpressstore.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

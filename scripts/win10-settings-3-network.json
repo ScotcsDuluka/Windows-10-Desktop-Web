@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://support.microsoft.com/en-us/windows/experience/connectivity-networking/essential-network-settings-and-tasks-in-windows",
+    "name": "Essential Network Settings and Tasks in Windows - Microsoft Support",
+    "snippet": "Go to Network & internet Wifi settings > Airplane mode, then select the toggle for On or Off. Note Airplane mode retains the settings you used last time.\nSelect the Start WindowsLogo > Settings. Right-click the Network Ethernet or Wi-Fi Wifi icon on the taskbar, then select Network and internet settings.",
+    "host_name": "support.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.instagram.com/p/DYED_rZoxlD",
+    "name": "Windows VPN, Airplane Mode, Mobile Hotspot & Proxy Settings Explained",
+    "snippet": "Airplane Mode quickly disables wireless communication such as Wi-Fi, Bluetooth, and mobile connectivity. Disable wireless communication ...",
+    "host_name": "www.instagram.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://superuser.com/questions/1650411/wifi-networks-not-getting-detected-on-windows-10",
+    "name": "Wifi networks not getting detected on windows 10 - Super User",
+    "snippet": "Aeroplane Mode and Mobile hotspot. option for Airplane mode appears. This apparently means the wifi is disabled. Open Device Manager and expand ...",
+    "host_name": "superuser.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/answers/questions/5535794/network-internet-settings-only-shows-airplane-mode",
+    "name": "\"Network & Internet settings\" only shows Airplane Mode - Microsoft Q&A",
+    "snippet": "You see from the title, I cannot connect to my WiFi because the \"Network & Internet settings\" is only showing Airplane Mode from the taskbar. Internet and Airplane Mode in Windows 10 - Microsoft Q&A Only airplane mode on network - Windows 10 - Microsoft Learn More results from learn.microsoft.com",
+    "host_name": "learn.microsoft.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://windowsforum.com/threads/windows-11-connectivity-field-guide-wi-fi-ethernet-cellular-hotspot-airplane-mode.429891",
+    "name": "Wi‑Fi, Ethernet, Cellular, Hotspot & Airplane Mode | Windows Forum",
+    "snippet": "covering Wi-Fi, Ethernet, cellular data, Airplane mode, and Mobile hotspot. Quick Settings borrows from mobile operating systems. Tap Wi-Fi, ...",
+    "host_name": "windowsforum.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

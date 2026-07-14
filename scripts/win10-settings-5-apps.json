@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://support.microsoft.com/en-us/windows/apps/change-default-apps-in-windows",
+    "name": "Change Default Apps in Windows - Microsoft Support",
+    "snippet": "This article explains how to change default apps in Windows using the Settings app. Users can assign apps by file type, protocol, or application to control how ...",
+    "host_name": "support.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://superuser.com/questions/1272956/windows-10-removed-the-option-to-set-this-program-as-default",
+    "name": "Windows 10 removed the option to \"Set this program as default\" - Super User",
+    "snippet": "To see this new option, go to Settings > Apps > Default apps > “Set defaults by App”. Choose an app and click 'Manage' to see all the file types ...\nGo to Settings > Apps > Default apps > “Set defaults by App”. Choose an app and click 'Manage' to see all the file types and protocol associations for which ... Optional features settings are blank - windows 10 - Super User I can't change the default apps in Windows 10 - Super User More results from superuser.com",
+    "host_name": "superuser.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=yHn18xKRzQ0",
+    "name": "Windows 10 Settings - Apps & Features - Uninstalling Apps, Default Apps, & Startup Apps",
+    "snippet": "This video walks you through all the Different Windows 10 settings listed under \"Apps\" in the settings panel. Including how to Uninstall ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.tenforums.com/tutorials/5507-choose-default-apps-windows-10-a.html",
+    "name": "Choose Default Apps in Windows 10",
+    "snippet": "This tutorial will show you how to reset defaults and different ways to choose default apps used to open files and protocols for your account in Windows 10.\nThis tutorial will show you how to reset defaults and different ways to choose default apps used to open files and protocols for your account ...",
+    "host_name": "www.tenforums.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/client-management/client-tools/add-remove-hide-features",
+    "name": "Add, remove, or hide Windows features | Microsoft Learn",
+    "snippet": "Use the Windows Settings app to add or remove features · Right-click on the Start menu and select Settings. · In the Settings app, select System.\nUse the Windows Settings app to add or remove features. Open the Optional features pane in the Settings app by selecting the following link.",
+    "host_name": "learn.microsoft.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
