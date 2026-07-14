@@ -406,19 +406,54 @@ const winBtnStyle: React.CSSProperties = {
 // Settings Content
 // ============================================================
 const SETTINGS_CATEGORIES = [
-  { id: 'System', icon: '🖥️', desc: 'Display, sound, notifications, power' },
-  { id: 'Devices', icon: '🖱️', desc: 'Bluetooth, printers, mouse' },
-  { id: 'Phone', icon: '📱', desc: 'Link your Android, iPhone' },
-  { id: 'Network & Internet', icon: '🌐', desc: 'Wi-Fi, airplane mode, VPN' },
-  { id: 'Personalization', icon: '🎨', desc: 'Background, lock screen, colors' },
-  { id: 'Apps', icon: '📦', desc: 'Uninstall, defaults, optional features' },
-  { id: 'Accounts', icon: '👤', desc: 'Your accounts, email, sync, work, family' },
-  { id: 'Time & Language', icon: '🕐', desc: 'Speech, region, date' },
-  { id: 'Gaming', icon: '🎮', desc: 'Xbox Game Bar, captures, Game Mode' },
-  { id: 'Ease of Access', icon: '♿', desc: 'Narrator, magnifier, high contrast' },
-  { id: 'Privacy', icon: '🔒', desc: 'Location, camera, microphone' },
-  { id: 'Update & Security', icon: '🔄', desc: 'Windows Update, recovery, backup' },
+  { id: 'System', icon: 'system', desc: 'Display, sound, notifications, power' },
+  { id: 'Devices', icon: 'devices', desc: 'Bluetooth, printers, mouse' },
+  { id: 'Phone', icon: 'phone', desc: 'Link your Android, iPhone' },
+  { id: 'Network & Internet', icon: 'network', desc: 'Wi-Fi, airplane mode, VPN' },
+  { id: 'Personalization', icon: 'personalization', desc: 'Background, lock screen, colors' },
+  { id: 'Apps', icon: 'apps', desc: 'Uninstall, defaults, optional features' },
+  { id: 'Accounts', icon: 'accounts', desc: 'Your accounts, email, sync, work, family' },
+  { id: 'Time & Language', icon: 'time', desc: 'Speech, region, date' },
+  { id: 'Gaming', icon: 'gaming', desc: 'Xbox Game Bar, captures, Game Mode' },
+  { id: 'Ease of Access', icon: 'ease', desc: 'Narrator, magnifier, high contrast' },
+  { id: 'Privacy', icon: 'privacy', desc: 'Location, camera, microphone' },
+  { id: 'Update & Security', icon: 'update', desc: 'Windows Update, recovery, backup' },
 ]
+
+// SVG icons สีฟ้าแบบ line-art (เหมือน Win10 จริง)
+function SettingsIcon({ name, size = 32 }: { name: string; size?: number }) {
+  const stroke = '#0078D7'
+  const sw = 1.6
+  const common = { width: size, height: size, viewBox: '0 0 32 32', fill: 'none', stroke, strokeWidth: sw, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
+  switch (name) {
+    case 'system': // Monitor
+      return <svg {...common}><rect x="4" y="6" width="24" height="16" rx="1" /><line x1="12" y1="26" x2="20" y2="26" /><line x1="16" y1="22" x2="16" y2="26" /></svg>
+    case 'devices': // Mouse
+      return <svg {...common}><rect x="12" y="4" width="8" height="20" rx="4" /><line x1="16" y1="8" x2="16" y2="13" /></svg>
+    case 'phone': // Phone
+      return <svg {...common}><rect x="10" y="4" width="12" height="24" rx="2" /><line x1="14" y1="25" x2="18" y2="25" /></svg>
+    case 'network': // Globe
+      return <svg {...common}><circle cx="16" cy="16" r="10" /><line x1="6" y1="16" x2="26" y2="16" /><path d="M16 6c4 4 4 16 0 20M16 6c-4 4-4 16 0 20" /></svg>
+    case 'personalization': // Palette
+      return <svg {...common}><path d="M16 4a12 12 0 0 0 0 24c2 0 3-1 3-3 0-1-1-2-1-3s1-2 2-2h2a6 6 0 0 0 6-6c0-5-5-10-12-10z" /><circle cx="10" cy="14" r="1.2" fill={stroke} /><circle cx="14" cy="10" r="1.2" fill={stroke} /><circle cx="20" cy="11" r="1.2" fill={stroke} /><circle cx="22" cy="17" r="1.2" fill={stroke} /></svg>
+    case 'apps': // Grid
+      return <svg {...common}><rect x="5" y="5" width="8" height="8" rx="1" /><rect x="19" y="5" width="8" height="8" rx="1" /><rect x="5" y="19" width="8" height="8" rx="1" /><rect x="19" y="19" width="8" height="8" rx="1" /></svg>
+    case 'accounts': // Person
+      return <svg {...common}><circle cx="16" cy="11" r="5" /><path d="M6 28c0-5 4-9 10-9s10 4 10 9" /></svg>
+    case 'time': // Clock
+      return <svg {...common}><circle cx="16" cy="16" r="11" /><polyline points="16 9 16 16 21 19" /></svg>
+    case 'gaming': // Game controller
+      return <svg {...common}><path d="M9 11h14a4 4 0 0 1 4 4v3a5 5 0 0 1-9 3l-2-2h-2l-2 2a5 5 0 0 1-9-3v-3a4 4 0 0 1 4-4z" /><line x1="11" y1="16" x2="11" y2="19" /><line x1="9.5" y1="17.5" x2="12.5" y2="17.5" /><circle cx="21" cy="16" r="1" fill={stroke} /><circle cx="23" cy="18" r="1" fill={stroke} /></svg>
+    case 'ease': // Eye
+      return <svg {...common}><path d="M2 16c4-6 9-9 14-9s10 3 14 9c-4 6-9 9-14 9s-10-3-14-9z" /><circle cx="16" cy="16" r="4" /><circle cx="16" cy="16" r="1.5" fill={stroke} /></svg>
+    case 'privacy': // Lock
+      return <svg {...common}><rect x="6" y="14" width="20" height="14" rx="2" /><path d="M10 14v-4a6 6 0 0 1 12 0v4" /><circle cx="16" cy="21" r="1.5" fill={stroke} /></svg>
+    case 'update': // Refresh circle
+      return <svg {...common}><path d="M27 16a11 11 0 1 1-3-8" /><polyline points="27 6 27 11 22 11" /></svg>
+    default:
+      return null
+  }
+}
 
 // ============================================================
 // Settings Content (Win10 style)
@@ -503,16 +538,49 @@ function SettingsContent({
       backgroundColor: '#f3f3f3',
       fontFamily: '"Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif',
     }}>
-      {/* ====== Header (Win10 real) ====== */}
-      <div
-        style={{
-          display: 'flex', alignItems: 'center', gap: 12,
-          padding: '12px 24px', backgroundColor: 'transparent',
-          borderBottom: '1px solid #e5e5e5', flexShrink: 0,
-        }}
-      >
-        {/* Back button — ซ่อนตอนอยู่ Home */}
-        {!isHome && (
+      {/* ====== Header ====== */}
+      {isHome ? (
+        // ====== Home header: title กลาง + search ใต้ title (เหมือน Win10 จริง) ======
+        <div
+          style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            padding: '40px 24px 24px', backgroundColor: 'transparent',
+            flexShrink: 0, gap: 16,
+          }}
+        >
+          <h1 style={{
+            fontSize: 28, fontWeight: 600, margin: 0,
+            lineHeight: '36px', color: '#1F1F1F',
+          }}>Windows Settings</h1>
+          <div
+            style={{
+              height: 36, width: '100%', maxWidth: 480,
+              backgroundColor: '#fff', border: '1px solid #ccc',
+              display: 'flex', alignItems: 'center', padding: '0 12px', gap: 8,
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="#767676" strokeWidth="1.5" />
+              <path d="M16 16l4 4" stroke="#767676" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            <input
+              placeholder="Find a setting"
+              style={{
+                border: 'none', outline: 'none', background: 'transparent',
+                fontSize: 14, flex: 1, color: '#1F1F1F', fontFamily: 'inherit',
+              }}
+            />
+          </div>
+        </div>
+      ) : (
+        // ====== Category header: back button + profile + search ขวา ======
+        <div
+          style={{
+            display: 'flex', alignItems: 'center', gap: 12,
+            padding: '12px 24px', backgroundColor: 'transparent',
+            borderBottom: '1px solid #e5e5e5', flexShrink: 0,
+          }}
+        >
           <button
             aria-label="Back"
             onClick={() => onCategoryChange('')}
@@ -528,63 +596,58 @@ function SettingsContent({
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
-        )}
 
-        {/* User profile circle (เล็กกว่าเดิม — 28px) */}
-        <div
-          style={{
-            width: 28, height: 28, borderRadius: '50%',
-            backgroundColor: '#0078D7', color: '#fff',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 13, fontWeight: 600, userSelect: 'none',
-            flexShrink: 0,
-          }}
-        >
-          U
-        </div>
-        <div style={{ fontSize: 13, color: '#1F1F1F', lineHeight: 1.3 }}>
-          <div style={{ fontWeight: 400 }}>User</div>
-          <div style={{ color: '#767676', fontSize: 11 }}>user@windows10.local</div>
-        </div>
-
-        {/* Search box (ขวา — ใหญ่กว่าเดิม, 36px height ตาม Win10) */}
-        <div
-          style={{
-            marginLeft: 'auto', height: 32, width: 320,
-            backgroundColor: '#fff', border: '1px solid #ccc',
-            display: 'flex', alignItems: 'center', padding: '0 10px', gap: 8,
-          }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <circle cx="11" cy="11" r="7" stroke="#767676" strokeWidth="1.5" />
-            <path d="M16 16l4 4" stroke="#767676" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-          <input
-            placeholder="Find a setting"
+          <div
             style={{
-              border: 'none', outline: 'none', background: 'transparent',
-              fontSize: 13, flex: 1, color: '#1F1F1F', fontFamily: 'inherit',
+              width: 28, height: 28, borderRadius: '50%',
+              backgroundColor: '#0078D7', color: '#fff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 13, fontWeight: 600, userSelect: 'none',
+              flexShrink: 0,
             }}
-          />
+          >
+            U
+          </div>
+          <div style={{ fontSize: 13, color: '#1F1F1F', lineHeight: 1.3 }}>
+            <div style={{ fontWeight: 400 }}>User</div>
+            <div style={{ color: '#767676', fontSize: 11 }}>user@windows10.local</div>
+          </div>
+
+          <div
+            style={{
+              marginLeft: 'auto', height: 32, width: 320,
+              backgroundColor: '#fff', border: '1px solid #ccc',
+              display: 'flex', alignItems: 'center', padding: '0 10px', gap: 8,
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="#767676" strokeWidth="1.5" />
+              <path d="M16 16l4 4" stroke="#767676" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            <input
+              placeholder="Find a setting"
+              style={{
+                border: 'none', outline: 'none', background: 'transparent',
+                fontSize: 13, flex: 1, color: '#1F1F1F', fontFamily: 'inherit',
+              }}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ====== Body: Home (grid) หรือ Sidebar + Content ====== */}
       {isHome ? (
         // ====== Home page — grid ของ category tiles (เหมือน Win10 จริง) ======
         <div style={{
           flex: 1, backgroundColor: '#fff', overflowY: 'auto',
-          padding: '40px 56px 32px', userSelect: 'none',
+          padding: '32px 56px', userSelect: 'none',
+          display: 'flex', flexDirection: 'column',
         }}>
-          <h1 style={{
-            fontSize: 28, fontWeight: 600, margin: '0 0 32px 0',
-            lineHeight: '36px', color: '#1F1F1F',
-          }}>Windows Settings</h1>
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '12px 24px',
-            maxWidth: 900,
+            maxWidth: 900, margin: '0 auto', width: '100%',
           }}>
             {SETTINGS_CATEGORIES.map((c) => (
               <div
@@ -607,9 +670,11 @@ function SettingsContent({
                   e.currentTarget.style.borderColor = 'transparent'
                 }}
               >
-                <span style={{ fontSize: 28, lineHeight: 1, flexShrink: 0 }}>{c.icon}</span>
+                <span style={{ fontSize: 28, lineHeight: 1, flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                  <SettingsIcon name={c.icon} size={32} />
+                </span>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: '#1F1F1F', lineHeight: '20px', marginBottom: 4 }}>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: '#0078D7', lineHeight: '20px', marginBottom: 4 }}>
                     {c.id}
                   </div>
                   <div style={{ fontSize: 12, color: '#767676', lineHeight: '16px' }}>
@@ -618,6 +683,13 @@ function SettingsContent({
                 </div>
               </div>
             ))}
+          </div>
+          {/* Footer: Activate Windows (เหมือน Win10 จริง) */}
+          <div style={{
+            marginTop: 'auto', padding: '24px 0 8px', textAlign: 'center',
+            fontSize: 12, color: '#0078D7',
+          }}>
+            Windows isn't activated. <span style={{ textDecoration: 'underline', cursor: 'default' }}>Activate Windows now.</span>
           </div>
         </div>
       ) : (
@@ -646,7 +718,7 @@ function SettingsContent({
               onMouseEnter={(e) => { if (category !== c.id) e.currentTarget.style.backgroundColor = '#e5e5e5' }}
               onMouseLeave={(e) => { if (category !== c.id) e.currentTarget.style.backgroundColor = 'transparent' }}
             >
-              <span style={{ fontSize: 16, lineHeight: 1 }}>{c.icon}</span>
+              <span style={{ display: 'flex', alignItems: 'center' }}><SettingsIcon name={c.icon} size={18} /></span>
               <span>{c.id}</span>
             </div>
           ))}
