@@ -262,11 +262,11 @@ function AppWindow({
   // - open (เข้า ปกติ)        → 600ms
   // - close (ออก ปกติ)        → 600ms
   // - minimize               → 600ms
-  // - switchOut (App 1 ออก) → 300ms (transform + fade เริ่มพร้อมกัน)
-  // - switchIn  (App 2 เข้า) → 600ms (เริ่มตอน 250ms — overlap 50ms กับ App 1)
+  // - switchOut (App 1 ออก) → 500ms
+  // - switchIn  (App 2 เข้า) → 600ms (เริ่มตอน 250ms — overlap 250ms กับ App 1)
   const D_OPEN = 600        // open / close / minimize
   const D_SWITCH_IN = 600   // switchIn (App 2)
-  const D_SWITCH_OUT = 300  // switchOut (App 1) — ลดจาก 600ms
+  const D_SWITCH_OUT = 500  // switchOut (App 1)
 
   let duration = D_OPEN
   if (state.switchIn) {
@@ -1041,7 +1041,7 @@ export default function Home() {
       return next
     })
 
-    // unlock หลัง animation จบ — overlap switch: 250ms + max(300, 600) = 850ms
+    // unlock หลัง animation จบ — overlap switch: 250ms + max(500, 600) = 850ms
     setTrackedTimeout(() => { isAnimatingRef.current = false }, 900)
 
     if (w.open && !w.minimized) {
@@ -1053,14 +1053,14 @@ export default function Home() {
       const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
       if (otherOpenIds.length > 0) {
         // ====== Overlap switch ======
-        // Phase 1 (0-300ms): App 1 switchOut 300ms, App 2 ยัง invisible
+        // Phase 1 (0-500ms): App 1 switchOut 500ms, App 2 ยัง invisible
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
           next[id] = { ...next[id], minimized: false, switchWaiting: true, focused: true }
           return next
         })
-        // Phase 2 (250ms): App 2 เริ่ม switchIn (overlap 50ms กับ App 1 ที่ยัง switchOut อยู่)
+        // Phase 2 (250ms): App 2 เริ่ม switchIn (overlap 250ms กับ App 1 ที่ยัง switchOut อยู่)
         setTrackedTimeout(() => {
           setWindows((prev) => {
             const next = { ...prev }
@@ -1068,14 +1068,14 @@ export default function Home() {
             return next
           })
         }, 250)
-        // Phase 3 (300ms): App 1 หายไป (minimized)
+        // Phase 3 (500ms): App 1 หายไป (minimized)
         setTrackedTimeout(() => {
           setWindows((prev) => {
             const next = { ...prev }
             otherOpenIds.forEach((k) => { next[k] = { ...next[k], minimized: true, switchOut: false } })
             return next
           })
-        }, 300)
+        }, 500)
         // Phase 4 (850ms): เคลียร์ switchIn (250 + 600)
         setTrackedTimeout(() => {
           updateWindow(id, { switchIn: false })
@@ -1091,14 +1091,14 @@ export default function Home() {
 
       if (otherOpenIds.length > 0) {
         // ====== Overlap switch ======
-        // Phase 1 (0-300ms): App 1 switchOut 300ms, App 2 ยัง invisible
+        // Phase 1 (0-500ms): App 1 switchOut 500ms, App 2 ยัง invisible
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
           next[id] = { ...next[id], open: true, minimized: false, switchWaiting: true, focused: true }
           return next
         })
-        // Phase 2 (250ms): App 2 เริ่ม switchIn (overlap 50ms กับ App 1)
+        // Phase 2 (250ms): App 2 เริ่ม switchIn (overlap 250ms กับ App 1)
         setTrackedTimeout(() => {
           setWindows((prev) => {
             const next = { ...prev }
@@ -1106,14 +1106,14 @@ export default function Home() {
             return next
           })
         }, 250)
-        // Phase 3 (300ms): App 1 หายไป (minimized)
+        // Phase 3 (500ms): App 1 หายไป (minimized)
         setTrackedTimeout(() => {
           setWindows((prev) => {
             const next = { ...prev }
             otherOpenIds.forEach((k) => { next[k] = { ...next[k], minimized: true, switchOut: false } })
             return next
           })
-        }, 300)
+        }, 500)
         // Phase 4 (850ms): เคลียร์ switchIn (250 + 600)
         setTrackedTimeout(() => {
           updateWindow(id, { switchIn: false })
