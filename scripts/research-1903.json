@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://www.windowscentral.com/whats-new-settings-app-windows-10-may-2019-update",
+    "name": "What's new with the Settings app for the Windows 10 May 2019 Update",
+    "snippet": "Starting with version 1903, the Settings experience revamps the homepage with a new header design (controlled feature) similar to the one found ...",
+    "host_name": "www.windowscentral.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=SkQMAE48XqQ",
+    "name": "Windows 10 May 2019 Update, version 1903: Top 10 new features - YouTube",
+    "snippet": "Windows 10 version 1903, May 2019 Update, official demo with the 10 best new features, including Light mode, Windows Sandbox, ...",
+    "host_name": "www.youtube.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.tenforums.com/windows-10-news/132228-what-new-windows-10-may-2019-update-version-1903-a.html",
+    "name": "What is new for Windows 10 May 2019 Update version 1903",
+    "snippet": "Inspired by the Microsoft account homepage, the Settings home page now has a header at the top allowing you to take quick action for things ...",
+    "host_name": "www.tenforums.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/apps/develop/launch/launch-settings",
+    "name": "Launch Windows Settings - Windows apps - Microsoft Learn",
+    "snippet": "Learn how to launch Windows Settings from your Windows apps using the ms-settings URI scheme.",
+    "host_name": "learn.microsoft.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://superuser.com/questions/1272956/windows-10-removed-the-option-to-set-this-program-as-default",
+    "name": "Windows 10 removed the option to \"Set this program as default\" - Super User",
+    "snippet": "To see this new option, go to Settings > Apps > Default apps > “Set defaults by App”. Choose an app and click 'Manage' to see all the file types ...",
+    "host_name": "superuser.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]

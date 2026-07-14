@@ -1,0 +1,56 @@
+[
+  {
+    "url": "https://support.microsoft.com/en-us/windows/experience/personalization/customize-the-windows-start-menu",
+    "name": "Customize the Windows Start Menu | Microsoft Support",
+    "snippet": "There are different Customization options let you resize tiles, organize them into groups, and change the appearance of the Start menu to fit your preferences. ...",
+    "host_name": "support.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/win32/shell/desktop-app-tiles-on-the-start-screen",
+    "name": "Desktop App Tiles on the Start Screen - Win32 apps - Microsoft Learn",
+    "snippet": "You can customize two aspects of your desktop app tiles: the app name, and icon. The background color is derived from the user's chosen ...",
+    "host_name": "learn.microsoft.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=--MapmZK7lA",
+    "name": "Windows 10 - Personalization - Colors - YouTube",
+    "snippet": "In this tutorial, I go over Windows 10 Personalization options. I show how to put your PC into dark mode, I also show how to customize the ...",
+    "host_name": "www.youtube.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/customize-start-layout",
+    "name": "Customize the Start layout | Microsoft Learn",
+    "snippet": "OEMs can customize the Start layout by adding an OEM group of tiles to the end of the Start layout. The layout is customized by creating a LayoutModification. ...",
+    "host_name": "learn.microsoft.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=iJ1984r-aB4",
+    "name": "How to setup Windows 10 Tiles menu - YouTube",
+    "snippet": "Windows menu short-cuts. Add programs to your menu in Windows. Learn how to move tiles around, remove tiles, and add tiles.",
+    "host_name": "www.youtube.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/iot/iot-enterprise/customize/layout-control",
+    "name": "Layout Control | Microsoft Learn",
+    "snippet": "Configuring the taskbar layout allows an organization to pin useful apps and to remove apps that are pinned by default to provide a specified user experience.",
+    "host_name": "learn.microsoft.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  }
+]

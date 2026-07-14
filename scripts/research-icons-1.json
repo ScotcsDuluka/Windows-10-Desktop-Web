@@ -1,0 +1,56 @@
+[
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/apps/design/iconography/segoe-ui-symbol-font",
+    "name": "Segoe MDL2 Assets icons - Windows apps | Microsoft Learn",
+    "snippet": "This article provides developer guidelines for using the Segoe MDL2 Assets icons and lists the font glyphs along with their unicode values and ... About Segoe MDL2 Assets · Layering and mirroring",
+    "host_name": "learn.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/unoplatform/uno/discussions/6493",
+    "name": "Plan for new Segoe Fluent Icons · unoplatform uno · Discussion #6493",
+    "snippet": "The Segoe Fluent Icons seem to be replacing Segoe MDL2 Assets icons starting with Windows 11. Downloading these new Fluent icons here. Gives a EULA.",
+    "host_name": "github.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/apps/design/iconography/segoe-fluent-icons-font",
+    "name": "Segoe Fluent Icons font - Windows apps | Microsoft Learn",
+    "snippet": "On Windows 10: Segoe Fluent Icons is not included by default on Windows 10. You can download it from the Design resources page.",
+    "host_name": "learn.microsoft.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.reddit.com/r/Windows10/comments/vc7zg7/where_would_one_get_these_modern_settings_icons",
+    "name": "Where would one get these modern settings icons from? They look",
+    "snippet": "These are from the Segoe Fluent Icon pack, which comes bundled with Windows 11. You can download the pack here. Can I use Segoe MDL2 Assets font family for a commercial project? In Windows, Where can I find these icons? : r/Windows11 - Reddit More results from www.reddit.com",
+    "host_name": "www.reddit.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://forum.figma.com/ask-the-community-7/using-segoe-fluent-icons-11104",
+    "name": "Using Segoe Fluent Icons - Figma Forum",
+    "snippet": "Hi, How can I use the Segoe Fluent Icons in my designs? e.g. I need to add a “Home” icon to my list item: I can see the unicode points here.",
+    "host_name": "forum.figma.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://files.lmd.de/downloads/tutorials/fontimagelist/supported_fonts.htm",
+    "name": "LMD-Tools Font Image List Guide",
+    "snippet": "Segoe Fluent Icons is a new Windows 11 font, which provides updated round corner icons in Windows 11 style. It is not installed by default in Windows 10.",
+    "host_name": "files.lmd.de",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  }
+]

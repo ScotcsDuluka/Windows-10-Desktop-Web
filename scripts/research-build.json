@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://www.youtube.com/watch?v=eHvmN4cwDyI",
+    "name": "WINDOWS 10 OCTOBER 2018 UPDATE - YouTube",
+    "snippet": "Microsoft has just begun rolling out Windows 10 Version 1809, the feature update for October. While there are a few new features in this ...",
+    "host_name": "www.youtube.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/uwp/whats-new/windows-10-build-17763",
+    "name": "What's New in Windows 10, build 17763 - UWP applications",
+    "snippet": "Windows 10 build 17763 (also known as the October 2018 Update or version 1809), provide controls and other user interface elements for UWP apps ...",
+    "host_name": "learn.microsoft.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.windowscentral.com/whats-new-settings-app-windows-10-october-2018-update",
+    "name": "What's new with the Settings app in Windows 10 October 2018 Update",
+    "snippet": "In this Windows 10 guide, we'll dive deep into the new enhancements, changes, and tweaks available in the Settings app starting with the version 1809.",
+    "host_name": "www.windowscentral.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.tenforums.com/tutorials/78306-hide-show-pages-settings-windows-10-a.html",
+    "name": "Hide or Show Pages on Settings in Windows 10",
+    "snippet": "This tutorial will show you how to specify a list of Settings pages to show or hide for all users in Windows 10.",
+    "host_name": "www.tenforums.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.bleepingcomputer.com/news/microsoft/windows-10-1809-cumulative-update-released-with-huge-list-of-fixes",
+    "name": "Windows 10 1809 Cumulative Update Released with Huge List of Fixes",
+    "snippet": "Microsoft has finally released the latest cumulative update for Windows 10 build 1809 and with it comes a huge amount of fixes for open issues.",
+    "host_name": "www.bleepingcomputer.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
