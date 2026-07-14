@@ -406,18 +406,18 @@ const winBtnStyle: React.CSSProperties = {
 // Settings Content
 // ============================================================
 const SETTINGS_CATEGORIES = [
-  { id: 'System', icon: '🖥️' },
-  { id: 'Devices', icon: '🖱️' },
-  { id: 'Phone', icon: '📱' },
-  { id: 'Network & Internet', icon: '🌐' },
-  { id: 'Personalization', icon: '🎨' },
-  { id: 'Apps', icon: '📦' },
-  { id: 'Accounts', icon: '👤' },
-  { id: 'Time & Language', icon: '🕐' },
-  { id: 'Gaming', icon: '🎮' },
-  { id: 'Ease of Access', icon: '♿' },
-  { id: 'Privacy', icon: '🔒' },
-  { id: 'Update & Security', icon: '🔄' },
+  { id: 'System', icon: '🖥️', desc: 'Display, sound, notifications, power' },
+  { id: 'Devices', icon: '🖱️', desc: 'Bluetooth, printers, mouse' },
+  { id: 'Phone', icon: '📱', desc: 'Link your Android, iPhone' },
+  { id: 'Network & Internet', icon: '🌐', desc: 'Wi-Fi, airplane mode, VPN' },
+  { id: 'Personalization', icon: '🎨', desc: 'Background, lock screen, colors' },
+  { id: 'Apps', icon: '📦', desc: 'Uninstall, defaults, optional features' },
+  { id: 'Accounts', icon: '👤', desc: 'Your accounts, email, sync, work, family' },
+  { id: 'Time & Language', icon: '🕐', desc: 'Speech, region, date' },
+  { id: 'Gaming', icon: '🎮', desc: 'Xbox Game Bar, captures, Game Mode' },
+  { id: 'Ease of Access', icon: '♿', desc: 'Narrator, magnifier, high contrast' },
+  { id: 'Privacy', icon: '🔒', desc: 'Location, camera, microphone' },
+  { id: 'Update & Security', icon: '🔄', desc: 'Windows Update, recovery, backup' },
 ]
 
 // ============================================================
@@ -496,6 +496,7 @@ function SettingsContent({
   microphone: boolean; onToggleMicrophone: () => void
   backup: boolean; onToggleBackup: () => void
 }) {
+  const isHome = !category || category === ''
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0,
@@ -503,7 +504,6 @@ function SettingsContent({
       fontFamily: '"Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif',
     }}>
       {/* ====== Header (Win10 real) ====== */}
-      {/* สีพื้นโปร่งใส + border บาง + back button ซ้าย + profile ขวา + search ขวา */}
       <div
         style={{
           display: 'flex', alignItems: 'center', gap: 12,
@@ -511,21 +511,24 @@ function SettingsContent({
           borderBottom: '1px solid #e5e5e5', flexShrink: 0,
         }}
       >
-        {/* Back button (Win10 มี) */}
-        <button
-          aria-label="Back"
-          style={{
-            width: 32, height: 32, border: 'none', background: 'transparent',
-            cursor: 'default', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            borderRadius: 0, padding: 0,
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#e5e5e5' }}
-          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F1F1F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-        </button>
+        {/* Back button — ซ่อนตอนอยู่ Home */}
+        {!isHome && (
+          <button
+            aria-label="Back"
+            onClick={() => onCategoryChange('')}
+            style={{
+              width: 32, height: 32, border: 'none', background: 'transparent',
+              cursor: 'default', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              borderRadius: 0, padding: 0,
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#e5e5e5' }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F1F1F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+        )}
 
         {/* User profile circle (เล็กกว่าเดิม — 28px) */}
         <div
@@ -566,8 +569,60 @@ function SettingsContent({
         </div>
       </div>
 
-      {/* ====== Body: Sidebar + Content ====== */}
-      <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
+      {/* ====== Body: Home (grid) หรือ Sidebar + Content ====== */}
+      {isHome ? (
+        // ====== Home page — grid ของ category tiles (เหมือน Win10 จริง) ======
+        <div style={{
+          flex: 1, backgroundColor: '#fff', overflowY: 'auto',
+          padding: '40px 56px 32px', userSelect: 'none',
+        }}>
+          <h1 style={{
+            fontSize: 28, fontWeight: 600, margin: '0 0 32px 0',
+            lineHeight: '36px', color: '#1F1F1F',
+          }}>Windows Settings</h1>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '12px 24px',
+            maxWidth: 900,
+          }}>
+            {SETTINGS_CATEGORIES.map((c) => (
+              <div
+                key={c.id}
+                onClick={() => onCategoryChange(c.id)}
+                style={{
+                  display: 'flex', alignItems: 'flex-start', gap: 16,
+                  padding: '16px 20px',
+                  cursor: 'default',
+                  backgroundColor: 'transparent',
+                  border: '1px solid transparent',
+                  transition: 'all 83ms linear',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#f3f3f3'
+                  e.currentTarget.style.borderColor = '#e5e5e5'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                  e.currentTarget.style.borderColor = 'transparent'
+                }}
+              >
+                <span style={{ fontSize: 28, lineHeight: 1, flexShrink: 0 }}>{c.icon}</span>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: '#1F1F1F', lineHeight: '20px', marginBottom: 4 }}>
+                    {c.id}
+                  </div>
+                  <div style={{ fontSize: 12, color: '#767676', lineHeight: '16px' }}>
+                    {c.desc}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        // ====== Category page — Sidebar + Content ======
+        <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
         {/* Sidebar — Win10 จริง: 240px wide, no border-right, hover = light gray */}
         <div
           style={{
@@ -637,6 +692,7 @@ function SettingsContent({
           />
         </div>
       </div>
+      )}
     </div>
   )
 }
@@ -1608,7 +1664,7 @@ export default function Home() {
           >
             {app.id === 'settings' && (
               <SettingsContent
-                category={w.data?.category || 'System'}
+                category={w.data?.category || ''}
                 onCategoryChange={(c) => updateWindow(app.id, { data: { ...w.data, category: c } })}
                 tabletMode={tabletMode}
                 onToggleTabletMode={() => setTabletMode((v) => !v)}
