@@ -241,7 +241,7 @@ function AppWindow({
   let animOpacity = 1
   let animTranslateY = 0
   let easing = 'cubic-bezier(0, 0, 0, 1)'        // Direct Entrance / Exit (default)
-  let transformDuration = '250ms'                  // MS default entrance
+  let transformDuration = '150ms'                  // snappy entrance
   let opacityDuration = '83ms'                     // MS bare minimum fade
   let opacityDelay = '0ms'
 
@@ -253,34 +253,34 @@ function AppWindow({
     transformDuration = '0ms'
     opacityDuration = '0ms'
   } else if (state.closing) {
-    // Direct Exit (Fast-Out): scale 1→0.95 + fade 1→0, 167ms
+    // Direct Exit (Fast-Out): scale 1→0.95 + fade 1→0, 100ms (snappy)
     animScale = 0.95
     animOpacity = 0
     easing = 'cubic-bezier(0, 0, 0, 1)'
-    transformDuration = '167ms'
-    opacityDuration = '167ms'
+    transformDuration = '100ms'
+    opacityDuration = '100ms'
   } else if (state.minAnim) {
-    // Gentle Exit (Soft-Out): scale →0.85 + fade + translateY 20px, 167ms
-    animScale = 0.85
+    // Gentle Exit (Soft-Out): scale →0.9 + fade + translateY 12px, 100ms
+    animScale = 0.9
     animOpacity = 0
-    animTranslateY = 20
+    animTranslateY = 12
     easing = 'cubic-bezier(1, 0, 1, 1)'
-    transformDuration = '167ms'
-    opacityDuration = '167ms'
+    transformDuration = '100ms'
+    opacityDuration = '100ms'
   } else if (state.switchOut) {
-    // Switch out: scale 1→1.05 + fade 1→0, 167ms (subtle, not 1.2 which is too jarring)
-    animScale = 1.05
+    // Switch out: scale 1→1.03 + fade 1→0, 100ms
+    animScale = 1.03
     animOpacity = 0
     easing = 'cubic-bezier(0, 0, 0, 1)'
-    transformDuration = '167ms'
-    opacityDuration = '167ms'
+    transformDuration = '100ms'
+    opacityDuration = '100ms'
   } else if (localStarting) {
-    // Direct Entrance: scale 0.95→1 + fade 0→1, 250ms
-    animScale = 0.95
+    // Direct Entrance: scale 0.96→1 + fade 0→1, 150ms (snappy)
+    animScale = 0.96
     animOpacity = 0
     easing = 'cubic-bezier(0, 0, 0, 1)'
-    transformDuration = '250ms'
-    opacityDuration = '167ms'
+    transformDuration = '150ms'
+    opacityDuration = '100ms'
   }
 
   const animTransform = `translateY(${animTranslateY}px) scale(${animScale})`
@@ -297,8 +297,8 @@ function AppWindow({
         transform: animTransform, opacity: animOpacity,
         transformOrigin: 'center center',
         // MS Motion: transform/opacity ใช้ Direct Entrance/Exit easing
-        // position/size ใช้ Point-to-Point easing (cubic-bezier(0.55,0.55,0,1) 167ms)
-        transition: `transform ${transformDuration} ${easing}, opacity ${opacityDuration} ${easing} ${opacityDelay}, left 167ms cubic-bezier(0.55, 0.55, 0, 1), top 167ms cubic-bezier(0.55, 0.55, 0, 1), width 167ms cubic-bezier(0.55, 0.55, 0, 1), height 167ms cubic-bezier(0.55, 0.55, 0, 1)`,
+        // position/size ใช้ Point-to-Point easing 100ms (snappy)
+        transition: `transform ${transformDuration} ${easing}, opacity ${opacityDuration} ${easing} ${opacityDelay}, left 100ms cubic-bezier(0.55, 0.55, 0, 1), top 100ms cubic-bezier(0.55, 0.55, 0, 1), width 100ms cubic-bezier(0.55, 0.55, 0, 1), height 100ms cubic-bezier(0.55, 0.55, 0, 1)`,
         willChange: 'transform, opacity, left, top, width, height',
         userSelect: 'none',
       }}
@@ -1124,9 +1124,9 @@ export default function Home() {
       return next
     })
 
-    // MS Motion specs: 167ms entrance, 167ms exit, 250ms switch
-    // ตั้งเผื่อไว้ 350ms
-    setTrackedTimeout(() => { isAnimatingRef.current = false }, 350)
+    // Snappy: 150ms entrance, 100ms exit
+    // ตั้งเผื่อไว้ 200ms
+    setTrackedTimeout(() => { isAnimatingRef.current = false }, 200)
 
     if (w.open && !w.minimized) {
       // เปิดอยู่ → ไม่ทำอะไร
@@ -1150,18 +1150,18 @@ export default function Home() {
             next[id] = { ...next[id], switchIn: false }
             return next
           })
-        }, 250)
+        }, 150)
       } else {
-        // restore ปกติ — Direct Entrance 250ms
+        // restore ปกติ — Direct Entrance 150ms
         updateWindow(id, { minimized: false, opening: true, focused: true })
-        setTrackedTimeout(() => updateWindow(id, { opening: false }), 250)
+        setTrackedTimeout(() => updateWindow(id, { opening: false }), 150)
       }
     } else {
       // ปิด → เปิดใหม่
       const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
 
       if (otherOpenIds.length > 0) {
-        // Switch — crossfade พร้อมกัน 250ms (MS Direct Entrance)
+        // Switch — crossfade พร้อมกัน 150ms (snappy)
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
@@ -1175,11 +1175,11 @@ export default function Home() {
             next[id] = { ...next[id], switchIn: false }
             return next
           })
-        }, 250)
+        }, 150)
       } else {
-        // Open ปกติ — Direct Entrance 250ms
+        // Open ปกติ — Direct Entrance 150ms
         updateWindow(id, { open: true, minimized: false, opening: true, focused: true })
-        setTrackedTimeout(() => updateWindow(id, { opening: false }), 250)
+        setTrackedTimeout(() => updateWindow(id, { opening: false }), 150)
       }
     }
   }, [windows, updateWindow, clearAllAnimTimeouts, setTrackedTimeout])
@@ -1188,18 +1188,18 @@ export default function Home() {
     clearAllAnimTimeouts()
     isAnimatingRef.current = true
     updateWindow(id, { closing: true, focused: false })
-    // MS Direct Exit: 167ms
+    // Snappy Direct Exit: 100ms
     setTrackedTimeout(() => {
       // reset state เมื่อปิดแอป (data หายไป กลับเป็นค่า default)
       updateWindow(id, { open: false, closing: false, data: {} })
       isAnimatingRef.current = false
-    }, 167)
+    }, 100)
   }, [updateWindow, clearAllAnimTimeouts, setTrackedTimeout])
 
   const minimizeApp = useCallback((id: string) => {
     updateWindow(id, { minAnim: true, focused: false })
-    // MS Gentle Exit: 167ms
-    setTrackedTimeout(() => updateWindow(id, { minimized: true, minAnim: false }), 167)
+    // Snappy Gentle Exit: 100ms
+    setTrackedTimeout(() => updateWindow(id, { minimized: true, minAnim: false }), 100)
   }, [updateWindow, setTrackedTimeout])
 
   const maximizeApp = useCallback((id: string) => {
@@ -1295,12 +1295,12 @@ export default function Home() {
     return () => clearInterval(t)
   }, [])
 
-  // ====== Tablet Mode toggle พร้อม animation ======
+  // ====== Tablet Mode toggle พร้อม animation (เบา/snappy) ======
   const toggleTabletMode = useCallback(() => {
     setTabletModeAnimating(true)
     setTabletMode((v) => !v)
-    // หลัง animation จบ (333ms = MS strong entrance duration)
-    window.setTimeout(() => setTabletModeAnimating(false), 333)
+    // 150ms — เบาและเร็ว
+    window.setTimeout(() => setTabletModeAnimating(false), 150)
   }, [])
 
   // ====== Swipe gestures (tablet mode only — ตาม Microsoft specs) ======
@@ -1464,14 +1464,14 @@ export default function Home() {
       }}
     >
       {/* ====== Tablet Mode transition overlay ====== */}
-      {/* เมื่อ toggle tablet mode → fade overlay สั้น ๆ พร้อม scale windows */}
+      {/* เบา: opacity 0.05 + 150ms เท่านั้น */}
       {tabletModeAnimating && (
         <div
           style={{
             position: 'absolute', inset: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.15)',
+            backgroundColor: 'rgba(0, 0, 0, 0.05)',
             zIndex: 9999, pointerEvents: 'none',
-            animation: 'msTabletModeTransition 333ms cubic-bezier(0.85, 0, 0, 1)',
+            animation: 'msTabletModeTransition 150ms ease-out',
           }}
         />
       )}
@@ -2028,11 +2028,11 @@ export default function Home() {
           from { opacity: 0; }
           to   { opacity: 1; }
         }
-        /* Tablet Mode transition — 333ms fade + scale */
+        /* Tablet Mode transition — 150ms light fade */
         @keyframes msTabletModeTransition {
-          0%   { opacity: 0; transform: scale(1); }
-          30%  { opacity: 1; transform: scale(1); }
-          100% { opacity: 0; transform: scale(1); }
+          0%   { opacity: 0; }
+          50%  { opacity: 1; }
+          100% { opacity: 0; }
         }
         /* Swipe gesture visual feedback — subtle glow at edge */
         @keyframes msSwipeHint {
