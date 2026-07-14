@@ -286,6 +286,10 @@ function AppWindow({
   const opacityDelay = `${opacityDelayMs}ms`
   // Easing: ease-out-expo (เร็ว→ช้า) — default สำหรับทุกแอป
   const easing = 'cubic-bezier(0.16, 1, 0.3, 1)'
+  // Easing พิเศษ: App 1 (แอปเก่า) ตอน switchOut zoom → ease-in-cubic (ช้า→เร็ว)
+  const transformEasing = state.switchOut
+    ? 'cubic-bezier(0.55, 0.055, 0.675, 0.19)'
+    : easing
   const posDuration = `${duration}ms`
 
   return (
@@ -299,7 +303,7 @@ function AppWindow({
         fontFamily: 'Segoe UI, sans-serif', overflow: 'hidden',
         transform: animTransform, opacity: animOpacity,
         transformOrigin: 'center center',
-        transition: `transform ${transformDuration} ${easing}, opacity ${opacityDuration} ${easing} ${opacityDelay}, left ${posDuration} ${easing}, top ${posDuration} ${easing}, width ${posDuration} ${easing}, height ${posDuration} ${easing}`,
+        transition: `transform ${transformDuration} ${transformEasing}, opacity ${opacityDuration} ${easing} ${opacityDelay}, left ${posDuration} ${easing}, top ${posDuration} ${easing}, width ${posDuration} ${easing}, height ${posDuration} ${easing}`,
         willChange: 'transform, opacity, left, top, width, height',
         userSelect: 'none',
       }}
