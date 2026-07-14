@@ -47,6 +47,7 @@ interface AppDef {
   defaultSize: { w: number; h: number }
   defaultPosition: { x: number; y: number }
   pinned: boolean  // แสดงใน taskbar เสมอ แม้ปิด
+  animDuration?: number  // ms — default 600
 }
 
 const APPS: AppDef[] = [
@@ -85,6 +86,7 @@ const APPS: AppDef[] = [
     defaultSize: { w: 480, h: 360 },
     defaultPosition: { x: 150, y: 100 },
     pinned: true,
+    animDuration: 400,
   },
   {
     id: 'app2',
@@ -94,6 +96,7 @@ const APPS: AppDef[] = [
     defaultSize: { w: 480, h: 360 },
     defaultPosition: { x: 250, y: 140 },
     pinned: true,
+    animDuration: 600,
   },
   // เพิ่มแอปใหม่ตรงนี้
 ]
@@ -208,6 +211,7 @@ function AppWindow({
   onMinimize, onMaximize, onClose, onFocus,
   onDragStart, onDragMove, onDragEnd,
   onResizeStart, onResizeMove, onResizeEnd,
+  animDuration = 600,
   children,
 }: {
   state: WindowState
@@ -223,6 +227,7 @@ function AppWindow({
   onResizeStart: (edge: string, e: React.MouseEvent) => void
   onResizeMove: (e: React.MouseEvent) => void
   onResizeEnd: () => void
+  animDuration?: number
   children: React.ReactNode
 }) {
   // tablet mode = maximize
@@ -276,11 +281,12 @@ function AppWindow({
 
   const animTransform = `scale(${animScale})`
 
-  // ทุกอย่าง 600ms ease-out-expo (เร็ว→ช้า นุ่ม ๆ)
-  const transformDuration = '600ms'
-  const opacityDuration = '600ms'
+  // ทุกอย่างใช้ animDuration (default 600ms) ease-out-expo (เร็ว→ช้า นุ่ม ๆ)
+  const transformDuration = `${animDuration}ms`
+  const opacityDuration = `${animDuration}ms`
   const opacityDelay = '0ms'
   const easing = 'cubic-bezier(0.16, 1, 0.3, 1)'
+  const posDuration = `${animDuration}ms`
 
   return (
     <div
@@ -293,7 +299,7 @@ function AppWindow({
         fontFamily: 'Segoe UI, sans-serif', overflow: 'hidden',
         transform: animTransform, opacity: animOpacity,
         transformOrigin: 'center center',
-        transition: `transform ${transformDuration} ${easing}, opacity ${opacityDuration} ${easing} ${opacityDelay}, left 600ms cubic-bezier(0.16, 1, 0.3, 1), top 600ms cubic-bezier(0.16, 1, 0.3, 1), width 600ms cubic-bezier(0.16, 1, 0.3, 1), height 600ms cubic-bezier(0.16, 1, 0.3, 1)`,
+        transition: `transform ${transformDuration} ${easing}, opacity ${opacityDuration} ${easing} ${opacityDelay}, left ${posDuration} cubic-bezier(0.16, 1, 0.3, 1), top ${posDuration} cubic-bezier(0.16, 1, 0.3, 1), width ${posDuration} cubic-bezier(0.16, 1, 0.3, 1), height ${posDuration} cubic-bezier(0.16, 1, 0.3, 1)`,
         willChange: 'transform, opacity, left, top, width, height',
         userSelect: 'none',
       }}
@@ -1321,6 +1327,7 @@ export default function Home() {
             onResizeStart={(edge, e) => onResizeStart(app.id, edge, e)}
             onResizeMove={() => {}}
             onResizeEnd={() => { resizeRef.current = null }}
+            animDuration={app.animDuration}
           >
             {app.id === 'settings' && (
               <SettingsContent
