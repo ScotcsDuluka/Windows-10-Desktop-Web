@@ -457,6 +457,13 @@ function SettingsContent({
   wallpaper, onWallpaperChange, brightness, onBrightnessChange,
   volume, onVolumeChange, nightLight, onToggleNightLight,
   autoTime, onToggleAutoTime, darkMode, onToggleDarkMode,
+  wifi, onToggleWifi, bluetooth, onToggleBluetooth,
+  airplane, onToggleAirplane, mobileHotspot, onToggleMobileHotspot,
+  touchpad, onToggleTouchpad, typing, onToggleTyping,
+  gameBar, onToggleGameBar, gameMode, onToggleGameMode,
+  magnifier, onToggleMagnifier, highContrast, onToggleHighContrast,
+  location, onToggleLocation, camera, onToggleCamera, microphone, onToggleMicrophone,
+  backup, onToggleBackup,
 }: {
   category: string
   onCategoryChange: (c: string) => void
@@ -474,6 +481,20 @@ function SettingsContent({
   onToggleAutoTime: () => void
   darkMode: boolean
   onToggleDarkMode: () => void
+  wifi: boolean; onToggleWifi: () => void
+  bluetooth: boolean; onToggleBluetooth: () => void
+  airplane: boolean; onToggleAirplane: () => void
+  mobileHotspot: boolean; onToggleMobileHotspot: () => void
+  touchpad: boolean; onToggleTouchpad: () => void
+  typing: boolean; onToggleTyping: () => void
+  gameBar: boolean; onToggleGameBar: () => void
+  gameMode: boolean; onToggleGameMode: () => void
+  magnifier: boolean; onToggleMagnifier: () => void
+  highContrast: boolean; onToggleHighContrast: () => void
+  location: boolean; onToggleLocation: () => void
+  camera: boolean; onToggleCamera: () => void
+  microphone: boolean; onToggleMicrophone: () => void
+  backup: boolean; onToggleBackup: () => void
 }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, backgroundColor: '#f3f3f3' }}>
@@ -575,6 +596,20 @@ function SettingsContent({
             onToggleAutoTime={onToggleAutoTime}
             darkMode={darkMode}
             onToggleDarkMode={onToggleDarkMode}
+            wifi={wifi} onToggleWifi={onToggleWifi}
+            bluetooth={bluetooth} onToggleBluetooth={onToggleBluetooth}
+            airplane={airplane} onToggleAirplane={onToggleAirplane}
+            mobileHotspot={mobileHotspot} onToggleMobileHotspot={onToggleMobileHotspot}
+            touchpad={touchpad} onToggleTouchpad={onToggleTouchpad}
+            typing={typing} onToggleTyping={onToggleTyping}
+            gameBar={gameBar} onToggleGameBar={onToggleGameBar}
+            gameMode={gameMode} onToggleGameMode={onToggleGameMode}
+            magnifier={magnifier} onToggleMagnifier={onToggleMagnifier}
+            highContrast={highContrast} onToggleHighContrast={onToggleHighContrast}
+            location={location} onToggleLocation={onToggleLocation}
+            camera={camera} onToggleCamera={onToggleCamera}
+            microphone={microphone} onToggleMicrophone={onToggleMicrophone}
+            backup={backup} onToggleBackup={onToggleBackup}
           />
         </div>
       </div>
@@ -601,6 +636,20 @@ function SettingsPage(props: {
   onToggleAutoTime: () => void
   darkMode: boolean
   onToggleDarkMode: () => void
+  wifi: boolean; onToggleWifi: () => void
+  bluetooth: boolean; onToggleBluetooth: () => void
+  airplane: boolean; onToggleAirplane: () => void
+  mobileHotspot: boolean; onToggleMobileHotspot: () => void
+  touchpad: boolean; onToggleTouchpad: () => void
+  typing: boolean; onToggleTyping: () => void
+  gameBar: boolean; onToggleGameBar: () => void
+  gameMode: boolean; onToggleGameMode: () => void
+  magnifier: boolean; onToggleMagnifier: () => void
+  highContrast: boolean; onToggleHighContrast: () => void
+  location: boolean; onToggleLocation: () => void
+  camera: boolean; onToggleCamera: () => void
+  microphone: boolean; onToggleMicrophone: () => void
+  backup: boolean; onToggleBackup: () => void
 }) {
   const rowStyle: React.CSSProperties = {
     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -702,77 +751,236 @@ function SettingsPage(props: {
     )
   }
 
-  // Default: หมวดอื่น ๆ (UI เฉย ๆ)
+  // ====== Devices ======
+  if (props.category === 'Devices') {
+    return (
+      <>
+        <h1 style={{ fontSize: 24, fontWeight: 400, margin: '0 0 24px 0' }}>Devices</h1>
+        <Row icon="🔵" title="Bluetooth & other devices" desc="Mouse, keyboard, pen, audio">
+          <ToggleSwitch on={props.bluetooth} onToggle={props.onToggleBluetooth} />
+        </Row>
+        <Row icon="🖨️" title="Printers & scanners" desc="Printers, scanners, fax">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Add</span>
+        </Row>
+        <Row icon="🖱️" title="Mouse" desc="Buttons, wheel, pointer">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+        </Row>
+        <Row icon="✋" title="Touchpad" desc="Gestures, sensitivity">
+          <ToggleSwitch on={props.touchpad} onToggle={props.onToggleTouchpad} />
+        </Row>
+        <Row icon="⌨️" title="Typing" desc="Autocorrect, suggestions">
+          <ToggleSwitch on={props.typing} onToggle={props.onToggleTyping} />
+        </Row>
+      </>
+    )
+  }
+
+  // ====== Phone ======
+  if (props.category === 'Phone') {
+    return (
+      <>
+        <h1 style={{ fontSize: 24, fontWeight: 400, margin: '0 0 24px 0' }}>Phone</h1>
+        <div style={{ fontSize: 13, color: '#666', marginBottom: 24, lineHeight: 1.6 }}>
+          Link your Android, iPhone, or other phone to your PC. Make calls, read texts, view photos, and more — right on your desktop.
+        </div>
+        <Row icon="📱" title="Your Phone" desc="Link your Android, iPhone">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Add a phone</span>
+        </Row>
+        <Row icon="📞" title="Calls" desc="Make and receive calls from your PC">
+          <ToggleSwitch defaultOn />
+        </Row>
+        <Row icon="💬" title="Messages" desc="Send and receive SMS">
+          <ToggleSwitch defaultOn />
+        </Row>
+        <Row icon="🖼️" title="Photos" desc="View phone photos on PC">
+          <ToggleSwitch defaultOn />
+        </Row>
+      </>
+    )
+  }
+
+  // ====== Network & Internet ======
+  if (props.category === 'Network & Internet') {
+    return (
+      <>
+        <h1 style={{ fontSize: 24, fontWeight: 400, margin: '0 0 24px 0' }}>Network & Internet</h1>
+        <Row icon="📶" title="Wi-Fi" desc="Connect, manage networks">
+          <ToggleSwitch on={props.wifi} onToggle={props.onToggleWifi} />
+        </Row>
+        <Row icon="🔌" title="Ethernet" desc="Authentication, IP, DNS">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+        </Row>
+        <Row icon="🔒" title="VPN" desc="Add, connect, manage">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Add</span>
+        </Row>
+        <Row icon="📡" title="Mobile hotspot" desc="Share your connection">
+          <ToggleSwitch on={props.mobileHotspot} onToggle={props.onToggleMobileHotspot} />
+        </Row>
+        <Row icon="✈️" title="Airplane mode" desc="Stop all wireless communication">
+          <ToggleSwitch on={props.airplane} onToggle={props.onToggleAirplane} />
+        </Row>
+        <Row icon="🌐" title="Proxy" desc="Proxy server settings">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+        </Row>
+      </>
+    )
+  }
+
+  // ====== Apps ======
+  if (props.category === 'Apps') {
+    return (
+      <>
+        <h1 style={{ fontSize: 24, fontWeight: 400, margin: '0 0 24px 0' }}>Apps</h1>
+        <Row icon="📦" title="Apps & features" desc="Uninstall, change, repair">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Manage</span>
+        </Row>
+        <Row icon="⭐" title="Default apps" desc="Defaults for email, maps, music">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+        </Row>
+        <Row icon="🔧" title="Optional features" desc="Install, uninstall features">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Add</span>
+        </Row>
+        <Row icon="🚀" title="Startup" desc="Apps that start automatically">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Manage</span>
+        </Row>
+      </>
+    )
+  }
+
+  // ====== Accounts ======
+  if (props.category === 'Accounts') {
+    return (
+      <>
+        <h1 style={{ fontSize: 24, fontWeight: 400, margin: '0 0 24px 0' }}>Accounts</h1>
+        <Row icon="👤" title="Your info" desc="Account name, picture, settings">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Manage</span>
+        </Row>
+        <Row icon="📧" title="Email & accounts" desc="Email, calendar, contacts">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Add</span>
+        </Row>
+        <Row icon="🔐" title="Sign-in options" desc="Windows Hello, password, PIN">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+        </Row>
+        <Row icon="👨‍👩‍👧" title="Family & other users" desc="Add, remove accounts">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Add</span>
+        </Row>
+        <Row icon="🔄" title="Sync your settings" desc="Sync across devices">
+          <ToggleSwitch defaultOn />
+        </Row>
+      </>
+    )
+  }
+
+  // ====== Gaming ======
+  if (props.category === 'Gaming') {
+    return (
+      <>
+        <h1 style={{ fontSize: 24, fontWeight: 400, margin: '0 0 24px 0' }}>Gaming</h1>
+        <Row icon="🎮" title="Game bar" desc="Open, capture, broadcast">
+          <ToggleSwitch on={props.gameBar} onToggle={props.onToggleGameBar} />
+        </Row>
+        <Row icon="🎥" title="Captures" desc="Recording, audio quality">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+        </Row>
+        <Row icon="⚡" title="Game Mode" desc="Optimize PC for play">
+          <ToggleSwitch on={props.gameMode} onToggle={props.onToggleGameMode} />
+        </Row>
+        <Row icon="🖥️" title="Game bar settings" desc="Customize shortcuts, layout">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+        </Row>
+      </>
+    )
+  }
+
+  // ====== Ease of Access ======
+  if (props.category === 'Ease of Access') {
+    return (
+      <>
+        <h1 style={{ fontSize: 24, fontWeight: 400, margin: '0 0 24px 0' }}>Ease of Access</h1>
+        <Row icon="🖥️" title="Display" desc="Text size, zoom, magnifier">
+          <ToggleSwitch on={props.magnifier} onToggle={props.onToggleMagnifier} />
+        </Row>
+        <Row icon="🖱️" title="Cursor & pointer" desc="Size, color, thickness">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+        </Row>
+        <Row icon="🔍" title="Magnifier" desc="Zoom part or all of screen">
+          <ToggleSwitch on={props.magnifier} onToggle={props.onToggleMagnifier} />
+        </Row>
+        <Row icon="🎨" title="High contrast" desc="Theme for readability">
+          <ToggleSwitch on={props.highContrast} onToggle={props.onToggleHighContrast} />
+        </Row>
+        <Row icon="🔊" title="Audio" desc="Closed captions, mono">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+        </Row>
+      </>
+    )
+  }
+
+  // ====== Privacy ======
+  if (props.category === 'Privacy') {
+    return (
+      <>
+        <h1 style={{ fontSize: 24, fontWeight: 400, margin: '0 0 24px 0' }}>Privacy</h1>
+        <Row icon="⚙️" title="General" desc="General privacy settings">
+          <ToggleSwitch defaultOn={false} />
+        </Row>
+        <Row icon="📍" title="Location" desc="App access to location">
+          <ToggleSwitch on={props.location} onToggle={props.onToggleLocation} />
+        </Row>
+        <Row icon="📷" title="Camera" desc="App access to camera">
+          <ToggleSwitch on={props.camera} onToggle={props.onToggleCamera} />
+        </Row>
+        <Row icon="🎤" title="Microphone" desc="App access to microphone">
+          <ToggleSwitch on={props.microphone} onToggle={props.onToggleMicrophone} />
+        </Row>
+        <Row icon="🔔" title="Notifications" desc="App access to notifications">
+          <ToggleSwitch defaultOn />
+        </Row>
+        <Row icon="📊" title="Account info" desc="App access to account info">
+          <ToggleSwitch defaultOn={false} />
+        </Row>
+      </>
+    )
+  }
+
+  // ====== Update & Security ======
+  if (props.category === 'Update & Security') {
+    return (
+      <>
+        <h1 style={{ fontSize: 24, fontWeight: 400, margin: '0 0 24px 0' }}>Update & Security</h1>
+        <Row icon="🔄" title="Windows Update" desc="Check for updates, history">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Check for updates</span>
+        </Row>
+        <Row icon="🛡️" title="Windows Security" desc="Antivirus, firewall, browser">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Open</span>
+        </Row>
+        <Row icon="💾" title="Backup" desc="File History, restore files">
+          <ToggleSwitch on={props.backup} onToggle={props.onToggleBackup} />
+        </Row>
+        <Row icon="🔧" title="Troubleshoot" desc="Resolve problems">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Run</span>
+        </Row>
+        <Row icon="↩️" title="Recovery" desc="Reset, restore, advanced startup">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+        </Row>
+        <Row icon="🔐" title="Device security" desc="Security processor, isolation">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>View</span>
+        </Row>
+      </>
+    )
+  }
+
+  // Fallback (ไม่ควรถึง)
   return (
     <>
       <h1 style={{ fontSize: 24, fontWeight: 400, margin: '0 0 24px 0' }}>{props.category}</h1>
       <div style={{ fontSize: 13, color: '#666', marginBottom: 24, lineHeight: 1.6 }}>
         This is the {props.category} settings page.
       </div>
-      {(SETTING_ROWS[props.category] || []).map((row, i) => (
-        <Row key={i} icon="⚙️" title={row.title} desc={row.desc}>
-          {row.type === 'toggle' ? <ToggleSwitch defaultOn={row.defaultOn} /> : <span style={{ fontSize: 12, color: '#0078D7' }}>{row.action || 'Configure'}</span>}
-        </Row>
-      ))}
     </>
   )
 }
 
-const SETTING_ROWS: Record<string, { title: string; desc: string; type?: 'toggle'; defaultOn?: boolean; action?: string }[]> = {
-  Devices: [
-    { title: 'Bluetooth & other devices', desc: 'Mouse, keyboard, pen, audio', action: 'Add' },
-    { title: 'Printers & scanners', desc: 'Printers, scanners, fax', action: 'Add' },
-    { title: 'Mouse', desc: 'Buttons, wheel, pointer', action: 'Configure' },
-    { title: 'Touchpad', desc: 'Gestures, sensitivity', type: 'toggle', defaultOn: true },
-    { title: 'Typing', desc: 'Autocorrect, suggestions', type: 'toggle', defaultOn: true },
-  ],
-  Phone: [
-    { title: 'Your Phone', desc: 'Link your Android, iPhone', action: 'Add' },
-  ],
-  'Network & Internet': [
-    { title: 'Wi-Fi', desc: 'Connect, manage networks', type: 'toggle', defaultOn: true },
-    { title: 'Ethernet', desc: 'Authentication, IP, DNS', action: 'Configure' },
-    { title: 'VPN', desc: 'Add, connect, manage', action: 'Add' },
-    { title: 'Mobile hotspot', desc: 'Share connection', type: 'toggle', defaultOn: false },
-    { title: 'Airplane mode', desc: 'Stop wireless communication', type: 'toggle', defaultOn: false },
-  ],
-  Apps: [
-    { title: 'Apps & features', desc: 'Uninstall, defaults', action: 'Manage' },
-    { title: 'Default apps', desc: 'Defaults for email, maps', action: 'Configure' },
-    { title: 'Optional features', desc: 'Install, uninstall', action: 'Add' },
-    { title: 'Startup', desc: 'Apps that start automatically', type: 'toggle', defaultOn: false },
-  ],
-  Accounts: [
-    { title: 'Your info', desc: 'Account name, picture', action: 'Manage' },
-    { title: 'Email & accounts', desc: 'Email, calendar, contacts', action: 'Add' },
-    { title: 'Sign-in options', desc: 'Windows Hello, password, PIN', action: 'Configure' },
-    { title: 'Family & other users', desc: 'Add, remove accounts', action: 'Add' },
-  ],
-  Gaming: [
-    { title: 'Game bar', desc: 'Open, capture, broadcast', type: 'toggle', defaultOn: true },
-    { title: 'Captures', desc: 'Recording, audio quality', action: 'Configure' },
-    { title: 'Game Mode', desc: 'Optimize PC for play', type: 'toggle', defaultOn: true },
-  ],
-  'Ease of Access': [
-    { title: 'Display', desc: 'Text size, zoom', action: 'Configure' },
-    { title: 'Cursor & pointer', desc: 'Size, color, thickness', action: 'Configure' },
-    { title: 'Magnifier', desc: 'Zoom part of screen', type: 'toggle', defaultOn: false },
-    { title: 'High contrast', desc: 'Theme for readability', type: 'toggle', defaultOn: false },
-  ],
-  Privacy: [
-    { title: 'General', desc: 'General privacy settings', type: 'toggle', defaultOn: false },
-    { title: 'Location', desc: 'App access to location', type: 'toggle', defaultOn: true },
-    { title: 'Camera', desc: 'App access to camera', type: 'toggle', defaultOn: true },
-    { title: 'Microphone', desc: 'App access to microphone', type: 'toggle', defaultOn: true },
-  ],
-  'Update & Security': [
-    { title: 'Windows Update', desc: 'Check for updates', action: 'Check' },
-    { title: 'Windows Security', desc: 'Antivirus, firewall', action: 'Open' },
-    { title: 'Backup', desc: 'File History, restore', type: 'toggle', defaultOn: false },
-    { title: 'Troubleshoot', desc: 'Resolve problems', action: 'Run' },
-    { title: 'Recovery', desc: 'Reset, restore, advanced startup', action: 'Configure' },
-  ],
-}
 
 // ============================================================
 // Notepad Content
@@ -959,6 +1167,22 @@ export default function Home() {
   const [nightLight, setNightLight] = useState(false)
   const [autoTime, setAutoTime] = useState(true)
   const [darkMode, setDarkMode] = useState(false)
+
+  // ====== Settings toggles (ใช้งานได้จริง) ======
+  const [wifi, setWifi] = useState(true)
+  const [bluetooth, setBluetooth] = useState(false)
+  const [airplane, setAirplane] = useState(false)
+  const [mobileHotspot, setMobileHotspot] = useState(false)
+  const [touchpad, setTouchpad] = useState(true)
+  const [typing, setTyping] = useState(true)
+  const [gameBar, setGameBar] = useState(true)
+  const [gameMode, setGameMode] = useState(true)
+  const [magnifier, setMagnifier] = useState(false)
+  const [highContrast, setHighContrast] = useState(false)
+  const [location, setLocation] = useState(true)
+  const [camera, setCamera] = useState(true)
+  const [microphone, setMicrophone] = useState(true)
+  const [backup, setBackup] = useState(false)
 
   // Windows state (window manager)
   const [windows, setWindows] = useState<Record<string, WindowState>>(() => {
@@ -1371,6 +1595,20 @@ export default function Home() {
                 onToggleAutoTime={() => setAutoTime((v) => !v)}
                 darkMode={darkMode}
                 onToggleDarkMode={() => setDarkMode((v) => !v)}
+                wifi={wifi} onToggleWifi={() => setWifi((v) => !v)}
+                bluetooth={bluetooth} onToggleBluetooth={() => setBluetooth((v) => !v)}
+                airplane={airplane} onToggleAirplane={() => setAirplane((v) => !v)}
+                mobileHotspot={mobileHotspot} onToggleMobileHotspot={() => setMobileHotspot((v) => !v)}
+                touchpad={touchpad} onToggleTouchpad={() => setTouchpad((v) => !v)}
+                typing={typing} onToggleTyping={() => setTyping((v) => !v)}
+                gameBar={gameBar} onToggleGameBar={() => setGameBar((v) => !v)}
+                gameMode={gameMode} onToggleGameMode={() => setGameMode((v) => !v)}
+                magnifier={magnifier} onToggleMagnifier={() => setMagnifier((v) => !v)}
+                highContrast={highContrast} onToggleHighContrast={() => setHighContrast((v) => !v)}
+                location={location} onToggleLocation={() => setLocation((v) => !v)}
+                camera={camera} onToggleCamera={() => setCamera((v) => !v)}
+                microphone={microphone} onToggleMicrophone={() => setMicrophone((v) => !v)}
+                backup={backup} onToggleBackup={() => setBackup((v) => !v)}
               />
             )}
             {app.id === 'notepad' && (
