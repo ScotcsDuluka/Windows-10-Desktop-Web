@@ -276,9 +276,9 @@ function AppWindow({
 
   const animTransform = `scale(${animScale})`
 
-  // ทุกอย่าง 400ms ease-out-expo (เร็ว→ช้า นุ่ม ๆ)
-  const transformDuration = '400ms'
-  const opacityDuration = '400ms'
+  // ทุกอย่าง 600ms ease-out-expo (เร็ว→ช้า นุ่ม ๆ)
+  const transformDuration = '600ms'
+  const opacityDuration = '600ms'
   const opacityDelay = '0ms'
   const easing = 'cubic-bezier(0.16, 1, 0.3, 1)'
 
@@ -293,7 +293,7 @@ function AppWindow({
         fontFamily: 'Segoe UI, sans-serif', overflow: 'hidden',
         transform: animTransform, opacity: animOpacity,
         transformOrigin: 'center center',
-        transition: `transform ${transformDuration} ${easing}, opacity ${opacityDuration} ${easing} ${opacityDelay}, left 400ms cubic-bezier(0.16, 1, 0.3, 1), top 400ms cubic-bezier(0.16, 1, 0.3, 1), width 400ms cubic-bezier(0.16, 1, 0.3, 1), height 400ms cubic-bezier(0.16, 1, 0.3, 1)`,
+        transition: `transform ${transformDuration} ${easing}, opacity ${opacityDuration} ${easing} ${opacityDelay}, left 600ms cubic-bezier(0.16, 1, 0.3, 1), top 600ms cubic-bezier(0.16, 1, 0.3, 1), width 600ms cubic-bezier(0.16, 1, 0.3, 1), height 600ms cubic-bezier(0.16, 1, 0.3, 1)`,
         willChange: 'transform, opacity, left, top, width, height',
         userSelect: 'none',
       }}
@@ -1037,8 +1037,8 @@ export default function Home() {
       return next
     })
 
-    // unlock หลัง animation จบ (400ms)
-    setTrackedTimeout(() => { isAnimatingRef.current = false }, 450)
+    // unlock หลัง animation จบ (600ms)
+    setTrackedTimeout(() => { isAnimatingRef.current = false }, 650)
 
     if (w.open && !w.minimized) {
       // เปิดอยู่ → ไม่ทำอะไร
@@ -1048,7 +1048,7 @@ export default function Home() {
       // minimized → restore + minimize แอปอื่นที่เปิดอยู่
       const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
       if (otherOpenIds.length > 0) {
-        // Switch — crossfade พร้อมกัน 400ms
+        // Switch — crossfade พร้อมกัน 600ms
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
@@ -1062,18 +1062,18 @@ export default function Home() {
             next[id] = { ...next[id], switchIn: false }
             return next
           })
-        }, 400)
+        }, 600)
       } else {
         // restore ปกติ
         updateWindow(id, { minimized: false, opening: true, focused: true })
-        setTrackedTimeout(() => updateWindow(id, { opening: false }), 400)
+        setTrackedTimeout(() => updateWindow(id, { opening: false }), 600)
       }
     } else {
       // ปิด → เปิดใหม่
       const otherOpenIds = Object.keys(windows).filter((k) => k !== id && windows[k].open && !windows[k].minimized)
 
       if (otherOpenIds.length > 0) {
-        // Switch — crossfade พร้อมกัน 400ms
+        // Switch — crossfade พร้อมกัน 600ms
         setWindows((prev) => {
           const next = { ...prev }
           otherOpenIds.forEach((k) => { next[k] = { ...next[k], switchOut: true, focused: false } })
@@ -1087,11 +1087,11 @@ export default function Home() {
             next[id] = { ...next[id], switchIn: false }
             return next
           })
-        }, 400)
+        }, 600)
       } else {
         // Open ปกติ
         updateWindow(id, { open: true, minimized: false, opening: true, focused: true })
-        setTrackedTimeout(() => updateWindow(id, { opening: false }), 400)
+        setTrackedTimeout(() => updateWindow(id, { opening: false }), 600)
       }
     }
   }, [windows, updateWindow, clearAllAnimTimeouts, setTrackedTimeout])
@@ -1104,12 +1104,12 @@ export default function Home() {
       // reset state เมื่อปิดแอป (data หายไป กลับเป็นค่า default)
       updateWindow(id, { open: false, closing: false, data: {} })
       isAnimatingRef.current = false
-    }, 400)
+    }, 600)
   }, [updateWindow, clearAllAnimTimeouts, setTrackedTimeout])
 
   const minimizeApp = useCallback((id: string) => {
     updateWindow(id, { minAnim: true, focused: false })
-    setTrackedTimeout(() => updateWindow(id, { minimized: true, minAnim: false }), 400)
+    setTrackedTimeout(() => updateWindow(id, { minimized: true, minAnim: false }), 600)
   }, [updateWindow, setTrackedTimeout])
 
   const maximizeApp = useCallback((id: string) => {
