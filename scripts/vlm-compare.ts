@@ -4,7 +4,7 @@ import fs from 'fs'
 async function main() {
   const zai = await ZAI.create()
   const real = fs.readFileSync('/home/z/my-project/upload/pasted_image_1784066620215.png').toString('base64')
-  const current = fs.readFileSync('/home/z/my-project/download/settings-home-final.png').toString('base64')
+  const current = fs.readFileSync('/home/z/my-project/download/settings-home-v4.png').toString('base64')
 
   const response = await zai.chat.completions.createVision({
     messages: [

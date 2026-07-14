@@ -422,8 +422,8 @@ const SETTINGS_CATEGORIES = [
 
 // SVG icons สีฟ้าแบบ line-art (เหมือน Win10 จริง)
 function SettingsIcon({ name, size = 32 }: { name: string; size?: number }) {
-  const stroke = '#0078D7'
-  const sw = 1.6
+  const stroke = '#0078D4'
+  const sw = 1.5
   const common = { width: size, height: size, viewBox: '0 0 32 32', fill: 'none', stroke, strokeWidth: sw, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
   switch (name) {
     case 'system': // Monitor
@@ -549,25 +549,26 @@ function SettingsContent({
           }}
         >
           <h1 style={{
-            fontSize: 28, fontWeight: 600, margin: 0,
-            lineHeight: '36px', color: '#1F1F1F',
+            fontSize: 24, fontWeight: 400, margin: 0,
+            lineHeight: '32px', color: '#323130',
           }}>Windows Settings</h1>
           <div
             style={{
               height: 36, width: '100%', maxWidth: 480,
-              backgroundColor: '#fff', border: '1px solid #ccc',
-              display: 'flex', alignItems: 'center', padding: '0 12px', gap: 8,
+              backgroundColor: '#fff', border: '1px solid #d1d5db',
+              borderRadius: 4,
+              display: 'flex', alignItems: 'center', padding: '8px 12px', gap: 8,
             }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <circle cx="11" cy="11" r="7" stroke="#767676" strokeWidth="1.5" />
-              <path d="M16 16l4 4" stroke="#767676" strokeWidth="1.5" strokeLinecap="round" />
+              <circle cx="11" cy="11" r="7" stroke="#64748b" strokeWidth="1.5" />
+              <path d="M16 16l4 4" stroke="#64748b" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
             <input
               placeholder="Find a setting"
               style={{
                 border: 'none', outline: 'none', background: 'transparent',
-                fontSize: 14, flex: 1, color: '#1F1F1F', fontFamily: 'inherit',
+                fontSize: 14, flex: 1, color: '#323130', fontFamily: 'inherit',
               }}
             />
           </div>
@@ -640,44 +641,43 @@ function SettingsContent({
         // ====== Home page — grid ของ category tiles (เหมือน Win10 จริง) ======
         <div style={{
           flex: 1, backgroundColor: '#fff', overflowY: 'auto',
-          padding: '32px 56px', userSelect: 'none',
+          padding: '24px 56px 32px', userSelect: 'none',
           display: 'flex', flexDirection: 'column',
         }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '12px 24px',
-            maxWidth: 900, margin: '0 auto', width: '100%',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '16px 16px',
+            maxWidth: 1100, margin: '0 auto', width: '100%',
           }}>
             {SETTINGS_CATEGORIES.map((c) => (
               <div
                 key={c.id}
                 onClick={() => onCategoryChange(c.id)}
                 style={{
-                  display: 'flex', alignItems: 'flex-start', gap: 16,
-                  padding: '16px 20px',
+                  display: 'flex', alignItems: 'flex-start', gap: 14,
+                  padding: '14px 12px',
                   cursor: 'default',
                   backgroundColor: 'transparent',
                   border: '1px solid transparent',
-                  transition: 'all 83ms linear',
+                  borderRadius: 4,
+                  transition: 'background-color 83ms linear',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = '#f3f3f3'
-                  e.currentTarget.style.borderColor = '#e5e5e5'
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'transparent'
-                  e.currentTarget.style.borderColor = 'transparent'
                 }}
               >
-                <span style={{ fontSize: 28, lineHeight: 1, flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-                  <SettingsIcon name={c.icon} size={32} />
+                <span style={{ flexShrink: 0, display: 'flex', alignItems: 'center', marginTop: 2 }}>
+                  <SettingsIcon name={c.icon} size={24} />
                 </span>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: '#0078D7', lineHeight: '20px', marginBottom: 4 }}>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: '#323130', lineHeight: '22px', marginBottom: 4 }}>
                     {c.id}
                   </div>
-                  <div style={{ fontSize: 12, color: '#767676', lineHeight: '16px' }}>
+                  <div style={{ fontSize: 13, color: '#64748b', lineHeight: '18px' }}>
                     {c.desc}
                   </div>
                 </div>
@@ -686,8 +686,8 @@ function SettingsContent({
           </div>
           {/* Footer: Activate Windows (เหมือน Win10 จริง) */}
           <div style={{
-            marginTop: 'auto', padding: '24px 0 8px', textAlign: 'center',
-            fontSize: 12, color: '#0078D7',
+            marginTop: 'auto', padding: '32px 0 8px', textAlign: 'center',
+            fontSize: 12, color: '#0078D4',
           }}>
             Windows isn't activated. <span style={{ textDecoration: 'underline', cursor: 'default' }}>Activate Windows now.</span>
           </div>
