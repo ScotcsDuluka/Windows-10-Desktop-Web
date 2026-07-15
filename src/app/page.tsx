@@ -406,18 +406,20 @@ const winBtnStyle: React.CSSProperties = {
 // Settings Content
 // ============================================================
 const SETTINGS_CATEGORIES = [
-  { id: 'System', icon: 'system', desc: 'Display, sound, notifications, power' },
-  { id: 'Devices', icon: 'devices', desc: 'Bluetooth, printers, mouse' },
-  { id: 'Phone', icon: 'phone', desc: 'Link your Android, iPhone' },
-  { id: 'Network & Internet', icon: 'network', desc: 'Wi-Fi, airplane mode, VPN' },
-  { id: 'Personalization', icon: 'personalization', desc: 'Background, lock screen, colors' },
-  { id: 'Apps', icon: 'apps', desc: 'Uninstall, defaults, optional features' },
-  { id: 'Accounts', icon: 'accounts', desc: 'Your accounts, email, sync, work, family' },
-  { id: 'Time & Language', icon: 'time', desc: 'Speech, region, date' },
-  { id: 'Gaming', icon: 'gaming', desc: 'Xbox Game Bar, captures, Game Mode' },
-  { id: 'Ease of Access', icon: 'ease', desc: 'Narrator, magnifier, high contrast' },
-  { id: 'Privacy', icon: 'privacy', desc: 'Location, camera, microphone' },
-  { id: 'Update & Security', icon: 'update', desc: 'Windows Update, recovery, backup' },
+  // 4 หมวดหลัก (active) — ไว้ก่อน
+  { id: 'System', icon: 'system', desc: 'Display, sound, notifications, power', active: true },
+  { id: 'Personalization', icon: 'personalization', desc: 'Background, lock screen, colors', active: true },
+  { id: 'Apps', icon: 'apps', desc: 'Uninstall, defaults, optional features', active: true },
+  { id: 'Update & Security', icon: 'update', desc: 'Windows Update, recovery, backup', active: true },
+  // 8 หมวดอื่น (disabled — สีเทา) — ไว้หลัง
+  { id: 'Devices', icon: 'devices', desc: 'Bluetooth, printers, mouse', active: false },
+  { id: 'Phone', icon: 'phone', desc: 'Link your Android, iPhone', active: false },
+  { id: 'Network & Internet', icon: 'network', desc: 'Wi-Fi, airplane mode, VPN', active: false },
+  { id: 'Accounts', icon: 'accounts', desc: 'Your accounts, email, sync, work, family', active: false },
+  { id: 'Time & Language', icon: 'time', desc: 'Speech, region, date', active: false },
+  { id: 'Gaming', icon: 'gaming', desc: 'Xbox Game Bar, captures, Game Mode', active: false },
+  { id: 'Ease of Access', icon: 'ease', desc: 'Narrator, magnifier, high contrast', active: false },
+  { id: 'Privacy', icon: 'privacy', desc: 'Location, camera, microphone', active: false },
 ]
 
 // SVG icons สีฟ้าแบบ line-art (เหมือน Win10 จริง)
@@ -650,24 +652,27 @@ function SettingsContent({
             gap: '16px 16px',
             maxWidth: 1100, margin: '0 auto', width: '100%',
           }}>
-            {SETTINGS_CATEGORIES.map((c) => (
+            {SETTINGS_CATEGORIES.map((c) => {
+              const disabled = c.active === false
+              return (
               <div
                 key={c.id}
-                onClick={() => onCategoryChange(c.id)}
+                onClick={() => { if (!disabled) onCategoryChange(c.id) }}
                 style={{
                   display: 'flex', alignItems: 'flex-start', gap: 14,
                   padding: '14px 12px',
-                  cursor: 'default',
+                  cursor: disabled ? 'not-allowed' : 'default',
                   backgroundColor: 'transparent',
                   border: '1px solid transparent',
                   borderRadius: 4,
-                  transition: 'background-color 83ms linear',
+                  opacity: disabled ? 0.4 : 1,
+                  transition: 'background-color 83ms linear, opacity 83ms linear',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#f3f3f3'
+                  if (!disabled) e.currentTarget.style.backgroundColor = '#f3f3f3'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent'
+                  if (!disabled) e.currentTarget.style.backgroundColor = 'transparent'
                 }}
               >
                 <span style={{ flexShrink: 0, display: 'flex', alignItems: 'center', marginTop: 2 }}>
@@ -682,7 +687,8 @@ function SettingsContent({
                   </div>
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
           {/* Footer: Activate Windows (เหมือน Win10 จริง) */}
           <div style={{
@@ -703,25 +709,30 @@ function SettingsContent({
             overflowY: 'auto', color: '#1F1F1F', userSelect: 'none',
           }}
         >
-          {SETTINGS_CATEGORIES.map((c) => (
+          {SETTINGS_CATEGORIES.map((c) => {
+            const disabled = c.active === false
+            return (
             <div
               key={c.id}
-              onClick={() => onCategoryChange(c.id)}
+              onClick={() => { if (!disabled) onCategoryChange(c.id) }}
               style={{
                 display: 'flex', alignItems: 'center', gap: 14,
-                padding: '9px 16px', cursor: 'default',
+                padding: '9px 16px',
+                cursor: disabled ? 'not-allowed' : 'default',
                 fontSize: 13, lineHeight: '20px',
+                opacity: disabled ? 0.4 : 1,
                 backgroundColor: category === c.id ? '#cce4f7' : 'transparent',
                 borderLeft: category === c.id ? '3px solid #0078D7' : '3px solid transparent',
-                transition: 'background-color 83ms linear',
+                transition: 'background-color 83ms linear, opacity 83ms linear',
               }}
-              onMouseEnter={(e) => { if (category !== c.id) e.currentTarget.style.backgroundColor = '#e5e5e5' }}
-              onMouseLeave={(e) => { if (category !== c.id) e.currentTarget.style.backgroundColor = 'transparent' }}
+              onMouseEnter={(e) => { if (!disabled && category !== c.id) e.currentTarget.style.backgroundColor = '#e5e5e5' }}
+              onMouseLeave={(e) => { if (!disabled && category !== c.id) e.currentTarget.style.backgroundColor = 'transparent' }}
             >
               <span style={{ display: 'flex', alignItems: 'center' }}><SettingsIcon name={c.icon} size={18} /></span>
               <span>{c.id}</span>
             </div>
-          ))}
+            )
+          })}
         </div>
 
         {/* Content — Win10 จริง: พื้นขาว, padding 32px, font 14px body */}
