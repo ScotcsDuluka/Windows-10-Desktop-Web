@@ -2167,16 +2167,24 @@ export default function Home() {
         style={{
           position: 'absolute', left: 0, right: 0, bottom: 0, height: 45,
           backgroundColor: 'rgba(255, 255, 255, 0.75)',
-          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          backgroundBlendMode: 'overlay',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           border: 'none', borderTop: 'none', outline: 'none', boxShadow: 'none',
           display: 'flex', alignItems: 'center', zIndex: 1000,
         }}
       >
+        {/* Noise overlay 10% — เหมือน Win10 จริง */}
+        <div
+          style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+            opacity: 0.1,
+            mixBlendMode: 'multiply',
+            zIndex: 0,
+          }}
+        />
         {/* ====== LEFT: Start | Search | Task View ====== */}
-        <div style={{ display: 'flex', alignItems: 'center', height: '100%', flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', height: '100%', flexShrink: 0, position: 'relative', zIndex: 1 }}>
           <TaskbarIconButton label="Start">
             <img
               src="/win10-start-icon.png" alt="Start" width={20} height={20}
@@ -2224,7 +2232,7 @@ export default function Home() {
         <div style={{ width: 4, height: '100%', flexShrink: 0 }} />
 
         {/* ====== CENTER: App icons ====== */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', height: '100%', gap: 2, flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', height: '100%', gap: 2, flexShrink: 0, position: 'relative', zIndex: 1 }}>
           {APPS.filter((a) => a.pinned).map((app) => {
             const w = windows[app.id]
             const isOpen = w?.open
@@ -2263,7 +2271,7 @@ export default function Home() {
         <div style={{ flex: 1, height: '100%' }} />
 
         {/* ====== RIGHT: Volume + Clock ====== */}
-        <div style={{ display: 'flex', alignItems: 'center', height: '100%', flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', height: '100%', flexShrink: 0, position: 'relative', zIndex: 1 }}>
           <div
             style={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center' }}
             onMouseEnter={() => setShowVolumeSlider(true)}
