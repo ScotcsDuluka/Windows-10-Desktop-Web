@@ -609,7 +609,7 @@ function SettingsContent({
           <div
             style={{
               height: 36, width: '100%', maxWidth: 480,
-              backgroundColor: '#fff', border: '1px solid #d1d5db',
+              backgroundColor: '#fff', border: '1px solid #E91E63',
               borderRadius: 4,
               display: 'flex', alignItems: 'center', padding: '8px 12px', gap: 8,
             }}
@@ -713,12 +713,7 @@ function SettingsContent({
             })}
           </div>
           {/* Footer: Activate Windows (เหมือน Win10 จริง) */}
-          <div style={{
-            marginTop: 'auto', padding: '32px 0 8px', textAlign: 'center',
-            fontSize: 12, color: '#E91E63',
-          }}>
-            Windows isn't activated. <span style={{ textDecoration: 'underline', cursor: 'default' }}>Activate Windows now.</span>
-          </div>
+          <div style={{ marginTop: 'auto' }} />
         </div>
       ) : (
         // ====== Category page — Sidebar + Content ======
@@ -895,16 +890,16 @@ function SettingsSubPage(props: {
         </div>
 
         <div style={{ ...rowStyle, borderBottom: '1px solid #F0F0F0' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <ToggleSwitch on={props.nightLight} onToggle={props.onToggleNightLight} />
             <div>
               <div style={labelStyle}>Night light</div>
               <div style={descStyle}>Off</div>
             </div>
           </div>
-        </div>
-        <div style={{ padding: '8px 0 4px' }}>
-          <span style={linkStyle}>Night light settings</span>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <span style={linkStyle}>Night light settings</span>
+          </div>
         </div>
 
         <div style={sectionTitleStyle}>Windows HD Color</div>
