@@ -408,7 +408,7 @@ const winBtnStyle: React.CSSProperties = {
 // Settings Content
 // ============================================================
 const SETTINGS_CATEGORIES = [
-  // 4 หมวดหลัก (active) — ไว้ก่อน
+  // แถวบน 5 หมวด (active)
   {
     id: 'System', icon: 'system', desc: 'Display, sound, notifications, power', active: true,
     subPages: [
@@ -424,6 +424,9 @@ const SETTINGS_CATEGORIES = [
       { id: 'About', icon: 'ℹ️', desc: 'Device specs' },
     ],
   },
+  { id: 'Devices', icon: 'devices', desc: 'Bluetooth, printers, mouse', active: false, subPages: [] },
+  { id: 'Phone', icon: 'phone', desc: 'Link your Android, iPhone', active: false, subPages: [] },
+  { id: 'Network & Internet', icon: 'network', desc: 'Wi-Fi, airplane mode, VPN', active: false, subPages: [] },
   {
     id: 'Personalization', icon: 'personalization', desc: 'Background, lock screen, colors', active: true,
     subPages: [
@@ -436,6 +439,7 @@ const SETTINGS_CATEGORIES = [
       { id: 'Taskbar', icon: '📊', desc: 'Lock, auto-hide' },
     ],
   },
+  // แถวล่าง 3 หมวด (active)
   {
     id: 'Apps', icon: 'apps', desc: 'Uninstall, defaults, optional features', active: true,
     subPages: [
@@ -447,6 +451,11 @@ const SETTINGS_CATEGORIES = [
       { id: 'Video playback', icon: '🎬', desc: 'HDR, battery' },
     ],
   },
+  { id: 'Accounts', icon: 'accounts', desc: 'Your accounts, email, sync, work, family', active: false, subPages: [] },
+  { id: 'Time & Language', icon: 'time', desc: 'Speech, region, date', active: false, subPages: [] },
+  { id: 'Gaming', icon: 'gaming', desc: 'Xbox Game Bar, captures, Game Mode', active: false, subPages: [] },
+  { id: 'Ease of Access', icon: 'ease', desc: 'Narrator, magnifier, high contrast', active: false, subPages: [] },
+  { id: 'Privacy', icon: 'privacy', desc: 'Location, camera, microphone', active: false, subPages: [] },
   {
     id: 'Update & Security', icon: 'update', desc: 'Windows Update, recovery, backup', active: true,
     subPages: [
@@ -460,15 +469,6 @@ const SETTINGS_CATEGORIES = [
       { id: 'For developers', icon: '👨‍💻', desc: 'Developer mode' },
     ],
   },
-  // 8 หมวดอื่น (disabled — สีเทา) — ไว้หลัง
-  { id: 'Devices', icon: 'devices', desc: 'Bluetooth, printers, mouse', active: false, subPages: [] },
-  { id: 'Phone', icon: 'phone', desc: 'Link your Android, iPhone', active: false, subPages: [] },
-  { id: 'Network & Internet', icon: 'network', desc: 'Wi-Fi, airplane mode, VPN', active: false, subPages: [] },
-  { id: 'Accounts', icon: 'accounts', desc: 'Your accounts, email, sync, work, family', active: false, subPages: [] },
-  { id: 'Time & Language', icon: 'time', desc: 'Speech, region, date', active: false, subPages: [] },
-  { id: 'Gaming', icon: 'gaming', desc: 'Xbox Game Bar, captures, Game Mode', active: false, subPages: [] },
-  { id: 'Ease of Access', icon: 'ease', desc: 'Narrator, magnifier, high contrast', active: false, subPages: [] },
-  { id: 'Privacy', icon: 'privacy', desc: 'Location, camera, microphone', active: false, subPages: [] },
 ]
 
 // SVG icons สีฟ้าแบบ line-art (เหมือน Win10 จริง)
@@ -670,7 +670,7 @@ function SettingsContent({
         }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
+            gridTemplateColumns: 'repeat(5, 1fr)',
             gap: '16px 16px',
             maxWidth: 1100, margin: '0 auto', width: '100%',
           }}>
@@ -897,9 +897,9 @@ function SettingsSubPage(props: {
               <div style={descStyle}>Off</div>
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span style={linkStyle}>Night light settings</span>
-          </div>
+        </div>
+        <div style={{ padding: '8px 0 4px' }}>
+          <span style={linkStyle}>Night light settings</span>
         </div>
 
         <div style={sectionTitleStyle}>Windows HD Color</div>
@@ -913,7 +913,7 @@ function SettingsSubPage(props: {
           <div>
             <div style={labelStyle}>Change the size of text, apps, and other items</div>
           </div>
-          <span style={{ fontSize: 14, color: '#323130' }}>125% (Recommended)</span>
+          <span style={{ fontSize: 14, color: '#323130' }}>100% (Recommended)</span>
         </div>
         <div style={{ padding: '8px 0 4px' }}>
           <span style={linkStyle}>Advanced scaling settings</span>
