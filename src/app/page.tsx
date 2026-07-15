@@ -632,7 +632,7 @@ function SettingsContent({
         <div
           style={{
             display: 'flex', alignItems: 'center', gap: 12,
-            padding: '12px 24px', backgroundColor: '#fff',
+            padding: '8px 24px', backgroundColor: '#fff',
             borderBottom: '1px solid rgba(0, 0, 0, 0.06)', flexShrink: 0,
           }}
         >
