@@ -413,12 +413,12 @@ const SETTINGS_CATEGORIES = [
     subPages: [
       { id: 'Display', icon: '🖥️', desc: 'Monitors, brightness, night light' },
       { id: 'Sound', icon: '🔊', desc: 'Volume, output, input' },
-      { id: 'Notifications', icon: '🔔', desc: 'Notifications, quick actions' },
+      { id: 'Notifications & actions', icon: '🔔', desc: 'Notifications, quick actions' },
       { id: 'Focus assist', icon: '🌙', desc: 'Hide notifications' },
       { id: 'Power & sleep', icon: '🔋', desc: 'Sleep, screen, power' },
       { id: 'Storage', icon: '💾', desc: 'Storage, drives' },
       { id: 'Multitasking', icon: '🪟', desc: 'Snap, virtual desktops' },
-      { id: 'Tablet mode', icon: '📱', desc: 'Touch-friendly mode' },
+      { id: 'Projecting to this PC', icon: '📱', desc: 'Project to this PC' },
       { id: 'Clipboard', icon: '📋', desc: 'Copy history, sync' },
       { id: 'About', icon: 'ℹ️', desc: 'Device specs' },
     ],
@@ -725,8 +725,8 @@ function SettingsContent({
         {/* Sidebar — Win10 จริง: 280px, bg #F2F2F2, search bar ด้านบน */}
         <div
           style={{
-            width: 280, backgroundColor: '#FDFDFD',
-            borderRight: '1px solid #F0F0F0', padding: 0,
+            width: 280, backgroundColor: '#E6E6E6',
+            borderRight: '1px solid #D4D4D4', padding: 0,
             overflowY: 'auto', color: '#1F1F1F', userSelect: 'none',
             display: 'flex', flexDirection: 'column',
           }}
@@ -886,8 +886,7 @@ function SettingsSubPage(props: {
         <div style={sectionTitleStyle}>Brightness and color</div>
         <div style={{ fontSize: 14, color: '#616161', marginBottom: 8 }}>Change brightness for the built-in display</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-          <input type="range" min={0} max={100} value={props.brightness} onChange={(e) => props.onBrightnessChange(Number(e.target.value))} style={{ width: 240, accentColor: '#E91E63', height: 4 }} />
-          <span style={{ fontSize: 14, color: '#323130', minWidth: 30 }}>{props.brightness}%</span>
+          <input type="range" min={0} max={100} value={props.brightness} onChange={(e) => props.onBrightnessChange(Number(e.target.value))} style={{ width: 280, accentColor: '#E91E63', height: 4 }} />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, fontSize: 14, color: '#323130' }}>
           <input type="checkbox" style={{ accentColor: '#E91E63', width: 16, height: 16 }} />
@@ -897,10 +896,9 @@ function SettingsSubPage(props: {
         <div style={{ ...rowStyle, borderBottom: '1px solid #F0F0F0' }}>
           <div>
             <div style={labelStyle}>Night light</div>
-            <div style={descStyle}>If you're having trouble sleeping, night light may help.</div>
+            <div style={descStyle}>Off</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 14, color: props.nightLight ? '#323130' : '#616161' }}>{props.nightLight ? 'On' : 'Off'}</span>
             <ToggleSwitch on={props.nightLight} onToggle={props.onToggleNightLight} />
           </div>
         </div>
@@ -935,6 +933,17 @@ function SettingsSubPage(props: {
             <div style={labelStyle}>Orientation</div>
           </div>
           <span style={{ fontSize: 14, color: '#323130' }}>Landscape</span>
+        </div>
+
+        {/* Help from the web */}
+        <div style={{ marginTop: 32, padding: 16, backgroundColor: '#F8F8F8', borderRadius: 4 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, color: '#323130', marginBottom: 12 }}>Help from the web</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <span style={linkStyle}>Adjusting display brightness settings easily</span>
+            <span style={linkStyle}>Syncing refresh rates for smooth playback</span>
+            <span style={linkStyle}>Setting up dual monitors easily</span>
+            <span style={linkStyle}>Connecting to a projector or PC</span>
+          </div>
         </div>
       </>
     )
@@ -2055,7 +2064,8 @@ export default function Home() {
   // ====== Time format ======
   const hh = time.getHours().toString().padStart(2, '0')
   const mm = time.getMinutes().toString().padStart(2, '0')
-  const dateStr = time.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
+  const dateStr = time.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' })
+  const timeStr = time.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: false })
 
   // ====== Wallpaper render ======
   const renderWallpaper = () => {
@@ -2367,7 +2377,7 @@ export default function Home() {
           >
             <div>
               <div>{dateStr}</div>
-              <div>{hh}:{mm}</div>
+              <div>{timeStr}</div>
             </div>
           </div>
         </div>
