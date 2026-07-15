@@ -1884,10 +1884,12 @@ export default function Home() {
   const closeApp = useCallback((id: string) => {
     clearAllAnimTimeouts()
     isAnimatingRef.current = true
-    updateWindow(id, { closing: true, focused: false })
+    // ตั้ง open: false ทันที เพื่อให้ highlight bar หายทันที
+    // แต่เก็บ closing: true ไว้เพื่อเล่น close animation
+    updateWindow(id, { open: false, closing: true, focused: false })
     setTrackedTimeout(() => {
-      // reset state เมื่อปิดแอป (data หายไป กลับเป็นค่า default)
-      updateWindow(id, { open: false, closing: false, data: {} })
+      // reset state เมื่อ animation จบ
+      updateWindow(id, { closing: false, data: {} })
       isAnimatingRef.current = false
     }, 600)
   }, [updateWindow, clearAllAnimTimeouts, setTrackedTimeout])
@@ -2089,7 +2091,7 @@ export default function Home() {
       {/* ====== Windows ====== */}
       {APPS.map((app) => {
         const w = windows[app.id]
-        if (!w || !w.open) return null
+        if (!w || (!w.open && !w.closing)) return null
         return (
           <AppWindow
             key={app.id}
