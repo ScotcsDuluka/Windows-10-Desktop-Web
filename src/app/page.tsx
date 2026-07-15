@@ -671,7 +671,7 @@ function SettingsContent({
           <div
             style={{
               height: 36, width: '100%', maxWidth: 480,
-              backgroundColor: '#fff', border: '1px solid #E91E63',
+              backgroundColor: 'rgba(255,255,255,0.5)', border: '1px solid #E91E63',
               borderRadius: 4,
               display: 'flex', alignItems: 'center', padding: '8px 12px', gap: 8,
             }}
@@ -694,7 +694,7 @@ function SettingsContent({
         <div
           style={{
             display: 'flex', alignItems: 'center', gap: 12,
-            padding: '8px 24px', backgroundColor: '#fff',
+            padding: '8px 24px', backgroundColor: 'transparent',
             borderBottom: '1px solid rgba(0, 0, 0, 0.06)', flexShrink: 0,
           }}
         >
@@ -783,7 +783,7 @@ function SettingsContent({
         {/* Sidebar — Win10 จริง: 280px, bg #F2F2F2, search bar ด้านบน */}
         <div
           style={{
-            width: 280, backgroundColor: '#E6E6E6',
+            width: 280, backgroundColor: 'transparent',
             borderRight: '1px solid #D4D4D4', padding: 0,
             overflowY: 'auto', color: '#1F1F1F', userSelect: 'none',
             display: 'flex', flexDirection: 'column',
@@ -793,7 +793,7 @@ function SettingsContent({
           <div style={{ padding: '12px 16px 16px' }}>
             <div
               style={{
-                height: 32, backgroundColor: '#fff', border: '1px solid #E91E63',
+                height: 32, backgroundColor: 'rgba(255,255,255,0.5)', border: '1px solid #E91E63',
                 borderRadius: 4,
                 display: 'flex', alignItems: 'center', padding: '0 10px', gap: 8,
               }}
@@ -876,7 +876,7 @@ function SettingsContent({
         {/* Content — Win10 จริง: พื้นขาว, padding 32px */}
         <div
           style={{
-            flex: 1, backgroundColor: '#fff', padding: '24px 32px 200px',
+            flex: 1, backgroundColor: 'transparent', padding: '24px 32px 200px',
             overflowY: 'auto', color: '#323130', userSelect: 'none',
           }}
         >
