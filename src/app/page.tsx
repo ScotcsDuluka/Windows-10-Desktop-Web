@@ -880,7 +880,7 @@ function SettingsContent({
             overflowY: 'auto', color: '#323130', userSelect: 'none',
           }}
         >
-          <div key={subPage || 'default'} style={{ animation: 'settingsFadeIn 200ms ease-out' }}>
+          <div key={subPage || 'default'} style={{ animation: 'settingsSwitch 300ms cubic-bezier(0.16, 1, 0.3, 1)' }}>
           <SettingsSubPage
             category={category}
             subPage={subPage || (SETTINGS_CATEGORIES.find((c) => c.id === category)?.subPages?.[0]?.id) || category}
@@ -2791,9 +2791,9 @@ export default function Home() {
 
       {/* ====== Styles ====== */}
       <style>{`
-        @keyframes settingsFadeIn {
-          from { opacity: 0; transform: translateY(8px); }
-          to   { opacity: 1; transform: translateY(0); }
+        @keyframes settingsSwitch {
+          from { opacity: 0; transform: scale(0.96); }
+          to   { opacity: 1; transform: scale(1); }
         }
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(4px); }
