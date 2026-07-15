@@ -501,8 +501,29 @@ function SettingsIcon({ name, size = 32 }: { name: string; size?: number }) {
       return <svg {...common}><rect x="6" y="14" width="20" height="14" rx="2" /><path d="M10 14v-4a6 6 0 0 1 12 0v4" /><circle cx="16" cy="21" r="1.5" fill={stroke} /></svg>
     case 'update': // Refresh circle
       return <svg {...common}><path d="M27 16a11 11 0 1 1-3-8" /><polyline points="27 6 27 11 22 11" /></svg>
+    // Sub-page icons (Win10 style)
+    case 'display': // Monitor
+      return <svg {...common}><rect x="5" y="6" width="22" height="15" rx="1" /><line x1="11" y1="26" x2="21" y2="26" /><line x1="16" y1="21" x2="16" y2="26" /></svg>
+    case 'sound': // Speaker
+      return <svg {...common}><polygon points="6,12 10,12 15,8 15,24 10,20 6,20" /><path d="M18 10a5 5 0 0 1 0 12" /><path d="M21 7a9 9 0 0 1 0 18" /></svg>
+    case 'notifications': // Bell
+      return <svg {...common}><path d="M16 4a6 6 0 0 0-6 6v5l-2 3h16l-2-3v-5a6 6 0 0 0-6-6z" /><path d="M13 22a3 3 0 0 0 6 0" /></svg>
+    case 'focus': // Moon
+      return <svg {...common}><path d="M20 14a8 8 0 1 1-9-9 7 7 0 0 0 9 9z" /></svg>
+    case 'power': // Power button
+      return <svg {...common}><path d="M16 4v10" /><path d="M10 7a10 10 0 1 0 12 0" /></svg>
+    case 'storage': // Drive
+      return <svg {...common}><rect x="4" y="10" width="24" height="10" rx="1" /><circle cx="9" cy="15" r="1.5" fill={stroke} /><line x1="14" y1="15" x2="24" y2="15" /></svg>
+    case 'multitasking': // Overlapping windows
+      return <svg {...common}><rect x="4" y="8" width="12" height="12" rx="1" /><rect x="12" y="12" width="12" height="12" rx="1" fill="#fff" /></svg>
+    case 'projecting': // Cast
+      return <svg {...common}><rect x="4" y="6" width="24" height="16" rx="1" /><path d="M10 22a6 6 0 0 1 12 0" /><circle cx="16" cy="22" r="1.5" fill={stroke} /></svg>
+    case 'clipboard': // Clipboard
+      return <svg {...common}><rect x="8" y="6" width="16" height="22" rx="2" /><rect x="12" y="3" width="8" height="5" rx="1" /><line x1="12" y1="14" x2="20" y2="14" /><line x1="12" y1="18" x2="20" y2="18" /></svg>
+    case 'about': // Info
+      return <svg {...common}><circle cx="16" cy="16" r="11" /><line x1="16" y1="11" x2="16" y2="17" /><circle cx="16" cy="21" r="1" fill={stroke} /></svg>
     default:
-      return null
+      return <svg {...common}><circle cx="16" cy="16" r="10" /><line x1="16" y1="12" x2="16" y2="16" /><circle cx="16" cy="20" r="0.5" fill={stroke} /></svg>
   }
 }
 
@@ -803,11 +824,7 @@ function SettingsContent({
               onMouseLeave={(e) => { if (!selected) e.currentTarget.style.backgroundColor = 'transparent' }}
             >
               <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-                {['display', 'sound', 'notifications', 'focus', 'power', 'storage', 'multitasking', 'projecting', 'clipboard', 'about'].includes(sp.icon) ? (
-                  <img src={`/win10-icons/${sp.icon}.png`} alt={sp.id} width={16} height={16} style={{ objectFit: 'contain' }} draggable={false} />
-                ) : (
-                  <SettingsIcon name={sp.icon} size={16} />
-                )}
+                <SettingsIcon name={sp.icon} size={16} />
               </span>
               <span>{sp.id}</span>
             </div>
