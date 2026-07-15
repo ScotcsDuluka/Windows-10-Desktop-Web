@@ -739,7 +739,7 @@ function SettingsContent({
         opacity: isHome ? 1 : 0,
         transform: isHome ? 'scale(1)' : 'scale(0.96)',
         pointerEvents: isHome ? 'auto' : 'none',
-        transition: 'opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+        transition: 'opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1)',
       }}>
           <div style={{
             display: 'grid',
@@ -796,7 +796,7 @@ function SettingsContent({
         opacity: isHome ? 0 : 1,
         transform: isHome ? 'scale(0.96)' : 'scale(1)',
         pointerEvents: isHome ? 'none' : 'auto',
-        transition: 'opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+        transition: 'opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1)',
       }}>
         {/* Sidebar — Win10 จริง: 280px, bg #F2F2F2, search bar ด้านบน */}
         <div
@@ -898,7 +898,7 @@ function SettingsContent({
             overflowY: 'auto', color: '#323130', userSelect: 'none',
           }}
         >
-          <div key={subPage || 'default'} style={{ animation: 'settingsSwitch 300ms cubic-bezier(0.16, 1, 0.3, 1)' }}>
+          <div key={subPage || 'default'} style={{ animation: 'settingsSwitch 700ms cubic-bezier(0.16, 1, 0.3, 1)' }}>
           <SettingsSubPage
             category={category}
             subPage={subPage || (SETTINGS_CATEGORIES.find((c) => c.id === category)?.subPages?.[0]?.id) || category}
