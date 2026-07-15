@@ -818,7 +818,7 @@ function SettingsContent({
         {/* Content — Win10 จริง: พื้นขาว, padding 32px */}
         <div
           style={{
-            flex: 1, backgroundColor: '#fff', padding: '24px 40px 200px',
+            flex: 1, backgroundColor: '#fff', padding: '24px 32px 200px',
             overflowY: 'auto', color: '#323130', userSelect: 'none',
           }}
         >
@@ -872,10 +872,10 @@ function SettingsSubPage(props: {
   onToggleBackup: () => void
 }) {
   const titleStyle: React.CSSProperties = { fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px', color: '#1F1F1F' }
-  const sectionTitleStyle: React.CSSProperties = { fontSize: 20, fontWeight: 600, marginBottom: 4, marginTop: 28, color: '#1F1F1F' }
-  const rowStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid #F0F0F0' }
+  const sectionTitleStyle: React.CSSProperties = { fontSize: 20, fontWeight: 600, marginBottom: 16, marginTop: 32, color: '#1F1F1F' }
+  const rowStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 0', borderBottom: '1px solid #F0F0F0' }
   const labelStyle: React.CSSProperties = { fontSize: 14, color: '#323130' }
-  const descStyle: React.CSSProperties = { fontSize: 13, color: '#616161', marginTop: 2 }
+  const descStyle: React.CSSProperties = { fontSize: 13, color: '#616161', marginTop: 4 }
   const linkStyle: React.CSSProperties = { fontSize: 14, color: '#E91E63', cursor: 'default' }
 
   // ====== Display sub-page (ใช้งานได้จริง — เหมือน Win10 จริง) ======
