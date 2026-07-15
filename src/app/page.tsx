@@ -750,7 +750,7 @@ function SettingsContent({
             </div>
           </div>
 
-          {/* Home item */}
+          {/* Home item — no icon (matches real Win10) */}
           <div
             onClick={() => onCategoryChange('')}
             style={{
@@ -765,11 +765,10 @@ function SettingsContent({
             onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.04)' }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
           >
-            <span style={{ fontSize: 16, lineHeight: 1 }}>🏠</span>
             <span>Home</span>
           </div>
 
-          {/* Category name (parent) */}
+          {/* Category name (parent) — no icon (matches real Win10) */}
           <div
             style={{
               display: 'flex', alignItems: 'center', gap: 14,
@@ -778,7 +777,6 @@ function SettingsContent({
               fontWeight: 600, color: '#323130',
             }}
           >
-            <span style={{ fontSize: 16, lineHeight: 1 }}>{SETTINGS_CATEGORIES.find((c) => c.id === category)?.icon === 'system' ? '🖥️' : SETTINGS_CATEGORIES.find((c) => c.id === category)?.icon === 'personalization' ? '🎨' : SETTINGS_CATEGORIES.find((c) => c.id === category)?.icon === 'apps' ? '📦' : '🔄'}</span>
             <span>{category}</span>
           </div>
 
@@ -791,8 +789,8 @@ function SettingsContent({
               key={sp.id}
               onClick={() => onSubPageChange(sp.id)}
               style={{
-                display: 'flex', alignItems: 'center', gap: 14,
-                padding: '10px 24px 10px 56px',
+                display: 'flex', alignItems: 'center', gap: 12,
+                padding: '10px 24px 10px 48px',
                 cursor: 'default',
                 fontSize: 13, lineHeight: '20px',
                 fontWeight: selected ? 600 : 400,
@@ -804,6 +802,9 @@ function SettingsContent({
               onMouseEnter={(e) => { if (!selected) e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.04)' }}
               onMouseLeave={(e) => { if (!selected) e.currentTarget.style.backgroundColor = 'transparent' }}
             >
+              <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                <SettingsIcon name={sp.icon} size={16} />
+              </span>
               <span>{sp.id}</span>
             </div>
             )
