@@ -733,7 +733,7 @@ function SettingsContent({
           }}
         >
           {/* Search bar ด้านบน sidebar */}
-          <div style={{ padding: '12px 16px 8px' }}>
+          <div style={{ padding: '12px 16px 16px' }}>
             <div
               style={{
                 height: 32, backgroundColor: '#fff', border: '1px solid #E91E63',
@@ -760,7 +760,7 @@ function SettingsContent({
             onClick={() => onCategoryChange('')}
             style={{
               display: 'flex', alignItems: 'center', gap: 14,
-              padding: '12px 24px',
+              padding: '14px 24px',
               cursor: 'default',
               fontSize: 13, lineHeight: '20px',
               color: '#E91E63',
@@ -778,7 +778,7 @@ function SettingsContent({
           <div
             style={{
               display: 'flex', alignItems: 'center', gap: 14,
-              padding: '12px 24px',
+              padding: '14px 24px',
               fontSize: 13, lineHeight: '20px',
               fontWeight: 600, color: '#323130',
             }}
@@ -797,7 +797,7 @@ function SettingsContent({
               onClick={() => onSubPageChange(sp.id)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 14,
-                padding: '8px 24px 8px 56px',
+                padding: '10px 24px 10px 56px',
                 cursor: 'default',
                 fontSize: 13, lineHeight: '20px',
                 fontWeight: selected ? 600 : 400,
@@ -872,7 +872,7 @@ function SettingsSubPage(props: {
   onToggleBackup: () => void
 }) {
   const titleStyle: React.CSSProperties = { fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px', color: '#1F1F1F' }
-  const sectionTitleStyle: React.CSSProperties = { fontSize: 20, fontWeight: 600, marginBottom: 16, marginTop: 32, color: '#1F1F1F' }
+  const sectionTitleStyle: React.CSSProperties = { fontSize: 24, fontWeight: 600, marginBottom: 16, marginTop: 36, color: '#1F1F1F' }
   const rowStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 0', borderBottom: '1px solid #F0F0F0' }
   const labelStyle: React.CSSProperties = { fontSize: 14, color: '#323130' }
   const descStyle: React.CSSProperties = { fontSize: 13, color: '#616161', marginTop: 4 }
@@ -886,10 +886,10 @@ function SettingsSubPage(props: {
 
         <div style={sectionTitleStyle}>Brightness and color</div>
         <div style={{ fontSize: 14, color: '#616161', marginBottom: 8 }}>Change brightness for the built-in display</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-          <input type="range" min={0} max={100} value={props.brightness} onChange={(e) => props.onBrightnessChange(Number(e.target.value))} style={{ width: 280, accentColor: '#E91E63', height: 4 }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+          <input type="range" min={0} max={100} value={props.brightness} onChange={(e) => props.onBrightnessChange(Number(e.target.value))} style={{ width: 400, accentColor: '#E91E63', height: 4 }} />
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, fontSize: 14, color: '#323130' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, fontSize: 14, color: '#323130' }}>
           <input type="checkbox" style={{ accentColor: '#E91E63', width: 16, height: 16 }} />
           <span>Change brightness automatically when lighting changes</span>
         </div>
@@ -2066,7 +2066,7 @@ export default function Home() {
   const hh = time.getHours().toString().padStart(2, '0')
   const mm = time.getMinutes().toString().padStart(2, '0')
   const dateStr = time.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' })
-  const timeStr = time.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: false })
+  const timeStr = time.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
 
   // ====== Wallpaper render ======
   const renderWallpaper = () => {
