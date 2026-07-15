@@ -320,10 +320,10 @@ function AppWindow({
       {/* ====== Title Bar ====== */}
       <div
         style={{
-          height: 32, backgroundColor: 'transparent',
+          height: 32, backgroundColor: '#fff',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '0 0 0 12px', flexShrink: 0,
-          borderBottom: '1px solid rgba(0, 0, 0, 0.08)', cursor: 'default',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.06)', cursor: 'default',
           userSelect: 'none',
         }}
         onMouseDown={(e) => {
@@ -472,7 +472,7 @@ const SETTINGS_CATEGORIES = [
 
 // SVG icons สีฟ้าแบบ line-art (เหมือน Win10 จริง)
 function SettingsIcon({ name, size = 32 }: { name: string; size?: number }) {
-  const stroke = '#0078D4'
+  const stroke = '#E91E63'
   const sw = 1.5
   const common = { width: size, height: size, viewBox: '0 0 32 32', fill: 'none', stroke, strokeWidth: sw, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const }
   switch (name) {
@@ -521,7 +521,7 @@ function ToggleSwitch({ defaultOn = false, on, onToggle }: { defaultOn?: boolean
       onClick={handleToggle}
       style={{
         width: 40, height: 20,
-        backgroundColor: current ? '#0078D7' : '#ccc',
+        backgroundColor: current ? '#E91E63' : '#ccc',
         borderRadius: 10, position: 'relative', cursor: 'default',
         transition: 'background-color 0.2s',
       }}
@@ -627,12 +627,12 @@ function SettingsContent({
           </div>
         </div>
       ) : (
-        // ====== Category header: back button + profile + search ขวา ======
+        // ====== Category header: back button + breadcrumb (เหมือน Win10 จริง) ======
         <div
           style={{
             display: 'flex', alignItems: 'center', gap: 12,
-            padding: '12px 24px', backgroundColor: 'transparent',
-            borderBottom: '1px solid #e5e5e5', flexShrink: 0,
+            padding: '12px 24px', backgroundColor: '#fff',
+            borderBottom: '1px solid rgba(0, 0, 0, 0.06)', flexShrink: 0,
           }}
         >
           <button
@@ -643,54 +643,18 @@ function SettingsContent({
               cursor: 'default', display: 'flex', alignItems: 'center', justifyContent: 'center',
               borderRadius: 0, padding: 0,
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#e5e5e5' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.05)' }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F1F1F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F1F1F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
-          {/* Breadcrumb: แสดง category > subPage (default ไป subPage แรก) */}
-          <div style={{ fontSize: 13, color: '#1F1F1F', fontWeight: 400, userSelect: 'none' }}>
-            <span>{category}</span>
+          {/* Breadcrumb: แสดง category > subPage */}
+          <div style={{ fontSize: 14, color: '#1F1F1F', fontWeight: 400, userSelect: 'none' }}>
+            <span style={{ cursor: 'default' }} onClick={() => onCategoryChange('')}>{category}</span>
             <span style={{ color: '#767676', margin: '0 6px' }}>›</span>
             <span>{subPage || (SETTINGS_CATEGORIES.find((c) => c.id === category)?.subPages?.[0]?.id) || ''}</span>
-          </div>
-
-          <div
-            style={{
-              width: 28, height: 28, borderRadius: '50%',
-              backgroundColor: '#0078D7', color: '#fff',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 13, fontWeight: 600, userSelect: 'none',
-              flexShrink: 0,
-            }}
-          >
-            U
-          </div>
-          <div style={{ fontSize: 13, color: '#1F1F1F', lineHeight: 1.3 }}>
-            <div style={{ fontWeight: 400 }}>User</div>
-            <div style={{ color: '#767676', fontSize: 11 }}>user@windows10.local</div>
-          </div>
-
-          <div
-            style={{
-              marginLeft: 'auto', height: 32, width: 320,
-              backgroundColor: '#fff', border: '1px solid #ccc',
-              display: 'flex', alignItems: 'center', padding: '0 10px', gap: 8,
-            }}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-              <circle cx="11" cy="11" r="7" stroke="#767676" strokeWidth="1.5" />
-              <path d="M16 16l4 4" stroke="#767676" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-            <input
-              placeholder="Find a setting"
-              style={{
-                border: 'none', outline: 'none', background: 'transparent',
-                fontSize: 13, flex: 1, color: '#1F1F1F', fontFamily: 'inherit',
-              }}
-            />
           </div>
         </div>
       )}
@@ -750,7 +714,7 @@ function SettingsContent({
           {/* Footer: Activate Windows (เหมือน Win10 จริง) */}
           <div style={{
             marginTop: 'auto', padding: '32px 0 8px', textAlign: 'center',
-            fontSize: 12, color: '#0078D4',
+            fontSize: 12, color: '#E91E63',
           }}>
             Windows isn't activated. <span style={{ textDecoration: 'underline', cursor: 'default' }}>Activate Windows now.</span>
           </div>
@@ -758,15 +722,71 @@ function SettingsContent({
       ) : (
         // ====== Category page — Sidebar + Content ======
         <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
-        {/* Sidebar — Win10 จริง: 240px wide, no border-right, hover = light gray */}
+        {/* Sidebar — Win10 จริง: 250px, bg #F0F0F0, search bar ด้านบน */}
         <div
           style={{
-            width: 280, backgroundColor: 'transparent',
-            borderRight: '1px solid rgba(0, 0, 0, 0.06)', padding: '8px 0',
+            width: 250, backgroundColor: '#F0F0F0',
+            borderRight: '1px solid #E0E0E0', padding: 0,
             overflowY: 'auto', color: '#1F1F1F', userSelect: 'none',
+            display: 'flex', flexDirection: 'column',
           }}
         >
-          {/* Sidebar ซ้าย: sub-pages ของ category ปัจจุบัน (เช่น Display, Sound, Power, ...) */}
+          {/* Search bar ด้านบน sidebar */}
+          <div style={{ padding: '12px 16px 8px' }}>
+            <div
+              style={{
+                height: 32, backgroundColor: '#fff', border: '1px solid #ccc',
+                borderRadius: 4,
+                display: 'flex', alignItems: 'center', padding: '0 10px', gap: 8,
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="11" cy="11" r="7" stroke="#757575" strokeWidth="1.5" />
+                <path d="M16 16l4 4" stroke="#757575" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+              <input
+                placeholder="Find a setting"
+                style={{
+                  border: 'none', outline: 'none', background: 'transparent',
+                  fontSize: 13, flex: 1, color: '#323130', fontFamily: 'inherit',
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Home item */}
+          <div
+            onClick={() => onCategoryChange('')}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 14,
+              padding: '10px 20px',
+              cursor: 'default',
+              fontSize: 13, lineHeight: '20px',
+              color: '#E91E63',
+              fontWeight: 400,
+              transition: 'background-color 83ms linear',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.04)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
+          >
+            <span style={{ fontSize: 16, lineHeight: 1 }}>🏠</span>
+            <span>Home</span>
+          </div>
+
+          {/* Category name (parent) */}
+          <div
+            style={{
+              display: 'flex', alignItems: 'center', gap: 14,
+              padding: '10px 20px',
+              fontSize: 13, lineHeight: '20px',
+              fontWeight: 600, color: '#323130',
+            }}
+          >
+            <span style={{ fontSize: 16, lineHeight: 1 }}>{SETTINGS_CATEGORIES.find((c) => c.id === category)?.icon === 'system' ? '🖥️' : SETTINGS_CATEGORIES.find((c) => c.id === category)?.icon === 'personalization' ? '🎨' : SETTINGS_CATEGORIES.find((c) => c.id === category)?.icon === 'apps' ? '📦' : '🔄'}</span>
+            <span>{category}</span>
+          </div>
+
+          {/* Sub-pages ของ category ปัจจุบัน */}
           {(SETTINGS_CATEGORIES.find((c) => c.id === category)?.subPages || []).map((sp) => {
             const currentSub = subPage || (SETTINGS_CATEGORIES.find((c) => c.id === category)?.subPages?.[0]?.id) || ''
             const selected = currentSub === sp.id
@@ -776,29 +796,29 @@ function SettingsContent({
               onClick={() => onSubPageChange(sp.id)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 14,
-                padding: '10px 20px',
+                padding: '8px 20px 8px 48px',
                 cursor: 'default',
                 fontSize: 13, lineHeight: '20px',
                 fontWeight: selected ? 600 : 400,
-                backgroundColor: selected ? 'rgba(0, 0, 0, 0.04)' : 'transparent',
-                borderLeft: selected ? '3px solid #0078D4' : '3px solid transparent',
+                color: selected ? '#323130' : '#323130',
+                backgroundColor: 'transparent',
+                borderLeft: selected ? '3px solid #E91E63' : '3px solid transparent',
                 transition: 'background-color 83ms linear',
               }}
-              onMouseEnter={(e) => { if (!selected) e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.03)' }}
+              onMouseEnter={(e) => { if (!selected) e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.04)' }}
               onMouseLeave={(e) => { if (!selected) e.currentTarget.style.backgroundColor = 'transparent' }}
             >
-              <span style={{ fontSize: 16, lineHeight: 1 }}>{sp.icon}</span>
               <span>{sp.id}</span>
             </div>
             )
           })}
         </div>
 
-        {/* Content — Win10 จริง: พื้น transparent, padding 24px, font 14px body */}
+        {/* Content — Win10 จริง: พื้นขาว, padding 32px */}
         <div
           style={{
-            flex: 1, backgroundColor: 'transparent', padding: '24px 40px 32px',
-            overflowY: 'auto', color: '#1F1F1F', userSelect: 'none',
+            flex: 1, backgroundColor: '#fff', padding: '24px 40px 32px',
+            overflowY: 'auto', color: '#323130', userSelect: 'none',
           }}
         >
           <SettingsSubPage
@@ -850,7 +870,7 @@ function SettingsSubPage(props: {
   backup: boolean
   onToggleBackup: () => void
 }) {
-  const titleStyle: React.CSSProperties = { fontSize: 20, fontWeight: 600, margin: '0 0 20px 0', lineHeight: '28px', color: '#1F1F1F' }
+  const titleStyle: React.CSSProperties = { fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px', color: '#1F1F1F' }
   const sectionTitleStyle: React.CSSProperties = { fontSize: 14, fontWeight: 600, marginBottom: 8, marginTop: 24, color: '#1F1F1F' }
   const rowStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 0', borderBottom: '1px solid rgba(0,0,0,0.06)' }
   const labelStyle: React.CSSProperties = { fontSize: 13, color: '#1F1F1F' }
@@ -868,7 +888,7 @@ function SettingsSubPage(props: {
             <div style={descStyle}>Adjust the brightness of the built-in display</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <input type="range" min={0} max={100} value={props.brightness} onChange={(e) => props.onBrightnessChange(Number(e.target.value))} style={{ width: 200, accentColor: '#0078D7' }} />
+            <input type="range" min={0} max={100} value={props.brightness} onChange={(e) => props.onBrightnessChange(Number(e.target.value))} style={{ width: 200, accentColor: '#E91E63' }} />
             <span style={{ fontSize: 12, color: '#767676', minWidth: 30 }}>{props.brightness}%</span>
           </div>
         </div>
@@ -885,21 +905,21 @@ function SettingsSubPage(props: {
             <div style={labelStyle}>Change the size of text, apps, and other items</div>
             <div style={descStyle}>Recommended: 100%</div>
           </div>
-          <span style={{ fontSize: 12, color: '#0078D7' }}>100% (Recommended)</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>100% (Recommended)</span>
         </div>
         <div style={rowStyle}>
           <div>
             <div style={labelStyle}>Display resolution</div>
             <div style={descStyle}>Recommended: 1920 × 1080</div>
           </div>
-          <span style={{ fontSize: 12, color: '#0078D7' }}>1920 × 1080 (Recommended)</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>1920 × 1080 (Recommended)</span>
         </div>
         <div style={rowStyle}>
           <div>
             <div style={labelStyle}>Orientation</div>
             <div style={descStyle}>Landscape</div>
           </div>
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Landscape</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Landscape</span>
         </div>
       </>
     )
@@ -916,7 +936,7 @@ function SettingsSubPage(props: {
             <div style={labelStyle}>Choose your output device</div>
             <div style={descStyle}>Speakers (Realtek Audio)</div>
           </div>
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Speakers</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Speakers</span>
         </div>
         <div style={rowStyle}>
           <div>
@@ -924,7 +944,7 @@ function SettingsSubPage(props: {
             <div style={descStyle}>Adjust the overall volume</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <input type="range" min={0} max={100} value={props.volume} onChange={(e) => props.onVolumeChange(Number(e.target.value))} style={{ width: 200, accentColor: '#0078D7' }} />
+            <input type="range" min={0} max={100} value={props.volume} onChange={(e) => props.onVolumeChange(Number(e.target.value))} style={{ width: 200, accentColor: '#E91E63' }} />
             <span style={{ fontSize: 12, color: '#767676', minWidth: 30 }}>{props.volume}%</span>
           </div>
         </div>
@@ -934,7 +954,7 @@ function SettingsSubPage(props: {
             <div style={labelStyle}>Choose your input device</div>
             <div style={descStyle}>Microphone (Realtek Audio)</div>
           </div>
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Microphone</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Microphone</span>
         </div>
       </>
     )
@@ -978,7 +998,7 @@ function SettingsSubPage(props: {
         <div style={sectionTitleStyle}>Time zone</div>
         <div style={rowStyle}>
           <div><div style={labelStyle}>Time zone</div></div>
-          <span style={{ fontSize: 12, color: '#0078D7' }}>(UTC+07:00) Bangkok</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>(UTC+07:00) Bangkok</span>
         </div>
       </>
     )
@@ -995,7 +1015,7 @@ function SettingsSubPage(props: {
             <div style={labelStyle}>Choose your mode</div>
             <div style={descStyle}>Light / Dark</div>
           </div>
-          <span style={{ fontSize: 12, color: '#0078D7' }}>{props.darkMode ? 'Dark' : 'Light'}</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>{props.darkMode ? 'Dark' : 'Light'}</span>
         </div>
         <div style={rowStyle}>
           <div>
@@ -1090,7 +1110,7 @@ function SettingsPage(props: {
   }
   // Win10 page title: Display semibold 28/36
   const pageTitleStyle: React.CSSProperties = {
-    fontSize: 20, fontWeight: 600, margin: '0 0 20px 0', lineHeight: '28px', color: '#1F1F1F',
+    fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px', color: '#1F1F1F',
   }
 
   // Row ที่คลิกได้ → เข้า sub-page
@@ -1129,12 +1149,12 @@ function SettingsPage(props: {
   if (props.category === 'System') {
     return (
       <>
-        <h1 style={{ fontSize: 20, fontWeight: 600, margin: '0 0 20px 0', lineHeight: '28px' }}>System</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>System</h1>
         <Row icon="🖥️" title="Display" desc="Monitors, brightness, night light, display profile">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="🔊" title="Sound" desc="Volume levels, output, input, sound devices">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="🔔" title="Notifications & actions" desc="Notifications, quick actions">
           <ToggleSwitch />
@@ -1143,10 +1163,10 @@ function SettingsPage(props: {
           <ToggleSwitch defaultOn />
         </Row>
         <Row icon="🔋" title="Power & sleep" desc="Sleep, screen, power mode">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="💾" title="Storage" desc="Storage space, drives, configuration rules">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="🪟" title="Multitasking" desc="Snap windows, virtual desktops, Task view">
           <ToggleSwitch defaultOn />
@@ -1161,13 +1181,13 @@ function SettingsPage(props: {
           <ToggleSwitch defaultOn />
         </Row>
         <Row icon="🖼️" title="Graphics Settings" desc="GPU preference, advanced graphics">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="🔋" title="Battery" desc="Battery saver, battery use">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="ℹ️" title="About" desc="Device specifications, Windows specifications">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>View</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>View</span>
         </Row>
       </>
     )
@@ -1176,21 +1196,21 @@ function SettingsPage(props: {
   if (props.category === 'Personalization') {
     return (
       <>
-        <h1 style={{ fontSize: 20, fontWeight: 600, margin: '0 0 20px 0', lineHeight: '28px' }}>Personalization</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Personalization</h1>
         <Row icon="🖼️" title="Background" desc="Picture, solid color, slideshow">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Browse</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Browse</span>
         </Row>
         <Row icon="🎨" title="Colors" desc="Light, dark, accent color">
           <ToggleSwitch on={props.darkMode} onToggle={props.onToggleDarkMode} />
         </Row>
         <Row icon="🔒" title="Lock screen" desc="Background, status, screen timeout">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="🎭" title="Themes" desc="Install, save, switch">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Browse</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Browse</span>
         </Row>
         <Row icon="🔤" title="Fonts" desc="Install, manage fonts">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Browse</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Browse</span>
         </Row>
         <Row icon="🚀" title="Start" desc="Layout, folders, recent apps">
           <ToggleSwitch defaultOn />
@@ -1205,18 +1225,18 @@ function SettingsPage(props: {
   if (props.category === 'Time & Language') {
     return (
       <>
-        <h1 style={{ fontSize: 20, fontWeight: 600, margin: '0 0 20px 0', lineHeight: '28px' }}>Time & Language</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Time & Language</h1>
         <Row icon="🕐" title="Date & time" desc="Time zone, automatic time">
           <ToggleSwitch on={props.autoTime} onToggle={props.onToggleAutoTime} />
         </Row>
         <Row icon="🌍" title="Region" desc="Country, regional format">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="🗣️" title="Language" desc="Display, preferred languages">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Add</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Add</span>
         </Row>
         <Row icon="🎤" title="Speech" desc="Microphone, voice packages">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
       </>
     )
@@ -1226,15 +1246,15 @@ function SettingsPage(props: {
   if (props.category === 'Devices') {
     return (
       <>
-        <h1 style={{ fontSize: 20, fontWeight: 600, margin: '0 0 20px 0', lineHeight: '28px' }}>Devices</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Devices</h1>
         <Row icon="🔵" title="Bluetooth & other devices" desc="Mouse, keyboard, pen, audio">
           <ToggleSwitch on={props.bluetooth} onToggle={props.onToggleBluetooth} />
         </Row>
         <Row icon="🖨️" title="Printers & scanners" desc="Printers, scanners, fax">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Add</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Add</span>
         </Row>
         <Row icon="🖱️" title="Mouse" desc="Buttons, wheel, pointer">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="✋" title="Touchpad" desc="Gestures, sensitivity">
           <ToggleSwitch on={props.touchpad} onToggle={props.onToggleTouchpad} />
@@ -1256,12 +1276,12 @@ function SettingsPage(props: {
   if (props.category === 'Phone') {
     return (
       <>
-        <h1 style={{ fontSize: 20, fontWeight: 600, margin: '0 0 20px 0', lineHeight: '28px' }}>Phone</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Phone</h1>
         <div style={{ fontSize: 13, color: '#666', marginBottom: 24, lineHeight: 1.6 }}>
           Link your Android, iPhone, or other phone to your PC. Make calls, read texts, view photos, and more — right on your desktop.
         </div>
         <Row icon="📱" title="Your Phone" desc="Link your Android, iPhone">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Add a phone</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Add a phone</span>
         </Row>
         <Row icon="📞" title="Calls" desc="Make and receive calls from your PC">
           <ToggleSwitch defaultOn />
@@ -1280,15 +1300,15 @@ function SettingsPage(props: {
   if (props.category === 'Network & Internet') {
     return (
       <>
-        <h1 style={{ fontSize: 20, fontWeight: 600, margin: '0 0 20px 0', lineHeight: '28px' }}>Network & Internet</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Network & Internet</h1>
         <Row icon="📶" title="Wi-Fi" desc="Connect, manage networks">
           <ToggleSwitch on={props.wifi} onToggle={props.onToggleWifi} />
         </Row>
         <Row icon="🔌" title="Ethernet" desc="Authentication, IP, DNS">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="🔒" title="VPN" desc="Add, connect, manage">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Add</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Add</span>
         </Row>
         <Row icon="📡" title="Mobile hotspot" desc="Share your connection">
           <ToggleSwitch on={props.mobileHotspot} onToggle={props.onToggleMobileHotspot} />
@@ -1297,7 +1317,7 @@ function SettingsPage(props: {
           <ToggleSwitch on={props.airplane} onToggle={props.onToggleAirplane} />
         </Row>
         <Row icon="🌐" title="Proxy" desc="Proxy server settings">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <DisabledRow icon="📊" title="Data usage" desc="View data usage per app" />
         <DisabledRow icon="☎️" title="Dial-up" desc="Set up a dial-up connection" />
@@ -1311,24 +1331,24 @@ function SettingsPage(props: {
   if (props.category === 'Apps') {
     return (
       <>
-        <h1 style={{ fontSize: 20, fontWeight: 600, margin: '0 0 20px 0', lineHeight: '28px' }}>Apps</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Apps</h1>
         <Row icon="📦" title="Apps & features" desc="Uninstall, change, repair">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Manage</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Manage</span>
         </Row>
         <Row icon="⭐" title="Default apps" desc="Defaults for email, maps, music">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="🔧" title="Optional features" desc="Install, uninstall features">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Add</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Add</span>
         </Row>
         <Row icon="🌐" title="Apps for websites" desc="Choose apps that open websites">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="🗺️" title="Offline Maps" desc="Download, manage maps">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Download maps</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Download maps</span>
         </Row>
         <Row icon="🚀" title="Startup" desc="Apps that start automatically">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Manage</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Manage</span>
         </Row>
         <Row icon="🎬" title="Video playback" desc="HDR, battery options">
           <ToggleSwitch defaultOn />
@@ -1341,18 +1361,18 @@ function SettingsPage(props: {
   if (props.category === 'Accounts') {
     return (
       <>
-        <h1 style={{ fontSize: 20, fontWeight: 600, margin: '0 0 20px 0', lineHeight: '28px' }}>Accounts</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Accounts</h1>
         <Row icon="👤" title="Your info" desc="Account name, picture, settings">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Manage</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Manage</span>
         </Row>
         <Row icon="📧" title="Email & accounts" desc="Email, calendar, contacts">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Add</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Add</span>
         </Row>
         <Row icon="🔐" title="Sign-in options" desc="Windows Hello, password, PIN">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="👨‍👩‍👧" title="Family & other users" desc="Add, remove accounts">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Add</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Add</span>
         </Row>
         <Row icon="🔄" title="Sync your settings" desc="Sync across devices">
           <ToggleSwitch defaultOn />
@@ -1367,18 +1387,18 @@ function SettingsPage(props: {
   if (props.category === 'Gaming') {
     return (
       <>
-        <h1 style={{ fontSize: 20, fontWeight: 600, margin: '0 0 20px 0', lineHeight: '28px' }}>Gaming</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Gaming</h1>
         <Row icon="🎮" title="Game bar" desc="Open, capture, broadcast">
           <ToggleSwitch on={props.gameBar} onToggle={props.onToggleGameBar} />
         </Row>
         <Row icon="🎥" title="Captures" desc="Recording, audio quality">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="⚡" title="Game Mode" desc="Optimize PC for play">
           <ToggleSwitch on={props.gameMode} onToggle={props.onToggleGameMode} />
         </Row>
         <Row icon="🖥️" title="Game bar settings" desc="Customize shortcuts, layout">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <DisabledRow icon="✅" title="TruePlay" desc="Anti-cheat, fair play" />
         <DisabledRow icon="🌐" title="Xbox Networking" desc="Multiplayer connection" />
@@ -1390,12 +1410,12 @@ function SettingsPage(props: {
   if (props.category === 'Ease of Access') {
     return (
       <>
-        <h1 style={{ fontSize: 20, fontWeight: 600, margin: '0 0 20px 0', lineHeight: '28px' }}>Ease of Access</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Ease of Access</h1>
         <Row icon="🖥️" title="Display" desc="Text size, zoom, magnifier">
           <ToggleSwitch on={props.magnifier} onToggle={props.onToggleMagnifier} />
         </Row>
         <Row icon="🖱️" title="Cursor & pointer" desc="Size, color, thickness">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="🔍" title="Magnifier" desc="Zoom part or all of screen">
           <ToggleSwitch on={props.magnifier} onToggle={props.onToggleMagnifier} />
@@ -1404,7 +1424,7 @@ function SettingsPage(props: {
           <ToggleSwitch on={props.highContrast} onToggle={props.onToggleHighContrast} />
         </Row>
         <Row icon="🔊" title="Audio" desc="Closed captions, mono">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <DisabledRow icon="🎙️" title="Narrator" desc="Screen reader" />
         <DisabledRow icon="🗣️" title="Speech recognition" desc="Voice control" />
@@ -1419,7 +1439,7 @@ function SettingsPage(props: {
   if (props.category === 'Privacy') {
     return (
       <>
-        <h1 style={{ fontSize: 20, fontWeight: 600, margin: '0 0 20px 0', lineHeight: '28px' }}>Privacy</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Privacy</h1>
         <Row icon="⚙️" title="General" desc="General privacy settings">
           <ToggleSwitch defaultOn={false} />
         </Row>
@@ -1461,24 +1481,24 @@ function SettingsPage(props: {
   if (props.category === 'Update & Security') {
     return (
       <>
-        <h1 style={{ fontSize: 20, fontWeight: 600, margin: '0 0 20px 0', lineHeight: '28px' }}>Update & Security</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Update & Security</h1>
         <Row icon="🔄" title="Windows Update" desc="Check for updates, history">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Check for updates</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Check for updates</span>
         </Row>
         <Row icon="🛡️" title="Windows Security" desc="Antivirus, firewall, browser">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Open</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Open</span>
         </Row>
         <Row icon="💾" title="Backup" desc="File History, restore files">
           <ToggleSwitch on={props.backup} onToggle={props.onToggleBackup} />
         </Row>
         <Row icon="🔧" title="Troubleshoot" desc="Resolve problems">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Run</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Run</span>
         </Row>
         <Row icon="↩️" title="Recovery" desc="Reset, restore, advanced startup">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
         <Row icon="🔑" title="Activation" desc="Windows activation status">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>View</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>View</span>
         </Row>
         <Row icon="📍" title="Find my device" desc="Locate your device">
           <ToggleSwitch defaultOn />
@@ -1490,13 +1510,13 @@ function SettingsPage(props: {
           <ToggleSwitch defaultOn />
         </Row>
         <Row icon="🔐" title="Device security" desc="Security processor, isolation">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>View</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>View</span>
         </Row>
         <Row icon="🔒" title="Device encryption" desc="BitLocker, encryption">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>View</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>View</span>
         </Row>
         <Row icon="🧪" title="Windows Insider Program" desc="Get preview builds">
-          <span style={{ fontSize: 12, color: '#0078D7' }}>Get started</span>
+          <span style={{ fontSize: 12, color: '#E91E63' }}>Get started</span>
         </Row>
       </>
     )
@@ -1505,7 +1525,7 @@ function SettingsPage(props: {
   // Fallback (ไม่ควรถึง)
   return (
     <>
-      <h1 style={{ fontSize: 20, fontWeight: 600, margin: '0 0 20px 0', lineHeight: '28px' }}>{props.category}</h1>
+      <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>{props.category}</h1>
       <div style={{ fontSize: 13, color: '#666', marginBottom: 24, lineHeight: 1.6 }}>
         This is the {props.category} settings page.
       </div>
@@ -1636,7 +1656,7 @@ function CalculatorContent({
     transition: 'background-color 0.1s', userSelect: 'none',
   }
   const opBtnStyle: React.CSSProperties = { ...btnStyle, background: '#f0f0f0', fontWeight: 500 }
-  const eqBtnStyle: React.CSSProperties = { ...btnStyle, background: '#0078D7', color: '#fff' }
+  const eqBtnStyle: React.CSSProperties = { ...btnStyle, background: '#E91E63', color: '#fff' }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, backgroundColor: '#f3f3f3' }}>
@@ -2315,7 +2335,7 @@ export default function Home() {
                 <input
                   type="range" min={0} max={100} value={muted ? 0 : volume}
                   onChange={(e) => onVolumeChange(Number(e.target.value))}
-                  style={{ writingMode: 'vertical-lr' as any, direction: 'rtl', width: 8, height: 100, cursor: 'default', accentColor: '#0078D7' }}
+                  style={{ writingMode: 'vertical-lr' as any, direction: 'rtl', width: 8, height: 100, cursor: 'default', accentColor: '#E91E63' }}
                   aria-label="Volume level"
                 />
               </div>
