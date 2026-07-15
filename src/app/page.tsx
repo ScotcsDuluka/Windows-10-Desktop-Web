@@ -1907,7 +1907,17 @@ function CalculatorContent({
 // Main Page
 // ============================================================
 export default function Home() {
-  const [wallpaper, setWallpaper] = useState<WallpaperConfig>(DEFAULT_WALLPAPER)
+  const [wallpaper, setWallpaperState] = useState<WallpaperConfig>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('wallpaper')
+      if (saved) { try { return JSON.parse(saved) } catch {} }
+    }
+    return DEFAULT_WALLPAPER
+  })
+  const setWallpaper = useCallback((wp: WallpaperConfig) => {
+    setWallpaperState(wp)
+    try { localStorage.setItem('wallpaper', JSON.stringify(wp)) } catch {}
+  }, [])
   const [time, setTime] = useState(new Date())
   const [volume, setVolume] = useState(80)
   const [muted, setMuted] = useState(false)
