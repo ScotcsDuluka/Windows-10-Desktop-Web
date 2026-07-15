@@ -334,6 +334,30 @@ function AppWindow({
       >
         <div style={{ fontSize: 12, color: '#1F1F1F', fontWeight: 400 }}>{state.title}</div>
         <div style={{ display: 'flex', height: '100%' }}>
+          {/* Minimize */}
+          <button
+            onClick={onMinimize}
+            onMouseDown={(e) => { e.stopPropagation(); onDragStart(e) }}
+            style={{ ...winBtnStyle }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.06)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
+            title="Minimize"
+            aria-label="Minimize"
+          >
+            <svg width="10" height="10" viewBox="0 0 10 10"><line x1="1" y1="5" x2="9" y2="5" stroke="currentColor" strokeWidth="1.2" /></svg>
+          </button>
+          {/* Maximize */}
+          <button
+            onClick={onMaximize}
+            onMouseDown={(e) => { e.stopPropagation(); onDragStart(e) }}
+            style={{ ...winBtnStyle }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.06)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
+            title="Maximize"
+            aria-label="Maximize"
+          >
+            <svg width="10" height="10" viewBox="0 0 10 10"><rect x="1" y="1" width="8" height="8" fill="none" stroke="currentColor" strokeWidth="1.2" /></svg>
+          </button>
           {/* Close */}
           <button
             onClick={onClose}
@@ -342,6 +366,7 @@ function AppWindow({
             onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#e81123'; e.currentTarget.style.color = '#fff' }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#1F1F1F' }}
             title="Close"
+            aria-label="Close"
           >
             <svg width="10" height="10" viewBox="0 0 10 10"><path d="M1,1 L9,9 M9,1 L1,9" stroke="currentColor" strokeWidth="1.2" /></svg>
           </button>
@@ -894,12 +919,12 @@ function SettingsSubPage(props: {
         </div>
 
         <div style={{ ...rowStyle, borderBottom: '1px solid #F0F0F0' }}>
-          <div>
-            <div style={labelStyle}>Night light</div>
-            <div style={descStyle}>Off</div>
-          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <ToggleSwitch on={props.nightLight} onToggle={props.onToggleNightLight} />
+            <div>
+              <div style={labelStyle}>Night light</div>
+              <div style={descStyle}>Off</div>
+            </div>
           </div>
         </div>
         <div style={{ padding: '8px 0 4px' }}>
