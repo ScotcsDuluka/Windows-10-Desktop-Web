@@ -1071,6 +1071,70 @@ function SettingsSubPage(props: {
   }
 
   // ====== Colors sub-page (ใช้งานได้จริง) ======
+  // ====== Background sub-page (wallpaper picker) ======
+  if (props.subPage === 'Background') {
+    return (
+      <>
+        <h1 style={titleStyle}>Background</h1>
+
+        <div style={sectionTitleStyle}>Preview</div>
+        <div style={{
+          width: '100%', maxWidth: 400, height: 200,
+          backgroundImage: props.wallpaper?.startsWith('data:') || props.wallpaper?.startsWith('/') ? `url(${props.wallpaper})` : 'none',
+          backgroundColor: props.wallpaper && !props.wallpaper.startsWith('data:') && !props.wallpaper.startsWith('/') ? props.wallpaper : '#ccc',
+          backgroundSize: 'cover', backgroundPosition: 'center',
+          border: '1px solid #ccc', borderRadius: 4, marginBottom: 16,
+        }} />
+
+        <div style={sectionTitleStyle}>Choose your picture</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 16 }}>
+          {WALLPAPER_PRESETS.map((wp) => (
+            <div
+              key={wp.src}
+              onClick={() => props.onWallpaperChange(wp.src)}
+              style={{
+                height: 80, backgroundImage: `url(${wp.src})`, backgroundSize: 'cover', backgroundPosition: 'center',
+                cursor: 'default', border: props.wallpaper === wp.src ? '3px solid #E91E63' : '1px solid #ccc',
+                borderRadius: 4,
+              }}
+              title={wp.name}
+            />
+          ))}
+        </div>
+
+        {/* Upload */}
+        <div style={{ marginBottom: 16 }}>
+          <label style={{ display: 'inline-block', padding: '8px 16px', backgroundColor: '#E91E63', color: '#fff', fontSize: 13, cursor: 'pointer', borderRadius: 4 }}>
+            Browse
+            <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
+              const file = e.target.files?.[0]
+              if (file) {
+                const reader = new FileReader()
+                reader.onload = () => props.onWallpaperChange(reader.result as string)
+                reader.readAsDataURL(file)
+              }
+            }} />
+          </label>
+        </div>
+
+        <div style={sectionTitleStyle}>Solid colors</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
+          {SOLID_COLORS.map((color) => (
+            <div
+              key={color}
+              onClick={() => props.onWallpaperChange(color)}
+              style={{
+                height: 60, backgroundColor: color, cursor: 'default',
+                border: props.wallpaper === color ? '3px solid #E91E63' : '1px solid #ccc',
+                borderRadius: 4,
+              }}
+            />
+          ))}
+        </div>
+      </>
+    )
+  }
+
   if (props.subPage === 'Colors') {
     return (
       <>
@@ -2082,7 +2146,6 @@ export default function Home() {
 
   // ====== Right-click: เปิด context menu บน desktop ======
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null)
-  const [wallpaperPickerOpen, setWallpaperPickerOpen] = useState(false)
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -2101,7 +2164,7 @@ export default function Home() {
   // ปิด context menu เมื่อคลิกที่อื่น
   useEffect(() => {
     const onClick = () => { setContextMenu(null) }
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { setContextMenu(null); setWallpaperPickerOpen(false) } }
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { setContextMenu(null) } }
     window.addEventListener('click', onClick)
     window.addEventListener('keydown', onKey)
     return () => { window.removeEventListener('click', onClick); window.removeEventListener('keydown', onKey) }
@@ -2484,7 +2547,7 @@ export default function Home() {
             Refresh
           </div>
           <div style={{ height: 1, backgroundColor: 'rgba(0,0,0,0.08)', margin: '4px 0' }} />
-          <div onClick={() => { setContextMenu(null); setWallpaperPickerOpen(true) }} style={{ padding: '8px 16px', fontSize: 13, cursor: 'default', color: '#323130' }}
+          <div onClick={() => { setContextMenu(null); openApp('settings'); /* TODO: set category=Personalization, subPage=Background */ }} style={{ padding: '8px 16px', fontSize: 13, cursor: 'default', color: '#323130' }}
             onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.06)' }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}>
             Change background
@@ -2499,78 +2562,6 @@ export default function Home() {
             onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.06)' }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}>
             Personalize
-          </div>
-        </div>
-      )}
-
-      {/* ====== Wallpaper Picker ====== */}
-      {wallpaperPickerOpen && (
-        <div
-          data-popup="wallpaper-picker"
-          onClick={(e) => e.stopPropagation()}
-          style={{
-            position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)',
-            width: 560, backgroundColor: 'rgba(243, 243, 243, 0.98)',
-            border: '1px solid rgba(0, 0, 0, 0.15)',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-            zIndex: 4000, padding: 24,
-          }}
-        >
-          <div style={{ fontSize: 20, fontWeight: 600, marginBottom: 16, color: '#323130' }}>Choose your background</div>
-
-          {/* Upload */}
-          <div style={{ marginBottom: 16 }}>
-            <label style={{ display: 'inline-block', padding: '8px 16px', backgroundColor: '#E91E63', color: '#fff', fontSize: 13, cursor: 'pointer', borderRadius: 4 }}>
-              Browse
-              <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
-                const file = e.target.files?.[0]
-                if (file) {
-                  const reader = new FileReader()
-                  reader.onload = () => { setWallpaper({ type: 'image', src: reader.result as string }); setWallpaperPickerOpen(false) }
-                  reader.readAsDataURL(file)
-                }
-              }} />
-            </label>
-          </div>
-
-          {/* Preset wallpapers */}
-          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: '#323130' }}>Wallpapers</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 16 }}>
-            {WALLPAPER_PRESETS.map((wp) => (
-              <div
-                key={wp.src}
-                onClick={() => { setWallpaper({ type: 'image', src: wp.src }); setWallpaperPickerOpen(false) }}
-                style={{
-                  height: 80, backgroundImage: `url(${wp.src})`, backgroundSize: 'cover', backgroundPosition: 'center',
-                  cursor: 'default', border: wallpaper.src === wp.src ? '3px solid #E91E63' : '1px solid #ccc',
-                  borderRadius: 4,
-                }}
-                title={wp.name}
-              />
-            ))}
-          </div>
-
-          {/* Solid colors */}
-          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: '#323130' }}>Solid colors</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8, marginBottom: 16 }}>
-            {SOLID_COLORS.map((color) => (
-              <div
-                key={color}
-                onClick={() => { setWallpaper({ type: 'solid', src: color }); setWallpaperPickerOpen(false) }}
-                style={{
-                  height: 60, backgroundColor: color, cursor: 'default',
-                  border: wallpaper.type === 'solid' && wallpaper.src === color ? '3px solid #E91E63' : '1px solid #ccc',
-                  borderRadius: 4,
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Close */}
-          <div style={{ textAlign: 'right' }}>
-            <button onClick={() => setWallpaperPickerOpen(false)} style={{ padding: '6px 16px', fontSize: 13, border: '1px solid #ccc', backgroundColor: '#fff', cursor: 'default', borderRadius: 4 }}>
-              Close
-            </button>
           </div>
         </div>
       )}
