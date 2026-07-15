@@ -363,7 +363,7 @@ function AppWindow({
       </div>
 
       {/* ====== Body ====== */}
-      <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', userSelect: 'none' }}>
+      <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', userSelect: 'none', position: 'relative', zIndex: 1 }}>
         {children}
       </div>
 
