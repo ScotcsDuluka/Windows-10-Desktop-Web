@@ -490,7 +490,8 @@ function ToggleSwitch({ defaultOn = false, on, onToggle }: { defaultOn?: boolean
 }
 
 function SettingsContent({
-  category, onCategoryChange, tabletMode, onToggleTabletMode,
+  category, onCategoryChange, subPage, onSubPageChange,
+  tabletMode, onToggleTabletMode,
   wallpaper, onWallpaperChange, brightness, onBrightnessChange,
   volume, onVolumeChange, nightLight, onToggleNightLight,
   autoTime, onToggleAutoTime, darkMode, onToggleDarkMode,
@@ -504,6 +505,8 @@ function SettingsContent({
 }: {
   category: string
   onCategoryChange: (c: string) => void
+  subPage: string
+  onSubPageChange: (s: string) => void
   tabletMode: boolean
   onToggleTabletMode: () => void
   wallpaper: string
@@ -586,7 +589,7 @@ function SettingsContent({
         >
           <button
             aria-label="Back"
-            onClick={() => onCategoryChange('')}
+            onClick={() => { if (subPage) onSubPageChange(''); else onCategoryChange('') }}
             style={{
               width: 32, height: 32, border: 'none', background: 'transparent',
               cursor: 'default', display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -599,6 +602,16 @@ function SettingsContent({
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
+          {/* Breadcrumb: แสดง category > subPage */}
+          <div style={{ fontSize: 13, color: '#1F1F1F', fontWeight: 400, userSelect: 'none' }}>
+            <span style={{ cursor: 'default' }} onClick={() => onSubPageChange('')}>{category}</span>
+            {subPage && (
+              <>
+                <span style={{ color: '#767676', margin: '0 6px' }}>›</span>
+                <span style={{ color: '#1F1F1F' }}>{subPage}</span>
+              </>
+            )}
+          </div>
 
           <div
             style={{
@@ -742,8 +755,30 @@ function SettingsContent({
             overflowY: 'auto', color: '#1F1F1F', userSelect: 'none',
           }}
         >
+          {subPage ? (
+            <SettingsSubPage
+              category={category}
+              subPage={subPage}
+              brightness={brightness}
+              onBrightnessChange={onBrightnessChange}
+              volume={volume}
+              onVolumeChange={onVolumeChange}
+              nightLight={nightLight}
+              onToggleNightLight={onToggleNightLight}
+              tabletMode={tabletMode}
+              onToggleTabletMode={onToggleTabletMode}
+              autoTime={autoTime}
+              onToggleAutoTime={onToggleAutoTime}
+              darkMode={darkMode}
+              onToggleDarkMode={onToggleDarkMode}
+              backup={backup}
+              onToggleBackup={onToggleBackup}
+            />
+          ) : (
           <SettingsPage
             category={category}
+            subPage={subPage}
+            onSubPageChange={onSubPageChange}
             tabletMode={tabletMode}
             onToggleTabletMode={onToggleTabletMode}
             wallpaper={wallpaper}
@@ -773,6 +808,7 @@ function SettingsContent({
             microphone={microphone} onToggleMicrophone={onToggleMicrophone}
             backup={backup} onToggleBackup={onToggleBackup}
           />
+          )}
         </div>
       </div>
       )}
@@ -783,8 +819,224 @@ function SettingsContent({
 // ============================================================
 // Settings Page (แต่ละหมวด)
 // ============================================================
+// ============================================================
+// Settings Sub-Page (หน้า detail ของแต่ละ row)
+// ============================================================
+function SettingsSubPage(props: {
+  category: string
+  subPage: string
+  brightness: number
+  onBrightnessChange: (b: number) => void
+  volume: number
+  onVolumeChange: (v: number) => void
+  nightLight: boolean
+  onToggleNightLight: () => void
+  tabletMode: boolean
+  onToggleTabletMode: () => void
+  autoTime: boolean
+  onToggleAutoTime: () => void
+  darkMode: boolean
+  onToggleDarkMode: () => void
+  backup: boolean
+  onToggleBackup: () => void
+}) {
+  const titleStyle: React.CSSProperties = { fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px', color: '#1F1F1F' }
+  const sectionTitleStyle: React.CSSProperties = { fontSize: 14, fontWeight: 600, marginBottom: 8, marginTop: 24, color: '#1F1F1F' }
+  const rowStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid #efefef' }
+  const labelStyle: React.CSSProperties = { fontSize: 13, color: '#1F1F1F' }
+  const descStyle: React.CSSProperties = { fontSize: 12, color: '#767676', marginTop: 2 }
+
+  // ====== Display sub-page (ใช้งานได้จริง) ======
+  if (props.subPage === 'Display') {
+    return (
+      <>
+        <h1 style={titleStyle}>Display</h1>
+        <div style={sectionTitleStyle}>Brightness and color</div>
+        <div style={rowStyle}>
+          <div>
+            <div style={labelStyle}>Brightness</div>
+            <div style={descStyle}>Adjust the brightness of the built-in display</div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <input type="range" min={0} max={100} value={props.brightness} onChange={(e) => props.onBrightnessChange(Number(e.target.value))} style={{ width: 200, accentColor: '#0078D7' }} />
+            <span style={{ fontSize: 12, color: '#767676', minWidth: 30 }}>{props.brightness}%</span>
+          </div>
+        </div>
+        <div style={rowStyle}>
+          <div>
+            <div style={labelStyle}>Night light</div>
+            <div style={descStyle}>Make your display easier to see at night</div>
+          </div>
+          <ToggleSwitch on={props.nightLight} onToggle={props.onToggleNightLight} />
+        </div>
+        <div style={sectionTitleStyle}>Scale and layout</div>
+        <div style={rowStyle}>
+          <div>
+            <div style={labelStyle}>Change the size of text, apps, and other items</div>
+            <div style={descStyle}>Recommended: 100%</div>
+          </div>
+          <span style={{ fontSize: 12, color: '#0078D7' }}>100% (Recommended)</span>
+        </div>
+        <div style={rowStyle}>
+          <div>
+            <div style={labelStyle}>Display resolution</div>
+            <div style={descStyle}>Recommended: 1920 × 1080</div>
+          </div>
+          <span style={{ fontSize: 12, color: '#0078D7' }}>1920 × 1080 (Recommended)</span>
+        </div>
+        <div style={rowStyle}>
+          <div>
+            <div style={labelStyle}>Orientation</div>
+            <div style={descStyle}>Landscape</div>
+          </div>
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Landscape</span>
+        </div>
+      </>
+    )
+  }
+
+  // ====== Sound sub-page (ใช้งานได้จริง) ======
+  if (props.subPage === 'Sound') {
+    return (
+      <>
+        <h1 style={titleStyle}>Sound</h1>
+        <div style={sectionTitleStyle}>Output</div>
+        <div style={rowStyle}>
+          <div>
+            <div style={labelStyle}>Choose your output device</div>
+            <div style={descStyle}>Speakers (Realtek Audio)</div>
+          </div>
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Speakers</span>
+        </div>
+        <div style={rowStyle}>
+          <div>
+            <div style={labelStyle}>Master volume</div>
+            <div style={descStyle}>Adjust the overall volume</div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <input type="range" min={0} max={100} value={props.volume} onChange={(e) => props.onVolumeChange(Number(e.target.value))} style={{ width: 200, accentColor: '#0078D7' }} />
+            <span style={{ fontSize: 12, color: '#767676', minWidth: 30 }}>{props.volume}%</span>
+          </div>
+        </div>
+        <div style={sectionTitleStyle}>Input</div>
+        <div style={rowStyle}>
+          <div>
+            <div style={labelStyle}>Choose your input device</div>
+            <div style={descStyle}>Microphone (Realtek Audio)</div>
+          </div>
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Microphone</span>
+        </div>
+      </>
+    )
+  }
+
+  // ====== Tablet mode sub-page (ใช้งานได้จริง) ======
+  if (props.subPage === 'Tablet mode') {
+    return (
+      <>
+        <h1 style={titleStyle}>Tablet mode</h1>
+        <div style={sectionTitleStyle}>Tablet mode</div>
+        <div style={rowStyle}>
+          <div>
+            <div style={labelStyle}>Make Windows more touch-friendly when using your device as a tablet</div>
+            <div style={descStyle}>When on, apps open full screen</div>
+          </div>
+          <ToggleSwitch on={props.tabletMode} onToggle={props.onToggleTabletMode} />
+        </div>
+      </>
+    )
+  }
+
+  // ====== Date & time sub-page (ใช้งานได้จริง) ======
+  if (props.subPage === 'Date & time') {
+    return (
+      <>
+        <h1 style={titleStyle}>Date &amp; time</h1>
+        <div style={rowStyle}>
+          <div>
+            <div style={labelStyle}>Set time automatically</div>
+            <div style={descStyle}>Windows will set the time zone automatically</div>
+          </div>
+          <ToggleSwitch on={props.autoTime} onToggle={props.onToggleAutoTime} />
+        </div>
+        <div style={rowStyle}>
+          <div>
+            <div style={labelStyle}>Adjust for daylight saving time automatically</div>
+          </div>
+          <ToggleSwitch on={props.autoTime} onToggle={props.onToggleAutoTime} />
+        </div>
+        <div style={sectionTitleStyle}>Time zone</div>
+        <div style={rowStyle}>
+          <div><div style={labelStyle}>Time zone</div></div>
+          <span style={{ fontSize: 12, color: '#0078D7' }}>(UTC+07:00) Bangkok</span>
+        </div>
+      </>
+    )
+  }
+
+  // ====== Colors sub-page (ใช้งานได้จริง) ======
+  if (props.subPage === 'Colors') {
+    return (
+      <>
+        <h1 style={titleStyle}>Colors</h1>
+        <div style={sectionTitleStyle}>Choose your color</div>
+        <div style={rowStyle}>
+          <div>
+            <div style={labelStyle}>Choose your mode</div>
+            <div style={descStyle}>Light / Dark</div>
+          </div>
+          <span style={{ fontSize: 12, color: '#0078D7' }}>{props.darkMode ? 'Dark' : 'Light'}</span>
+        </div>
+        <div style={rowStyle}>
+          <div>
+            <div style={labelStyle}>Choose your default app mode</div>
+            <div style={descStyle}>Toggle between light and dark mode</div>
+          </div>
+          <ToggleSwitch on={props.darkMode} onToggle={props.onToggleDarkMode} />
+        </div>
+      </>
+    )
+  }
+
+  // ====== Backup sub-page (ใช้งานได้จริง) ======
+  if (props.subPage === 'Backup') {
+    return (
+      <>
+        <h1 style={titleStyle}>Backup</h1>
+        <div style={sectionTitleStyle}>Back up using File History</div>
+        <div style={rowStyle}>
+          <div>
+            <div style={labelStyle}>Automatically back up my files</div>
+            <div style={descStyle}>File History backs up files to an external drive</div>
+          </div>
+          <ToggleSwitch on={props.backup} onToggle={props.onToggleBackup} />
+        </div>
+      </>
+    )
+  }
+
+  // ====== Default placeholder สำหรับ sub-pages อื่น ๆ ======
+  return (
+    <>
+      <h1 style={titleStyle}>{props.subPage}</h1>
+      <div style={{ fontSize: 13, color: '#767676', marginBottom: 24, lineHeight: 1.6 }}>
+        This is the {props.subPage} settings page under {props.category}.
+      </div>
+      <div style={{ padding: 24, backgroundColor: '#f3f3f3', borderRadius: 4, textAlign: 'center' }}>
+        <div style={{ fontSize: 13, color: '#767676' }}>⚙️ Settings for {props.subPage}</div>
+        <div style={{ fontSize: 11, color: '#999', marginTop: 4 }}>This sub-page is a placeholder</div>
+      </div>
+    </>
+  )
+}
+
+// ============================================================
+// Settings Page (แต่ละหมวด)
+// ============================================================
 function SettingsPage(props: {
   category: string
+  subPage: string
+  onSubPageChange: (s: string) => void
   tabletMode: boolean
   onToggleTabletMode: () => void
   wallpaper: string
@@ -831,8 +1083,14 @@ function SettingsPage(props: {
     fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px', color: '#1F1F1F',
   }
 
+  // Row ที่คลิกได้ → เข้า sub-page
   const Row = ({ icon, title, desc, children }: { icon: string; title: string; desc: string; children?: React.ReactNode }) => (
-    <div style={rowStyle}>
+    <div
+      style={{ ...rowStyle, cursor: 'pointer' }}
+      onClick={() => props.onSubPageChange(title)}
+      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#f3f3f3' }}
+      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
+    >
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1 }}>
         <div style={iconBoxStyle}>{icon}</div>
         <div>
@@ -1844,7 +2102,9 @@ export default function Home() {
             {app.id === 'settings' && (
               <SettingsContent
                 category={w.data?.category || ''}
-                onCategoryChange={(c) => updateWindow(app.id, { data: { ...w.data, category: c } })}
+                onCategoryChange={(c) => updateWindow(app.id, { data: { ...w.data, category: c, subPage: '' } })}
+                subPage={w.data?.subPage || ''}
+                onSubPageChange={(s) => updateWindow(app.id, { data: { ...w.data, subPage: s } })}
                 tabletMode={tabletMode}
                 onToggleTabletMode={() => setTabletMode((v) => !v)}
                 wallpaper={wallpaper.src}
