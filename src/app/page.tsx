@@ -96,8 +96,8 @@ const APPS: AppDef[] = [
   {
     id: 'notepad',
     title: 'Notepad',
-    icon: '📝',
-    iconType: 'emoji',
+    icon: '/icon-notepad.png',
+    iconType: 'img',
     defaultSize: { w: 500, h: 400 },
     defaultPosition: { x: 200, y: 120 },
     pinned: true,
@@ -105,8 +105,8 @@ const APPS: AppDef[] = [
   {
     id: 'calculator',
     title: 'Calculator',
-    icon: '🧮',
-    iconType: 'emoji',
+    icon: '/icon-calculator.png',
+    iconType: 'img',
     defaultSize: { w: 320, h: 480 },
     defaultPosition: { x: 300, y: 100 },
     pinned: true,
@@ -814,11 +814,11 @@ function SettingsContent({
 
           {/* Home item — no icon (matches real Win10) */}
           <div
-            onClick={() => onCategoryChange('')}
+            onClick={(e) => { e.stopPropagation(); onCategoryChange('') }}
             style={{
               display: 'flex', alignItems: 'center', gap: 14,
               padding: '14px 24px',
-              cursor: 'default',
+              cursor: 'pointer',
               fontSize: 13, lineHeight: '20px',
               color: '#E91E63',
               fontWeight: 400,
@@ -849,17 +849,17 @@ function SettingsContent({
             return (
             <div
               key={sp.id}
-              onClick={() => onSubPageChange(sp.id)}
+              onClick={(e) => { e.stopPropagation(); onSubPageChange(sp.id) }}
               style={{
                 display: 'flex', alignItems: 'center', gap: 12,
                 padding: '10px 24px 10px 48px',
-                cursor: 'default',
+                cursor: 'pointer',
                 fontSize: 13, lineHeight: '20px',
                 fontWeight: selected ? 600 : 400,
                 color: '#323130',
-                backgroundColor: 'transparent',
+                backgroundColor: selected ? 'rgba(0, 0, 0, 0.06)' : 'transparent',
                 borderLeft: selected ? '3px solid #E91E63' : '3px solid transparent',
-                transition: 'background-color 83ms linear',
+                transition: 'background-color 150ms ease, border-color 150ms ease',
               }}
               onMouseEnter={(e) => { if (!selected) e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.04)' }}
               onMouseLeave={(e) => { if (!selected) e.currentTarget.style.backgroundColor = 'transparent' }}
@@ -880,6 +880,7 @@ function SettingsContent({
             overflowY: 'auto', color: '#323130', userSelect: 'none',
           }}
         >
+          <div key={subPage || 'default'} style={{ animation: 'settingsFadeIn 200ms ease-out' }}>
           <SettingsSubPage
             category={category}
             subPage={subPage || (SETTINGS_CATEGORIES.find((c) => c.id === category)?.subPages?.[0]?.id) || category}
@@ -900,6 +901,7 @@ function SettingsContent({
             backup={backup}
             onToggleBackup={onToggleBackup}
           />
+          </div>
         </div>
       </div>
       )}
@@ -2789,6 +2791,10 @@ export default function Home() {
 
       {/* ====== Styles ====== */}
       <style>{`
+        @keyframes settingsFadeIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(4px); }
           to { opacity: 1; transform: translateY(0); }
