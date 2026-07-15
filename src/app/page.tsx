@@ -2,6 +2,23 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 
+// ====== Mond fonts (จาก Rainmeter skin) ======
+// โหลด font ที่นี่เพื่อให้ clock ใช้ได้
+if (typeof window !== 'undefined') {
+  const fontStyles = `
+    @font-face { font-family: 'Quicksand'; src: url('/Quicksand.otf') format('opentype'); font-weight: normal; font-style: normal; }
+    @font-face { font-family: 'Quicksand'; src: url('/Quicksand.otf') format('opentype'); font-weight: 600; font-style: normal; }
+    @font-face { font-family: 'Anurati'; src: url('/Anurati.otf') format('opentype'); font-weight: normal; font-style: normal; }
+  `
+  const existing = document.getElementById('mond-fonts')
+  if (!existing) {
+    const style = document.createElement('style')
+    style.id = 'mond-fonts'
+    style.textContent = fontStyles
+    document.head.appendChild(style)
+  }
+}
+
 // ============================================================
 // Windows 10 Desktop — Window Manager Edition
 // ============================================================
@@ -866,6 +883,8 @@ function SettingsContent({
           <SettingsSubPage
             category={category}
             subPage={subPage || (SETTINGS_CATEGORIES.find((c) => c.id === category)?.subPages?.[0]?.id) || category}
+            wallpaper={wallpaper}
+            onWallpaperChange={onWallpaperChange}
             brightness={brightness}
             onBrightnessChange={onBrightnessChange}
             volume={volume}
@@ -897,6 +916,8 @@ function SettingsContent({
 function SettingsSubPage(props: {
   category: string
   subPage: string
+  wallpaper: string
+  onWallpaperChange: (w: string, t?: string) => void
   brightness: number
   onBrightnessChange: (b: number) => void
   volume: number
@@ -2193,9 +2214,23 @@ export default function Home() {
     return () => clearInterval(t)
   }, [])
 
-  // ====== Mond Clock widget (draggable) ======
-  const [clockPos, setClockPos] = useState({ x: 80, y: 80 })
+  // ====== Mond Clock widget (draggable + localStorage) ======
+  const [clockPos, setClockPos] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('clockPos')
+      if (saved) { try { return JSON.parse(saved) } catch {} }
+    }
+    return { x: 80, y: 80 }
+  })
   const clockDragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null)
+
+  // บันทึกตำแหน่งนาฬิกาเมื่อปล่อยเมาส์
+  const onClockDragEnd = useCallback(() => {
+    if (clockDragRef.current) {
+      clockDragRef.current = null
+      localStorage.setItem('clockPos', JSON.stringify(clockPos))
+    }
+  }, [clockPos])
 
   const onClockDragStart = useCallback((e: React.MouseEvent) => {
     clockDragRef.current = { startX: e.clientX, startY: e.clientY, origX: clockPos.x, origY: clockPos.y }
@@ -2210,8 +2245,6 @@ export default function Home() {
       y: Math.max(0, Math.min(window.innerHeight - 200, clockDragRef.current.origY + dy)),
     })
   }, [])
-
-  const onClockDragEnd = useCallback(() => { clockDragRef.current = null }, [])
 
   // ====== Right-click: เปิด context menu บน desktop ======
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null)
@@ -2599,15 +2632,15 @@ export default function Home() {
           textAlign: 'center', pointerEvents: 'auto',
         }}
       >
-        {/* Day — large, spaced */}
+        {/* Day — Anurati font (จาก Mond skin), large, spaced */}
         <div style={{
-          fontFamily: '"Segoe UI", sans-serif', fontSize: 28, fontWeight: 300,
-          color: '#fff', letterSpacing: 6, textShadow: '0 2px 8px rgba(0,0,0,0.5)',
+          fontFamily: 'Anurati, "Segoe UI", sans-serif', fontSize: 32, fontWeight: 400,
+          color: '#fff', letterSpacing: 10, textShadow: '0 2px 8px rgba(0,0,0,0.5)',
           marginBottom: 2,
         }}>
           {time.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase()}
         </div>
-        {/* Date — medium */}
+        {/* Date — Quicksand font (จาก Mond skin) */}
         <div style={{
           fontFamily: 'Quicksand, "Segoe UI", sans-serif', fontSize: 14, fontWeight: 400,
           color: '#fff', textShadow: '0 1px 4px rgba(0,0,0,0.5)',
@@ -2615,7 +2648,7 @@ export default function Home() {
         }}>
           {time.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' })}
         </div>
-        {/* Time — large, bold */}
+        {/* Time — Quicksand font, large bold */}
         <div style={{
           fontFamily: 'Quicksand, "Segoe UI", sans-serif', fontSize: 42, fontWeight: 600,
           color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,0.5)',
