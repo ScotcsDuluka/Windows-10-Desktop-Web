@@ -296,7 +296,9 @@ function AppWindow({
       style={{
         position: 'absolute', left: winLeft, top: winTop,
         width: winWidth, height: winHeight, zIndex: 500,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        backdropFilter: 'blur(70px)',
+        WebkitBackdropFilter: 'blur(70px)',
         border: 'none',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
         display: 'flex', flexDirection: 'column',
@@ -317,14 +319,25 @@ function AppWindow({
       onMouseUp={onDragEnd}
       onMouseLeave={onDragEnd}
     >
+      {/* Noise overlay 20% */}
+      <div
+        style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          backgroundImage: `url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
+          opacity: 0.2,
+          mixBlendMode: 'overlay',
+          backgroundSize: '100px 100px',
+          zIndex: 0,
+        }}
+      />
       {/* ====== Title Bar ====== */}
       <div
         style={{
-          height: 32, backgroundColor: '#fff',
+          height: 32, backgroundColor: 'transparent',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '0 0 0 12px', flexShrink: 0,
           borderBottom: 'none', cursor: 'default',
-          userSelect: 'none',
+          userSelect: 'none', position: 'relative', zIndex: 1,
         }}
         onMouseDown={(e) => {
           e.stopPropagation()
