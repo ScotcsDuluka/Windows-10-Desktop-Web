@@ -1,0 +1,43 @@
+{
+  "success": true,
+  "query": "Windows 10 Settings app System page screenshot real interface",
+  "count": 5,
+  "ranked": true,
+  "results": [
+    {
+      "original_url": "https://sfile.chatglm.cn/images-ppt/6a08bdd8930d.png",
+      "caption": "The image contains a large amount of text information and you do not need to output the text completely.",
+      "source": "Microsoft Learn",
+      "original_width": "1372px",
+      "original_height": "1351px"
+    },
+    {
+      "original_url": "https://sfile.chatglm.cn/images-ppt/7480b1a6f76f.png",
+      "caption": "The image displays the Windows App interface, showing favorites like Cloud PC, Contoso Desktop, Word, Edge, and Excel.",
+      "source": "Microsoft Learn",
+      "original_width": "1484px",
+      "original_height": "945px"
+    },
+    {
+      "original_url": "https://sfile.chatglm.cn/images-ppt/0b2f9f2d7b80.png",
+      "caption": "The image contains a large amount of text information and you do not need to output the text completely.",
+      "source": "Medium",
+      "original_width": "1291px",
+      "original_height": "750px"
+    },
+    {
+      "original_url": "https://sfile.chatglm.cn/images-ppt/b7aa59ca9867.jpg",
+      "caption": "The image displays a Windows tutorial on resetting display settings to default, showing the Display settings window.",
+      "source": "YouTube",
+      "original_width": "1280px",
+      "original_height": "720px"
+    },
+    {
+      "original_url": "https://sfile.chatglm.cn/images-ppt/976852b4f2b1.jpg",
+      "caption": "The image contains a large amount of text information and you do not need to output the text completely.",
+      "source": "MakeUseOf",
+      "original_width": "1650px",
+      "original_height": "1102px"
+    }
+  ]
+}
