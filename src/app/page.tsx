@@ -648,6 +648,11 @@ function SettingsContent({
   backup: boolean; onToggleBackup: () => void
 }) {
   const isHome = !category || category === ''
+  // Settings page transition state
+  const [settingsTransition, setSettingsTransition] = useState<'home' | 'category'>(isHome ? 'home' : 'category')
+  useEffect(() => {
+    setSettingsTransition(isHome ? 'home' : 'category')
+  }, [isHome])
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, height: '100%',
@@ -722,15 +727,20 @@ function SettingsContent({
         </div>
       )}
 
-      {/* ====== Body: Home (grid) หรือ Sidebar + Content ====== */}
-      {isHome ? (
-        // ====== Home page — app1 (ออกไปทางซ้าย) ======
-        <div key="home" style={{
-          flex: 1, backgroundColor: 'transparent', overflowY: 'auto',
-          padding: '24px 56px 32px', userSelect: 'none',
-          display: 'flex', flexDirection: 'column',
-          animation: 'settingsIn 300ms cubic-bezier(0.16, 1, 0.3, 1)',
-        }}>
+      {/* ====== Body: ทั้งหน้าเปลี่ยนพร้อมกัน (Home ↔ Category) ====== */}
+      <div style={{ position: 'relative', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+
+      {/* Home page — โผล่/หาย ตาม isHome */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        backgroundColor: 'transparent', overflowY: 'auto',
+        padding: '24px 56px 32px', userSelect: 'none',
+        display: 'flex', flexDirection: 'column',
+        opacity: isHome ? 1 : 0,
+        transform: isHome ? 'scale(1)' : 'scale(0.96)',
+        pointerEvents: isHome ? 'auto' : 'none',
+        transition: 'opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+      }}>
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(5, 1fr)',
@@ -761,7 +771,7 @@ function SettingsContent({
                 }}
               >
                 <span style={{ flexShrink: 0, display: 'flex', alignItems: 'center', marginTop: 2 }}>
-                  <SettingsIcon name={c.icon} size={24} />
+                  <SettingsIcon name={c.icon} size={19} />
                 </span>
                 <div>
                   <div style={{ fontSize: 16, fontWeight: 600, color: '#323130', lineHeight: '22px', marginBottom: 4 }}>
@@ -775,12 +785,19 @@ function SettingsContent({
               )
             })}
           </div>
-          {/* Footer: Activate Windows (เหมือน Win10 จริง) */}
+          {/* Footer */}
           <div style={{ marginTop: 'auto' }} />
         </div>
-      ) : (
-        // ====== Category page — app2 (เข้ามาจากขวา) ======
-        <div key="category" style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden', animation: 'settingsIn 300ms cubic-bezier(0.16, 1, 0.3, 1)' }}>
+
+      {/* Category page — โผล่/หาย ตาม isHome (ตรงข้าม) */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        display: 'flex', minHeight: 0, overflow: 'hidden',
+        opacity: isHome ? 0 : 1,
+        transform: isHome ? 'scale(0.96)' : 'scale(1)',
+        pointerEvents: isHome ? 'none' : 'auto',
+        transition: 'opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+      }}>
         {/* Sidebar — Win10 จริง: 280px, bg #F2F2F2, search bar ด้านบน */}
         <div
           style={{
@@ -905,7 +922,8 @@ function SettingsContent({
           </div>
         </div>
       </div>
-      )}
+
+      </div>{/* ปิด wrapper relative */}
     </div>
   )
 }
@@ -2577,7 +2595,7 @@ export default function Home() {
                   onVolumeChange(newVol)
                 }}
               >
-                {renderAppIcon(app, app.iconType === 'img' ? 28 : 20)}
+                {renderAppIcon(app, app.iconType === 'img' ? 25 : 18)}
               </TaskbarIconButton>
             )
           })}
