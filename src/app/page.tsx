@@ -587,7 +587,9 @@ function SettingsContent({
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0,
-      backgroundColor: '#f3f3f3',
+      backgroundColor: 'rgba(243, 243, 243, 0.85)',
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
       fontFamily: '"Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif',
     }}>
       {/* ====== Header ====== */}
@@ -698,7 +700,7 @@ function SettingsContent({
       {isHome ? (
         // ====== Home page — grid ของ category tiles (เหมือน Win10 จริง) ======
         <div style={{
-          flex: 1, backgroundColor: '#fff', overflowY: 'auto',
+          flex: 1, backgroundColor: 'rgba(255, 255, 255, 0.75)', overflowY: 'auto',
           padding: '24px 56px 32px', userSelect: 'none',
           display: 'flex', flexDirection: 'column',
         }}>
@@ -795,7 +797,7 @@ function SettingsContent({
         {/* Content — Win10 จริง: พื้นขาว, padding 32px, font 14px body */}
         <div
           style={{
-            flex: 1, backgroundColor: '#fff', padding: '24px 40px 32px',
+            flex: 1, backgroundColor: 'rgba(255, 255, 255, 0.75)', padding: '24px 40px 32px',
             overflowY: 'auto', color: '#1F1F1F', userSelect: 'none',
           }}
         >
