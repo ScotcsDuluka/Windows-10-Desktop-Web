@@ -1096,8 +1096,8 @@ function SettingsSubPage(props: {
           <select
             value={isSolidColor ? 'solid' : 'picture'}
             onChange={(e) => {
-              if (e.target.value === 'solid') props.onWallpaperChange('#0078D7')
-              else props.onWallpaperChange(WALLPAPER_PRESETS[0].src)
+              if (e.target.value === 'solid') props.onWallpaperChange('#0078D7', 'solid')
+              else props.onWallpaperChange(WALLPAPER_PRESETS[0].src, 'image')
             }}
             style={{ padding: '4px 8px', fontSize: 13, border: '1px solid #ccc', borderRadius: 2, backgroundColor: '#fff', color: '#323130', cursor: 'default', minWidth: 120 }}
           >
@@ -1115,10 +1115,10 @@ function SettingsSubPage(props: {
                 {WALLPAPER_PRESETS.map((wp) => (
                   <div
                     key={wp.src}
-                    onClick={() => props.onWallpaperChange(wp.src)}
+                    onClick={() => props.onWallpaperChange(wp.src, 'image')}
                     style={{
                       width: 90, height: 60, backgroundImage: `url(${wp.src})`, backgroundSize: 'cover', backgroundPosition: 'center',
-                      cursor: 'default', border: props.wallpaper === wp.src ? '3px solid #E91E63' : '1px solid #ccc',
+                      cursor: 'pointer', border: props.wallpaper === wp.src ? '3px solid #E91E63' : '1px solid #ccc',
                       borderRadius: 2,
                     }}
                     title={wp.name}
@@ -1169,9 +1169,9 @@ function SettingsSubPage(props: {
               {SOLID_COLORS.map((color) => (
                 <div
                   key={color}
-                  onClick={() => props.onWallpaperChange(color)}
+                  onClick={() => props.onWallpaperChange(color, 'solid')}
                   style={{
-                    width: 60, height: 60, backgroundColor: color, cursor: 'default',
+                    width: 60, height: 60, backgroundColor: color, cursor: 'pointer',
                     border: props.wallpaper === color ? '3px solid #E91E63' : '1px solid #ccc',
                     borderRadius: 2,
                   }}
