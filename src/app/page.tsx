@@ -297,8 +297,8 @@ function AppWindow({
         position: 'absolute', left: winLeft, top: winTop,
         width: winWidth, height: winHeight, zIndex: 500,
         backgroundColor: 'rgba(255, 255, 255, 0.85)',
-        backdropFilter: 'blur(4px)',
-        WebkitBackdropFilter: 'blur(4px)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         border: '1px solid rgba(0, 0, 0, 0.1)',
         boxShadow: '0 10px 30px rgba(0, 0, 0, 0.25)',
         display: 'flex', flexDirection: 'column',
@@ -322,10 +322,10 @@ function AppWindow({
       {/* ====== Title Bar ====== */}
       <div
         style={{
-          height: 32, backgroundColor: '#f0f0f0',
+          height: 32, backgroundColor: 'transparent',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '0 0 0 12px', flexShrink: 0,
-          borderBottom: '1px solid #e5e5e5', cursor: 'default',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.08)', cursor: 'default',
           userSelect: 'none',
         }}
         onMouseDown={(e) => {
