@@ -7,7 +7,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 // ============================================================
 
 // ---------- Types ----------
-type WallpaperType = 'image' | 'video'
+type WallpaperType = 'image' | 'video' | 'solid'
 interface WallpaperConfig { type: WallpaperType; src: string }
 
 interface WindowState {
@@ -33,7 +33,17 @@ interface WindowState {
 }
 
 // ---------- Constants ----------
-const DEFAULT_WALLPAPER: WallpaperConfig = { type: 'image', src: '/win10-wallpaper.jpg' }
+const DEFAULT_WALLPAPER: WallpaperConfig = { type: 'image', src: '/wallpaper-default.jpg' }
+
+// Preset wallpapers + solid colors
+const WALLPAPER_PRESETS = [
+  { type: 'image' as const, src: '/wallpaper-default.jpg', name: 'Windows 10' },
+  { type: 'image' as const, src: '/win10-wallpaper.jpg', name: 'Hero' },
+]
+const SOLID_COLORS = [
+  '#0078D7', '#E91E63', '#107C10', '#FF8C00', '#5C2D91',
+  '#008272', '#D83B01', '#000000', '#FFFFFF', '#444444',
+]
 
 const MIN_W = 400
 const MIN_H = 300
@@ -293,6 +303,7 @@ function AppWindow({
 
   return (
     <div
+      data-window="true"
       style={{
         position: 'absolute', left: winLeft, top: winTop,
         width: winWidth, height: winHeight, zIndex: 500,
@@ -2069,11 +2080,31 @@ export default function Home() {
     return () => clearInterval(t)
   }, [])
 
-  // ====== Block right-click ======
+  // ====== Right-click: เปิด context menu บน desktop ======
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null)
+  const [wallpaperPickerOpen, setWallpaperPickerOpen] = useState(false)
+
   useEffect(() => {
-    const handler = (e: MouseEvent) => { e.preventDefault(); return false }
+    const handler = (e: MouseEvent) => {
+      e.preventDefault()
+      // เปิด context menu เฉพาะตอนคลิกขวาบน desktop (ไม่ใช่บน window)
+      const target = e.target as HTMLElement
+      if (target.closest('[data-window]') || target.closest('[data-popup]')) return
+      const x = Math.min(e.clientX, window.innerWidth - 230)
+      const y = Math.min(e.clientY, window.innerHeight - 320)
+      setContextMenu({ x, y })
+    }
     document.addEventListener('contextmenu', handler)
     return () => document.removeEventListener('contextmenu', handler)
+  }, [])
+
+  // ปิด context menu เมื่อคลิกที่อื่น
+  useEffect(() => {
+    const onClick = () => { setContextMenu(null) }
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { setContextMenu(null); setWallpaperPickerOpen(false) } }
+    window.addEventListener('click', onClick)
+    window.addEventListener('keydown', onKey)
+    return () => { window.removeEventListener('click', onClick); window.removeEventListener('keydown', onKey) }
   }, [])
 
   // ====== Volume control ======
@@ -2105,6 +2136,16 @@ export default function Home() {
         <video
           autoPlay loop muted playsInline src={wallpaper.src}
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0 }}
+        />
+      )
+    }
+    if (wallpaper.type === 'solid' && wallpaper.src) {
+      return (
+        <div
+          style={{
+            position: 'absolute', inset: 0,
+            backgroundColor: wallpaper.src, zIndex: 0,
+          }}
         />
       )
     }
@@ -2413,6 +2454,126 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* ====== Desktop right-click context menu ====== */}
+      {contextMenu && (
+        <div
+          data-popup="context-menu"
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            position: 'absolute', left: contextMenu.x, top: contextMenu.y,
+            minWidth: 220, backgroundColor: 'rgba(243, 243, 243, 0.98)',
+            border: '1px solid rgba(0, 0, 0, 0.15)',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+            padding: '4px 0', zIndex: 3000,
+          }}
+        >
+          <div onClick={() => { setContextMenu(null) }} style={{ padding: '8px 16px', fontSize: 13, cursor: 'default', color: '#323130' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.06)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}>
+            View ›
+          </div>
+          <div onClick={() => { setContextMenu(null) }} style={{ padding: '8px 16px', fontSize: 13, cursor: 'default', color: '#323130' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.06)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}>
+            Sort by ›
+          </div>
+          <div onClick={() => { setContextMenu(null) }} style={{ padding: '8px 16px', fontSize: 13, cursor: 'default', color: '#323130' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.06)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}>
+            Refresh
+          </div>
+          <div style={{ height: 1, backgroundColor: 'rgba(0,0,0,0.08)', margin: '4px 0' }} />
+          <div onClick={() => { setContextMenu(null); setWallpaperPickerOpen(true) }} style={{ padding: '8px 16px', fontSize: 13, cursor: 'default', color: '#323130' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.06)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}>
+            Change background
+          </div>
+          <div style={{ height: 1, backgroundColor: 'rgba(0,0,0,0.08)', margin: '4px 0' }} />
+          <div onClick={() => { setContextMenu(null); openApp('settings') }} style={{ padding: '8px 16px', fontSize: 13, cursor: 'default', color: '#323130' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.06)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}>
+            Display settings
+          </div>
+          <div onClick={() => { setContextMenu(null); openApp('settings') }} style={{ padding: '8px 16px', fontSize: 13, cursor: 'default', color: '#323130' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.06)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}>
+            Personalize
+          </div>
+        </div>
+      )}
+
+      {/* ====== Wallpaper Picker ====== */}
+      {wallpaperPickerOpen && (
+        <div
+          data-popup="wallpaper-picker"
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)',
+            width: 560, backgroundColor: 'rgba(243, 243, 243, 0.98)',
+            border: '1px solid rgba(0, 0, 0, 0.15)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+            zIndex: 4000, padding: 24,
+          }}
+        >
+          <div style={{ fontSize: 20, fontWeight: 600, marginBottom: 16, color: '#323130' }}>Choose your background</div>
+
+          {/* Upload */}
+          <div style={{ marginBottom: 16 }}>
+            <label style={{ display: 'inline-block', padding: '8px 16px', backgroundColor: '#E91E63', color: '#fff', fontSize: 13, cursor: 'pointer', borderRadius: 4 }}>
+              Browse
+              <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
+                const file = e.target.files?.[0]
+                if (file) {
+                  const reader = new FileReader()
+                  reader.onload = () => { setWallpaper({ type: 'image', src: reader.result as string }); setWallpaperPickerOpen(false) }
+                  reader.readAsDataURL(file)
+                }
+              }} />
+            </label>
+          </div>
+
+          {/* Preset wallpapers */}
+          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: '#323130' }}>Wallpapers</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 16 }}>
+            {WALLPAPER_PRESETS.map((wp) => (
+              <div
+                key={wp.src}
+                onClick={() => { setWallpaper({ type: 'image', src: wp.src }); setWallpaperPickerOpen(false) }}
+                style={{
+                  height: 80, backgroundImage: `url(${wp.src})`, backgroundSize: 'cover', backgroundPosition: 'center',
+                  cursor: 'default', border: wallpaper.src === wp.src ? '3px solid #E91E63' : '1px solid #ccc',
+                  borderRadius: 4,
+                }}
+                title={wp.name}
+              />
+            ))}
+          </div>
+
+          {/* Solid colors */}
+          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: '#323130' }}>Solid colors</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8, marginBottom: 16 }}>
+            {SOLID_COLORS.map((color) => (
+              <div
+                key={color}
+                onClick={() => { setWallpaper({ type: 'solid', src: color }); setWallpaperPickerOpen(false) }}
+                style={{
+                  height: 60, backgroundColor: color, cursor: 'default',
+                  border: wallpaper.type === 'solid' && wallpaper.src === color ? '3px solid #E91E63' : '1px solid #ccc',
+                  borderRadius: 4,
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Close */}
+          <div style={{ textAlign: 'right' }}>
+            <button onClick={() => setWallpaperPickerOpen(false)} style={{ padding: '6px 16px', fontSize: 13, border: '1px solid #ccc', backgroundColor: '#fff', cursor: 'default', borderRadius: 4 }}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ====== Styles ====== */}
       <style>{`
