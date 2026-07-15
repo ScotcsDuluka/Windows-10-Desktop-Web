@@ -2347,6 +2347,8 @@ export default function Home() {
             position: 'absolute', inset: 0,
             backgroundImage: `url(${wallpaper.src})`,
             backgroundSize: 'cover', backgroundPosition: 'center', zIndex: 0,
+            imageRendering: 'auto',
+            backgroundRepeat: 'no-repeat',
           }}
         />
       )
