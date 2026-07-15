@@ -296,9 +296,9 @@ function AppWindow({
       style={{
         position: 'absolute', left: winLeft, top: winTop,
         width: winWidth, height: winHeight, zIndex: 500,
-        backgroundColor: '#f3f3f3',
-        border: '1px solid rgba(0, 0, 0, 0.1)',
-        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
+        backgroundColor: '#fff',
+        border: '1px solid #EAEAEA',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
         display: 'flex', flexDirection: 'column',
         fontFamily: 'Segoe UI, sans-serif', overflow: 'hidden',
         transform: animTransform, opacity: animOpacity,
@@ -320,10 +320,10 @@ function AppWindow({
       {/* ====== Title Bar ====== */}
       <div
         style={{
-          height: 32, backgroundColor: '#fff',
+          height: 32, backgroundColor: '#F8F8F8',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '0 0 0 12px', flexShrink: 0,
-          borderBottom: '1px solid rgba(0, 0, 0, 0.06)', cursor: 'default',
+          borderBottom: '1px solid #EAEAEA', cursor: 'default',
           userSelect: 'none',
         }}
         onMouseDown={(e) => {
@@ -722,11 +722,11 @@ function SettingsContent({
       ) : (
         // ====== Category page — Sidebar + Content ======
         <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
-        {/* Sidebar — Win10 จริง: 250px, bg #F0F0F0, search bar ด้านบน */}
+        {/* Sidebar — Win10 จริง: 280px, bg #F2F2F2, search bar ด้านบน */}
         <div
           style={{
-            width: 250, backgroundColor: '#F0F0F0',
-            borderRight: '1px solid #E0E0E0', padding: 0,
+            width: 280, backgroundColor: '#F2F2F2',
+            borderRight: '1px solid #EAEAEA', padding: 0,
             overflowY: 'auto', color: '#1F1F1F', userSelect: 'none',
             display: 'flex', flexDirection: 'column',
           }}
@@ -735,7 +735,7 @@ function SettingsContent({
           <div style={{ padding: '12px 16px 8px' }}>
             <div
               style={{
-                height: 32, backgroundColor: '#fff', border: '1px solid #ccc',
+                height: 32, backgroundColor: '#fff', border: '1px solid #EAEAEA',
                 borderRadius: 4,
                 display: 'flex', alignItems: 'center', padding: '0 10px', gap: 8,
               }}
@@ -759,7 +759,7 @@ function SettingsContent({
             onClick={() => onCategoryChange('')}
             style={{
               display: 'flex', alignItems: 'center', gap: 14,
-              padding: '10px 20px',
+              padding: '12px 24px',
               cursor: 'default',
               fontSize: 13, lineHeight: '20px',
               color: '#E91E63',
@@ -777,7 +777,7 @@ function SettingsContent({
           <div
             style={{
               display: 'flex', alignItems: 'center', gap: 14,
-              padding: '10px 20px',
+              padding: '12px 24px',
               fontSize: 13, lineHeight: '20px',
               fontWeight: 600, color: '#323130',
             }}
@@ -796,11 +796,11 @@ function SettingsContent({
               onClick={() => onSubPageChange(sp.id)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 14,
-                padding: '8px 20px 8px 48px',
+                padding: '8px 24px 8px 56px',
                 cursor: 'default',
                 fontSize: 13, lineHeight: '20px',
                 fontWeight: selected ? 600 : 400,
-                color: selected ? '#323130' : '#323130',
+                color: '#323130',
                 backgroundColor: 'transparent',
                 borderLeft: selected ? '3px solid #E91E63' : '3px solid transparent',
                 transition: 'background-color 83ms linear',
@@ -870,7 +870,7 @@ function SettingsSubPage(props: {
   backup: boolean
   onToggleBackup: () => void
 }) {
-  const titleStyle: React.CSSProperties = { fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px', color: '#1F1F1F' }
+  const titleStyle: React.CSSProperties = { fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px', color: '#1F1F1F' }
   const sectionTitleStyle: React.CSSProperties = { fontSize: 14, fontWeight: 600, marginBottom: 8, marginTop: 24, color: '#1F1F1F' }
   const rowStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 0', borderBottom: '1px solid rgba(0,0,0,0.06)' }
   const labelStyle: React.CSSProperties = { fontSize: 13, color: '#1F1F1F' }
@@ -1110,7 +1110,7 @@ function SettingsPage(props: {
   }
   // Win10 page title: Display semibold 28/36
   const pageTitleStyle: React.CSSProperties = {
-    fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px', color: '#1F1F1F',
+    fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px', color: '#1F1F1F',
   }
 
   // Row ที่คลิกได้ → เข้า sub-page
@@ -1149,7 +1149,7 @@ function SettingsPage(props: {
   if (props.category === 'System') {
     return (
       <>
-        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>System</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px' }}>System</h1>
         <Row icon="🖥️" title="Display" desc="Monitors, brightness, night light, display profile">
           <span style={{ fontSize: 12, color: '#E91E63' }}>Configure</span>
         </Row>
@@ -1196,7 +1196,7 @@ function SettingsPage(props: {
   if (props.category === 'Personalization') {
     return (
       <>
-        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Personalization</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px' }}>Personalization</h1>
         <Row icon="🖼️" title="Background" desc="Picture, solid color, slideshow">
           <span style={{ fontSize: 12, color: '#E91E63' }}>Browse</span>
         </Row>
@@ -1225,7 +1225,7 @@ function SettingsPage(props: {
   if (props.category === 'Time & Language') {
     return (
       <>
-        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Time & Language</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px' }}>Time & Language</h1>
         <Row icon="🕐" title="Date & time" desc="Time zone, automatic time">
           <ToggleSwitch on={props.autoTime} onToggle={props.onToggleAutoTime} />
         </Row>
@@ -1246,7 +1246,7 @@ function SettingsPage(props: {
   if (props.category === 'Devices') {
     return (
       <>
-        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Devices</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px' }}>Devices</h1>
         <Row icon="🔵" title="Bluetooth & other devices" desc="Mouse, keyboard, pen, audio">
           <ToggleSwitch on={props.bluetooth} onToggle={props.onToggleBluetooth} />
         </Row>
@@ -1276,7 +1276,7 @@ function SettingsPage(props: {
   if (props.category === 'Phone') {
     return (
       <>
-        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Phone</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px' }}>Phone</h1>
         <div style={{ fontSize: 13, color: '#666', marginBottom: 24, lineHeight: 1.6 }}>
           Link your Android, iPhone, or other phone to your PC. Make calls, read texts, view photos, and more — right on your desktop.
         </div>
@@ -1300,7 +1300,7 @@ function SettingsPage(props: {
   if (props.category === 'Network & Internet') {
     return (
       <>
-        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Network & Internet</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px' }}>Network & Internet</h1>
         <Row icon="📶" title="Wi-Fi" desc="Connect, manage networks">
           <ToggleSwitch on={props.wifi} onToggle={props.onToggleWifi} />
         </Row>
@@ -1331,7 +1331,7 @@ function SettingsPage(props: {
   if (props.category === 'Apps') {
     return (
       <>
-        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Apps</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px' }}>Apps</h1>
         <Row icon="📦" title="Apps & features" desc="Uninstall, change, repair">
           <span style={{ fontSize: 12, color: '#E91E63' }}>Manage</span>
         </Row>
@@ -1361,7 +1361,7 @@ function SettingsPage(props: {
   if (props.category === 'Accounts') {
     return (
       <>
-        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Accounts</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px' }}>Accounts</h1>
         <Row icon="👤" title="Your info" desc="Account name, picture, settings">
           <span style={{ fontSize: 12, color: '#E91E63' }}>Manage</span>
         </Row>
@@ -1387,7 +1387,7 @@ function SettingsPage(props: {
   if (props.category === 'Gaming') {
     return (
       <>
-        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Gaming</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px' }}>Gaming</h1>
         <Row icon="🎮" title="Game bar" desc="Open, capture, broadcast">
           <ToggleSwitch on={props.gameBar} onToggle={props.onToggleGameBar} />
         </Row>
@@ -1410,7 +1410,7 @@ function SettingsPage(props: {
   if (props.category === 'Ease of Access') {
     return (
       <>
-        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Ease of Access</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px' }}>Ease of Access</h1>
         <Row icon="🖥️" title="Display" desc="Text size, zoom, magnifier">
           <ToggleSwitch on={props.magnifier} onToggle={props.onToggleMagnifier} />
         </Row>
@@ -1439,7 +1439,7 @@ function SettingsPage(props: {
   if (props.category === 'Privacy') {
     return (
       <>
-        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Privacy</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px' }}>Privacy</h1>
         <Row icon="⚙️" title="General" desc="General privacy settings">
           <ToggleSwitch defaultOn={false} />
         </Row>
@@ -1481,7 +1481,7 @@ function SettingsPage(props: {
   if (props.category === 'Update & Security') {
     return (
       <>
-        <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>Update & Security</h1>
+        <h1 style={{ fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px' }}>Update & Security</h1>
         <Row icon="🔄" title="Windows Update" desc="Check for updates, history">
           <span style={{ fontSize: 12, color: '#E91E63' }}>Check for updates</span>
         </Row>
@@ -1525,7 +1525,7 @@ function SettingsPage(props: {
   // Fallback (ไม่ควรถึง)
   return (
     <>
-      <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '32px' }}>{props.category}</h1>
+      <h1 style={{ fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px' }}>{props.category}</h1>
       <div style={{ fontSize: 13, color: '#666', marginBottom: 24, lineHeight: 1.6 }}>
         This is the {props.category} settings page.
       </div>
