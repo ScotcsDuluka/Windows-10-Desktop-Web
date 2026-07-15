@@ -296,9 +296,9 @@ function AppWindow({
       style={{
         position: 'absolute', left: winLeft, top: winTop,
         width: winWidth, height: winHeight, zIndex: 500,
-        backgroundColor: 'rgba(243, 243, 243, 0.85)',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
+        backgroundColor: 'rgba(255, 255, 255, 0.85)',
+        backdropFilter: 'blur(4px)',
+        WebkitBackdropFilter: 'blur(4px)',
         border: '1px solid rgba(0, 0, 0, 0.1)',
         boxShadow: '0 10px 30px rgba(0, 0, 0, 0.25)',
         display: 'flex', flexDirection: 'column',
