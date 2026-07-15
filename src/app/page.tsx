@@ -297,8 +297,8 @@ function AppWindow({
         position: 'absolute', left: winLeft, top: winTop,
         width: winWidth, height: winHeight, zIndex: 500,
         backgroundColor: '#fff',
-        border: '1px solid #EAEAEA',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+        border: 'none',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
         display: 'flex', flexDirection: 'column',
         fontFamily: 'Segoe UI, sans-serif', overflow: 'hidden',
         transform: animTransform, opacity: animOpacity,
@@ -320,10 +320,10 @@ function AppWindow({
       {/* ====== Title Bar ====== */}
       <div
         style={{
-          height: 32, backgroundColor: '#F8F8F8',
+          height: 32, backgroundColor: '#fff',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '0 0 0 12px', flexShrink: 0,
-          borderBottom: '1px solid #EAEAEA', cursor: 'default',
+          borderBottom: 'none', cursor: 'default',
           userSelect: 'none',
         }}
         onMouseDown={(e) => {
@@ -520,16 +520,16 @@ function ToggleSwitch({ defaultOn = false, on, onToggle }: { defaultOn?: boolean
     <div
       onClick={handleToggle}
       style={{
-        width: 40, height: 20,
-        backgroundColor: current ? '#E91E63' : '#ccc',
-        borderRadius: 10, position: 'relative', cursor: 'default',
+        width: 44, height: 22,
+        backgroundColor: current ? '#E91E63' : '#BDBDBD',
+        borderRadius: 11, position: 'relative', cursor: 'default',
         transition: 'background-color 0.2s',
       }}
     >
       <div
         style={{
-          position: 'absolute', top: 3, left: current ? 23 : 3,
-          width: 14, height: 14, backgroundColor: '#fff', borderRadius: '50%',
+          position: 'absolute', top: 3, left: current ? 25 : 3,
+          width: 16, height: 16, backgroundColor: current ? '#fff' : '#333', borderRadius: '50%',
           transition: 'left 0.2s', boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
         }}
       />
@@ -646,7 +646,7 @@ function SettingsContent({
             onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.05)' }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent' }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F1F1F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#323130" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
@@ -725,8 +725,8 @@ function SettingsContent({
         {/* Sidebar — Win10 จริง: 280px, bg #F2F2F2, search bar ด้านบน */}
         <div
           style={{
-            width: 280, backgroundColor: '#F2F2F2',
-            borderRight: '1px solid #EAEAEA', padding: 0,
+            width: 280, backgroundColor: '#FDFDFD',
+            borderRight: '1px solid #F0F0F0', padding: 0,
             overflowY: 'auto', color: '#1F1F1F', userSelect: 'none',
             display: 'flex', flexDirection: 'column',
           }}
@@ -735,7 +735,7 @@ function SettingsContent({
           <div style={{ padding: '12px 16px 8px' }}>
             <div
               style={{
-                height: 32, backgroundColor: '#fff', border: '1px solid #EAEAEA',
+                height: 32, backgroundColor: '#fff', border: '1px solid #E91E63',
                 borderRadius: 4,
                 display: 'flex', alignItems: 'center', padding: '0 10px', gap: 8,
               }}
@@ -871,55 +871,70 @@ function SettingsSubPage(props: {
   onToggleBackup: () => void
 }) {
   const titleStyle: React.CSSProperties = { fontSize: 28, fontWeight: 600, margin: '0 0 24px 0', lineHeight: '36px', color: '#1F1F1F' }
-  const sectionTitleStyle: React.CSSProperties = { fontSize: 14, fontWeight: 600, marginBottom: 8, marginTop: 24, color: '#1F1F1F' }
-  const rowStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 0', borderBottom: '1px solid rgba(0,0,0,0.06)' }
-  const labelStyle: React.CSSProperties = { fontSize: 13, color: '#1F1F1F' }
-  const descStyle: React.CSSProperties = { fontSize: 12, color: '#767676', marginTop: 2 }
+  const sectionTitleStyle: React.CSSProperties = { fontSize: 20, fontWeight: 600, marginBottom: 4, marginTop: 28, color: '#1F1F1F' }
+  const rowStyle: React.CSSProperties = { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid #F0F0F0' }
+  const labelStyle: React.CSSProperties = { fontSize: 14, color: '#323130' }
+  const descStyle: React.CSSProperties = { fontSize: 13, color: '#616161', marginTop: 2 }
+  const linkStyle: React.CSSProperties = { fontSize: 14, color: '#E91E63', cursor: 'default' }
 
-  // ====== Display sub-page (ใช้งานได้จริง) ======
+  // ====== Display sub-page (ใช้งานได้จริง — เหมือน Win10 จริง) ======
   if (props.subPage === 'Display') {
     return (
       <>
         <h1 style={titleStyle}>Display</h1>
+
         <div style={sectionTitleStyle}>Brightness and color</div>
-        <div style={rowStyle}>
-          <div>
-            <div style={labelStyle}>Brightness</div>
-            <div style={descStyle}>Adjust the brightness of the built-in display</div>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <input type="range" min={0} max={100} value={props.brightness} onChange={(e) => props.onBrightnessChange(Number(e.target.value))} style={{ width: 200, accentColor: '#E91E63' }} />
-            <span style={{ fontSize: 12, color: '#767676', minWidth: 30 }}>{props.brightness}%</span>
-          </div>
+        <div style={{ fontSize: 14, color: '#616161', marginBottom: 8 }}>Change brightness for the built-in display</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+          <input type="range" min={0} max={100} value={props.brightness} onChange={(e) => props.onBrightnessChange(Number(e.target.value))} style={{ width: 240, accentColor: '#E91E63', height: 4 }} />
+          <span style={{ fontSize: 14, color: '#323130', minWidth: 30 }}>{props.brightness}%</span>
         </div>
-        <div style={rowStyle}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, fontSize: 14, color: '#323130' }}>
+          <input type="checkbox" style={{ accentColor: '#E91E63', width: 16, height: 16 }} />
+          <span>Change brightness automatically when lighting changes</span>
+        </div>
+
+        <div style={{ ...rowStyle, borderBottom: '1px solid #F0F0F0' }}>
           <div>
             <div style={labelStyle}>Night light</div>
-            <div style={descStyle}>Make your display easier to see at night</div>
+            <div style={descStyle}>If you're having trouble sleeping, night light may help.</div>
           </div>
-          <ToggleSwitch on={props.nightLight} onToggle={props.onToggleNightLight} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span style={{ fontSize: 14, color: props.nightLight ? '#323130' : '#616161' }}>{props.nightLight ? 'On' : 'Off'}</span>
+            <ToggleSwitch on={props.nightLight} onToggle={props.onToggleNightLight} />
+          </div>
         </div>
+        <div style={{ padding: '8px 0 4px' }}>
+          <span style={linkStyle}>Night light settings</span>
+        </div>
+
+        <div style={sectionTitleStyle}>Windows HD Color</div>
+        <div style={{ fontSize: 14, color: '#616161', marginBottom: 8 }}>Get a brighter and more vibrant picture for videos, games and apps that support HDR.</div>
+        <div style={{ padding: '4px 0' }}>
+          <span style={linkStyle}>Windows HD Color settings</span>
+        </div>
+
         <div style={sectionTitleStyle}>Scale and layout</div>
-        <div style={rowStyle}>
+        <div style={{ ...rowStyle, borderBottom: '1px solid #F0F0F0' }}>
           <div>
             <div style={labelStyle}>Change the size of text, apps, and other items</div>
-            <div style={descStyle}>Recommended: 100%</div>
           </div>
-          <span style={{ fontSize: 12, color: '#E91E63' }}>100% (Recommended)</span>
+          <span style={{ fontSize: 14, color: '#323130' }}>125% (Recommended)</span>
         </div>
-        <div style={rowStyle}>
+        <div style={{ padding: '8px 0 4px' }}>
+          <span style={linkStyle}>Advanced scaling settings</span>
+        </div>
+        <div style={{ ...rowStyle, borderBottom: '1px solid #F0F0F0' }}>
           <div>
             <div style={labelStyle}>Display resolution</div>
-            <div style={descStyle}>Recommended: 1920 × 1080</div>
           </div>
-          <span style={{ fontSize: 12, color: '#E91E63' }}>1920 × 1080 (Recommended)</span>
+          <span style={{ fontSize: 14, color: '#323130' }}>1920 × 1080 (Recommended)</span>
         </div>
-        <div style={rowStyle}>
+        <div style={{ ...rowStyle, borderBottom: '1px solid #F0F0F0' }}>
           <div>
             <div style={labelStyle}>Orientation</div>
-            <div style={descStyle}>Landscape</div>
           </div>
-          <span style={{ fontSize: 12, color: '#E91E63' }}>Landscape</span>
+          <span style={{ fontSize: 14, color: '#323130' }}>Landscape</span>
         </div>
       </>
     )
