@@ -604,7 +604,7 @@ function SettingsContent({
   tabletMode: boolean
   onToggleTabletMode: () => void
   wallpaper: string
-  onWallpaperChange: (w: string) => void
+  onWallpaperChange: (w: string, t?: string) => void
   brightness: number
   onBrightnessChange: (b: number) => void
   volume: number
@@ -1131,11 +1131,14 @@ function SettingsSubPage(props: {
                   backgroundColor: '#f3f3f3',
                 }}>
                   Browse
-                  <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
+                  <input type="file" accept="image/*,video/*" style={{ display: 'none' }} onChange={(e) => {
                     const file = e.target.files?.[0]
                     if (file) {
                       const reader = new FileReader()
-                      reader.onload = () => props.onWallpaperChange(reader.result as string)
+                      reader.onload = () => {
+                        const isVideo = file.type.startsWith('video/')
+                        props.onWallpaperChange(reader.result as string, isVideo ? 'video' : 'image')
+                      }
                       reader.readAsDataURL(file)
                     }
                   }} />
@@ -1246,7 +1249,7 @@ function SettingsPage(props: {
   tabletMode: boolean
   onToggleTabletMode: () => void
   wallpaper: string
-  onWallpaperChange: (w: string) => void
+  onWallpaperChange: (w: string, t?: string) => void
   brightness: number
   onBrightnessChange: (b: number) => void
   volume: number
@@ -2190,6 +2193,26 @@ export default function Home() {
     return () => clearInterval(t)
   }, [])
 
+  // ====== Mond Clock widget (draggable) ======
+  const [clockPos, setClockPos] = useState({ x: 80, y: 80 })
+  const clockDragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null)
+
+  const onClockDragStart = useCallback((e: React.MouseEvent) => {
+    clockDragRef.current = { startX: e.clientX, startY: e.clientY, origX: clockPos.x, origY: clockPos.y }
+  }, [clockPos])
+
+  const onClockDragMove = useCallback((e: React.MouseEvent) => {
+    if (!clockDragRef.current) return
+    const dx = e.clientX - clockDragRef.current.startX
+    const dy = e.clientY - clockDragRef.current.startY
+    setClockPos({
+      x: Math.max(0, Math.min(window.innerWidth - 300, clockDragRef.current.origX + dx)),
+      y: Math.max(0, Math.min(window.innerHeight - 200, clockDragRef.current.origY + dy)),
+    })
+  }, [])
+
+  const onClockDragEnd = useCallback(() => { clockDragRef.current = null }, [])
+
   // ====== Right-click: เปิด context menu บน desktop ======
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null)
 
@@ -2346,7 +2369,7 @@ export default function Home() {
                 tabletMode={tabletMode}
                 onToggleTabletMode={() => setTabletMode((v) => !v)}
                 wallpaper={wallpaper.src}
-                onWallpaperChange={(wp) => setWallpaper({ type: 'image', src: wp })}
+                onWallpaperChange={(wp, t) => setWallpaper({ type: (t as WallpaperType) || 'image', src: wp })}
                 brightness={brightness}
                 onBrightnessChange={setBrightness}
                 volume={volume}
@@ -2561,6 +2584,44 @@ export default function Home() {
               <div>{timeStr}</div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* ====== Mond Clock Widget (draggable on desktop) ====== */}
+      <div
+        onMouseDown={onClockDragStart}
+        onMouseMove={onClockDragMove}
+        onMouseUp={onClockDragEnd}
+        onMouseLeave={onClockDragEnd}
+        style={{
+          position: 'absolute', left: clockPos.x, top: clockPos.y,
+          zIndex: 100, cursor: 'grab', userSelect: 'none',
+          textAlign: 'center', pointerEvents: 'auto',
+        }}
+      >
+        {/* Day — large, spaced */}
+        <div style={{
+          fontFamily: '"Segoe UI", sans-serif', fontSize: 28, fontWeight: 300,
+          color: '#fff', letterSpacing: 6, textShadow: '0 2px 8px rgba(0,0,0,0.5)',
+          marginBottom: 2,
+        }}>
+          {time.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase()}
+        </div>
+        {/* Date — medium */}
+        <div style={{
+          fontFamily: 'Quicksand, "Segoe UI", sans-serif', fontSize: 14, fontWeight: 400,
+          color: '#fff', textShadow: '0 1px 4px rgba(0,0,0,0.5)',
+          marginBottom: 4,
+        }}>
+          {time.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' })}
+        </div>
+        {/* Time — large, bold */}
+        <div style={{
+          fontFamily: 'Quicksand, "Segoe UI", sans-serif', fontSize: 42, fontWeight: 600,
+          color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,0.5)',
+          lineHeight: 1,
+        }}>
+          {timeStr}
         </div>
       </div>
 
