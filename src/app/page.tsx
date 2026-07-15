@@ -587,8 +587,8 @@ function SettingsContent({
   const isHome = !category || category === ''
   return (
     <div style={{
-      display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0,
-      backgroundColor: 'transparent',
+      display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, height: '100%',
+      backgroundColor: 'transparent', overflow: 'hidden',
       fontFamily: '"Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif',
     }}>
       {/* ====== Header ====== */}
@@ -721,7 +721,7 @@ function SettingsContent({
         </div>
       ) : (
         // ====== Category page — Sidebar + Content ======
-        <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
+        <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
         {/* Sidebar — Win10 จริง: 280px, bg #F2F2F2, search bar ด้านบน */}
         <div
           style={{
@@ -817,7 +817,7 @@ function SettingsContent({
         {/* Content — Win10 จริง: พื้นขาว, padding 32px */}
         <div
           style={{
-            flex: 1, backgroundColor: '#fff', padding: '24px 40px 32px',
+            flex: 1, backgroundColor: '#fff', padding: '24px 40px 200px',
             overflowY: 'auto', color: '#323130', userSelect: 'none',
           }}
         >
