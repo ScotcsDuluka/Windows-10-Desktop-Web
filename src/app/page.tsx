@@ -412,14 +412,14 @@ const SETTINGS_CATEGORIES = [
   {
     id: 'System', icon: 'system', desc: 'Display, sound, notifications, power', active: true,
     subPages: [
-      { id: 'Display', icon: 'system', desc: 'Monitors, brightness, night light' },
+      { id: 'Display', icon: 'display', desc: 'Monitors, brightness, night light' },
       { id: 'Sound', icon: 'sound', desc: 'Volume, output, input' },
       { id: 'Notifications & actions', icon: 'notifications', desc: 'Notifications, quick actions' },
       { id: 'Focus assist', icon: 'focus', desc: 'Hide notifications' },
       { id: 'Power & sleep', icon: 'power', desc: 'Sleep, screen, power' },
       { id: 'Storage', icon: 'storage', desc: 'Storage, drives' },
       { id: 'Multitasking', icon: 'multitasking', desc: 'Snap, virtual desktops' },
-      { id: 'Projecting to this PC', icon: 'phone', desc: 'Project to this PC' },
+      { id: 'Projecting to this PC', icon: 'projecting', desc: 'Project to this PC' },
       { id: 'Clipboard', icon: 'clipboard', desc: 'Copy history, sync' },
       { id: 'About', icon: 'about', desc: 'Device specs' },
     ],
@@ -430,25 +430,25 @@ const SETTINGS_CATEGORIES = [
   {
     id: 'Personalization', icon: 'personalization', desc: 'Background, lock screen, colors', active: true,
     subPages: [
-      { id: 'Background', icon: '🖼️', desc: 'Picture, color, slideshow' },
-      { id: 'Colors', icon: '🎨', desc: 'Light, dark, accent' },
-      { id: 'Lock screen', icon: '🔒', desc: 'Background, status' },
-      { id: 'Themes', icon: '🎭', desc: 'Install, save, switch' },
-      { id: 'Fonts', icon: '🔤', desc: 'Install, manage' },
-      { id: 'Start', icon: '🚀', desc: 'Layout, folders' },
-      { id: 'Taskbar', icon: '📊', desc: 'Lock, auto-hide' },
+      { id: 'Background', icon: 'display', desc: 'Picture, color, slideshow' },
+      { id: 'Colors', icon: 'personalization', desc: 'Light, dark, accent' },
+      { id: 'Lock screen', icon: 'privacy', desc: 'Background, status' },
+      { id: 'Themes', icon: 'personalization', desc: 'Install, save, switch' },
+      { id: 'Fonts', icon: 'about', desc: 'Install, manage' },
+      { id: 'Start', icon: 'system', desc: 'Layout, folders' },
+      { id: 'Taskbar', icon: 'system', desc: 'Lock, auto-hide' },
     ],
   },
   // แถวล่าง 3 หมวด (active)
   {
     id: 'Apps', icon: 'apps', desc: 'Uninstall, defaults, optional features', active: true,
     subPages: [
-      { id: 'Apps & features', icon: '📦', desc: 'Uninstall, change' },
-      { id: 'Default apps', icon: '⭐', desc: 'Defaults for email, maps' },
-      { id: 'Optional features', icon: '🔧', desc: 'Install, uninstall' },
-      { id: 'Startup', icon: '🚀', desc: 'Auto-start apps' },
-      { id: 'Apps for websites', icon: '🌐', desc: 'Open websites with apps' },
-      { id: 'Video playback', icon: '🎬', desc: 'HDR, battery' },
+      { id: 'Apps & features', icon: 'apps', desc: 'Uninstall, change' },
+      { id: 'Default apps', icon: 'apps', desc: 'Defaults for email, maps' },
+      { id: 'Optional features', icon: 'storage', desc: 'Install, uninstall' },
+      { id: 'Startup', icon: 'system', desc: 'Auto-start apps' },
+      { id: 'Apps for websites', icon: 'network', desc: 'Open websites with apps' },
+      { id: 'Video playback', icon: 'display', desc: 'HDR, battery' },
     ],
   },
   { id: 'Accounts', icon: 'accounts', desc: 'Your accounts, email, sync, work, family', active: false, subPages: [] },
@@ -459,14 +459,14 @@ const SETTINGS_CATEGORIES = [
   {
     id: 'Update & Security', icon: 'update', desc: 'Windows Update, recovery, backup', active: true,
     subPages: [
-      { id: 'Windows Update', icon: '🔄', desc: 'Check for updates' },
-      { id: 'Windows Security', icon: '🛡️', desc: 'Antivirus, firewall' },
-      { id: 'Backup', icon: '💾', desc: 'File History' },
-      { id: 'Troubleshoot', icon: '🔧', desc: 'Resolve problems' },
-      { id: 'Recovery', icon: '↩️', desc: 'Reset, restore' },
-      { id: 'Activation', icon: '🔑', desc: 'Activation status' },
-      { id: 'Find my device', icon: '📍', desc: 'Locate device' },
-      { id: 'For developers', icon: '👨‍💻', desc: 'Developer mode' },
+      { id: 'Windows Update', icon: 'update', desc: 'Check for updates' },
+      { id: 'Windows Security', icon: 'privacy', desc: 'Antivirus, firewall' },
+      { id: 'Backup', icon: 'storage', desc: 'File History' },
+      { id: 'Troubleshoot', icon: 'about', desc: 'Resolve problems' },
+      { id: 'Recovery', icon: 'update', desc: 'Reset, restore' },
+      { id: 'Activation', icon: 'about', desc: 'Activation status' },
+      { id: 'Find my device', icon: 'phone', desc: 'Locate device' },
+      { id: 'For developers', icon: 'system', desc: 'Developer mode' },
     ],
   },
 ]
@@ -803,7 +803,11 @@ function SettingsContent({
               onMouseLeave={(e) => { if (!selected) e.currentTarget.style.backgroundColor = 'transparent' }}
             >
               <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-                <SettingsIcon name={sp.icon} size={16} />
+                {['display', 'sound', 'notifications', 'focus', 'power', 'storage', 'multitasking', 'projecting', 'clipboard', 'about'].includes(sp.icon) ? (
+                  <img src={`/win10-icons/${sp.icon}.png`} alt={sp.id} width={16} height={16} style={{ objectFit: 'contain' }} draggable={false} />
+                ) : (
+                  <SettingsIcon name={sp.icon} size={16} />
+                )}
               </span>
               <span>{sp.id}</span>
             </div>
