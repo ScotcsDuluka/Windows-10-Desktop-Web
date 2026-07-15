@@ -407,19 +407,66 @@ const winBtnStyle: React.CSSProperties = {
 // ============================================================
 const SETTINGS_CATEGORIES = [
   // 4 หมวดหลัก (active) — ไว้ก่อน
-  { id: 'System', icon: 'system', desc: 'Display, sound, notifications, power', active: true },
-  { id: 'Personalization', icon: 'personalization', desc: 'Background, lock screen, colors', active: true },
-  { id: 'Apps', icon: 'apps', desc: 'Uninstall, defaults, optional features', active: true },
-  { id: 'Update & Security', icon: 'update', desc: 'Windows Update, recovery, backup', active: true },
+  {
+    id: 'System', icon: 'system', desc: 'Display, sound, notifications, power', active: true,
+    subPages: [
+      { id: 'Display', icon: '🖥️', desc: 'Monitors, brightness, night light' },
+      { id: 'Sound', icon: '🔊', desc: 'Volume, output, input' },
+      { id: 'Notifications', icon: '🔔', desc: 'Notifications, quick actions' },
+      { id: 'Focus assist', icon: '🌙', desc: 'Hide notifications' },
+      { id: 'Power & sleep', icon: '🔋', desc: 'Sleep, screen, power' },
+      { id: 'Storage', icon: '💾', desc: 'Storage, drives' },
+      { id: 'Multitasking', icon: '🪟', desc: 'Snap, virtual desktops' },
+      { id: 'Tablet mode', icon: '📱', desc: 'Touch-friendly mode' },
+      { id: 'Clipboard', icon: '📋', desc: 'Copy history, sync' },
+      { id: 'About', icon: 'ℹ️', desc: 'Device specs' },
+    ],
+  },
+  {
+    id: 'Personalization', icon: 'personalization', desc: 'Background, lock screen, colors', active: true,
+    subPages: [
+      { id: 'Background', icon: '🖼️', desc: 'Picture, color, slideshow' },
+      { id: 'Colors', icon: '🎨', desc: 'Light, dark, accent' },
+      { id: 'Lock screen', icon: '🔒', desc: 'Background, status' },
+      { id: 'Themes', icon: '🎭', desc: 'Install, save, switch' },
+      { id: 'Fonts', icon: '🔤', desc: 'Install, manage' },
+      { id: 'Start', icon: '🚀', desc: 'Layout, folders' },
+      { id: 'Taskbar', icon: '📊', desc: 'Lock, auto-hide' },
+    ],
+  },
+  {
+    id: 'Apps', icon: 'apps', desc: 'Uninstall, defaults, optional features', active: true,
+    subPages: [
+      { id: 'Apps & features', icon: '📦', desc: 'Uninstall, change' },
+      { id: 'Default apps', icon: '⭐', desc: 'Defaults for email, maps' },
+      { id: 'Optional features', icon: '🔧', desc: 'Install, uninstall' },
+      { id: 'Startup', icon: '🚀', desc: 'Auto-start apps' },
+      { id: 'Apps for websites', icon: '🌐', desc: 'Open websites with apps' },
+      { id: 'Video playback', icon: '🎬', desc: 'HDR, battery' },
+    ],
+  },
+  {
+    id: 'Update & Security', icon: 'update', desc: 'Windows Update, recovery, backup', active: true,
+    subPages: [
+      { id: 'Windows Update', icon: '🔄', desc: 'Check for updates' },
+      { id: 'Windows Security', icon: '🛡️', desc: 'Antivirus, firewall' },
+      { id: 'Backup', icon: '💾', desc: 'File History' },
+      { id: 'Troubleshoot', icon: '🔧', desc: 'Resolve problems' },
+      { id: 'Recovery', icon: '↩️', desc: 'Reset, restore' },
+      { id: 'Activation', icon: '🔑', desc: 'Activation status' },
+      { id: 'Find my device', icon: '📍', desc: 'Locate device' },
+      { id: 'For developers', icon: '👨‍💻', desc: 'Developer mode' },
+    ],
+  },
   // 8 หมวดอื่น (disabled — สีเทา) — ไว้หลัง
-  { id: 'Devices', icon: 'devices', desc: 'Bluetooth, printers, mouse', active: false },
-  { id: 'Phone', icon: 'phone', desc: 'Link your Android, iPhone', active: false },
-  { id: 'Network & Internet', icon: 'network', desc: 'Wi-Fi, airplane mode, VPN', active: false },
-  { id: 'Accounts', icon: 'accounts', desc: 'Your accounts, email, sync, work, family', active: false },
-  { id: 'Time & Language', icon: 'time', desc: 'Speech, region, date', active: false },
-  { id: 'Gaming', icon: 'gaming', desc: 'Xbox Game Bar, captures, Game Mode', active: false },
-  { id: 'Ease of Access', icon: 'ease', desc: 'Narrator, magnifier, high contrast', active: false },
-  { id: 'Privacy', icon: 'privacy', desc: 'Location, camera, microphone', active: false },
+  { id: 'Devices', icon: 'devices', desc: 'Bluetooth, printers, mouse', active: false, subPages: [] },
+  { id: 'Phone', icon: 'phone', desc: 'Link your Android, iPhone', active: false, subPages: [] },
+  { id: 'Network & Internet', icon: 'network', desc: 'Wi-Fi, airplane mode, VPN', active: false, subPages: [] },
+  { id: 'Accounts', icon: 'accounts', desc: 'Your accounts, email, sync, work, family', active: false, subPages: [] },
+  { id: 'Time & Language', icon: 'time', desc: 'Speech, region, date', active: false, subPages: [] },
+  { id: 'Gaming', icon: 'gaming', desc: 'Xbox Game Bar, captures, Game Mode', active: false, subPages: [] },
+  { id: 'Ease of Access', icon: 'ease', desc: 'Narrator, magnifier, high contrast', active: false, subPages: [] },
+  { id: 'Privacy', icon: 'privacy', desc: 'Location, camera, microphone', active: false, subPages: [] },
 ]
 
 // SVG icons สีฟ้าแบบ line-art (เหมือน Win10 จริง)
@@ -589,7 +636,7 @@ function SettingsContent({
         >
           <button
             aria-label="Back"
-            onClick={() => { if (subPage) onSubPageChange(''); else onCategoryChange('') }}
+            onClick={() => onCategoryChange('')}
             style={{
               width: 32, height: 32, border: 'none', background: 'transparent',
               cursor: 'default', display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -602,15 +649,11 @@ function SettingsContent({
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
-          {/* Breadcrumb: แสดง category > subPage */}
+          {/* Breadcrumb: แสดง category > subPage (default ไป subPage แรก) */}
           <div style={{ fontSize: 13, color: '#1F1F1F', fontWeight: 400, userSelect: 'none' }}>
-            <span style={{ cursor: 'default' }} onClick={() => onSubPageChange('')}>{category}</span>
-            {subPage && (
-              <>
-                <span style={{ color: '#767676', margin: '0 6px' }}>›</span>
-                <span style={{ color: '#1F1F1F' }}>{subPage}</span>
-              </>
-            )}
+            <span>{category}</span>
+            <span style={{ color: '#767676', margin: '0 6px' }}>›</span>
+            <span>{subPage || (SETTINGS_CATEGORIES.find((c) => c.id === category)?.subPages?.[0]?.id) || ''}</span>
           </div>
 
           <div
@@ -722,27 +765,28 @@ function SettingsContent({
             overflowY: 'auto', color: '#1F1F1F', userSelect: 'none',
           }}
         >
-          {SETTINGS_CATEGORIES.map((c) => {
-            const disabled = c.active === false
+          {/* Sidebar ซ้าย: sub-pages ของ category ปัจจุบัน (เช่น Display, Sound, Power, ...) */}
+          {(SETTINGS_CATEGORIES.find((c) => c.id === category)?.subPages || []).map((sp) => {
+            const currentSub = subPage || (SETTINGS_CATEGORIES.find((c) => c.id === category)?.subPages?.[0]?.id) || ''
+            const selected = currentSub === sp.id
             return (
             <div
-              key={c.id}
-              onClick={() => { if (!disabled) onCategoryChange(c.id) }}
+              key={sp.id}
+              onClick={() => onSubPageChange(sp.id)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 14,
                 padding: '9px 16px',
-                cursor: disabled ? 'not-allowed' : 'default',
+                cursor: 'default',
                 fontSize: 13, lineHeight: '20px',
-                opacity: disabled ? 0.4 : 1,
-                backgroundColor: category === c.id ? '#cce4f7' : 'transparent',
-                borderLeft: category === c.id ? '3px solid #0078D7' : '3px solid transparent',
-                transition: 'background-color 83ms linear, opacity 83ms linear',
+                backgroundColor: selected ? '#cce4f7' : 'transparent',
+                borderLeft: selected ? '3px solid #0078D7' : '3px solid transparent',
+                transition: 'background-color 83ms linear',
               }}
-              onMouseEnter={(e) => { if (!disabled && category !== c.id) e.currentTarget.style.backgroundColor = '#e5e5e5' }}
-              onMouseLeave={(e) => { if (!disabled && category !== c.id) e.currentTarget.style.backgroundColor = 'transparent' }}
+              onMouseEnter={(e) => { if (!selected) e.currentTarget.style.backgroundColor = '#e5e5e5' }}
+              onMouseLeave={(e) => { if (!selected) e.currentTarget.style.backgroundColor = 'transparent' }}
             >
-              <span style={{ display: 'flex', alignItems: 'center' }}><SettingsIcon name={c.icon} size={18} /></span>
-              <span>{c.id}</span>
+              <span style={{ fontSize: 16, lineHeight: 1 }}>{sp.icon}</span>
+              <span>{sp.id}</span>
             </div>
             )
           })}
@@ -755,60 +799,24 @@ function SettingsContent({
             overflowY: 'auto', color: '#1F1F1F', userSelect: 'none',
           }}
         >
-          {subPage ? (
-            <SettingsSubPage
-              category={category}
-              subPage={subPage}
-              brightness={brightness}
-              onBrightnessChange={onBrightnessChange}
-              volume={volume}
-              onVolumeChange={onVolumeChange}
-              nightLight={nightLight}
-              onToggleNightLight={onToggleNightLight}
-              tabletMode={tabletMode}
-              onToggleTabletMode={onToggleTabletMode}
-              autoTime={autoTime}
-              onToggleAutoTime={onToggleAutoTime}
-              darkMode={darkMode}
-              onToggleDarkMode={onToggleDarkMode}
-              backup={backup}
-              onToggleBackup={onToggleBackup}
-            />
-          ) : (
-          <SettingsPage
+          <SettingsSubPage
             category={category}
-            subPage={subPage}
-            onSubPageChange={onSubPageChange}
-            tabletMode={tabletMode}
-            onToggleTabletMode={onToggleTabletMode}
-            wallpaper={wallpaper}
-            onWallpaperChange={onWallpaperChange}
+            subPage={subPage || (SETTINGS_CATEGORIES.find((c) => c.id === category)?.subPages?.[0]?.id) || category}
             brightness={brightness}
             onBrightnessChange={onBrightnessChange}
             volume={volume}
             onVolumeChange={onVolumeChange}
             nightLight={nightLight}
             onToggleNightLight={onToggleNightLight}
+            tabletMode={tabletMode}
+            onToggleTabletMode={onToggleTabletMode}
             autoTime={autoTime}
             onToggleAutoTime={onToggleAutoTime}
             darkMode={darkMode}
             onToggleDarkMode={onToggleDarkMode}
-            wifi={wifi} onToggleWifi={onToggleWifi}
-            bluetooth={bluetooth} onToggleBluetooth={onToggleBluetooth}
-            airplane={airplane} onToggleAirplane={onToggleAirplane}
-            mobileHotspot={mobileHotspot} onToggleMobileHotspot={onToggleMobileHotspot}
-            touchpad={touchpad} onToggleTouchpad={onToggleTouchpad}
-            typing={typing} onToggleTyping={onToggleTyping}
-            gameBar={gameBar} onToggleGameBar={onToggleGameBar}
-            gameMode={gameMode} onToggleGameMode={onToggleGameMode}
-            magnifier={magnifier} onToggleMagnifier={onToggleMagnifier}
-            highContrast={highContrast} onToggleHighContrast={onToggleHighContrast}
-            location={location} onToggleLocation={onToggleLocation}
-            camera={camera} onToggleCamera={onToggleCamera}
-            microphone={microphone} onToggleMicrophone={onToggleMicrophone}
-            backup={backup} onToggleBackup={onToggleBackup}
+            backup={backup}
+            onToggleBackup={onToggleBackup}
           />
-          )}
         </div>
       </div>
       )}
