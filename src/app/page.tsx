@@ -833,6 +833,20 @@ function SettingsPage(props: {
     </div>
   )
 
+  // DisabledRow — สีเทา ใช้งานไม่ได้ (placeholder สำหรับ sub-pages ที่ยังไม่ได้ทำ)
+  const DisabledRow = ({ icon, title, desc }: { icon: string; title: string; desc: string }) => (
+    <div style={{ ...rowStyle, opacity: 0.45, cursor: 'not-allowed' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1 }}>
+        <div style={iconBoxStyle}>{icon}</div>
+        <div>
+          <div style={titleStyle}>{title}</div>
+          <div style={descStyle}>{desc}</div>
+        </div>
+      </div>
+      <span style={{ fontSize: 12, color: '#999' }}>—</span>
+    </div>
+  )
+
   if (props.category === 'System') {
     return (
       <>
@@ -846,6 +860,9 @@ function SettingsPage(props: {
         <Row icon="🔔" title="Notifications & actions" desc="Notifications, quick actions">
           <ToggleSwitch />
         </Row>
+        <Row icon="🌙" title="Focus assist" desc="Hide notifications during focus time">
+          <ToggleSwitch defaultOn />
+        </Row>
         <Row icon="🔋" title="Power & sleep" desc="Sleep, screen, power mode">
           <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
         </Row>
@@ -857,6 +874,18 @@ function SettingsPage(props: {
         </Row>
         <Row icon="📱" title="Tablet mode" desc="Make Windows more touch-friendly">
           <ToggleSwitch on={props.tabletMode} onToggle={props.onToggleTabletMode} />
+        </Row>
+        <Row icon="📋" title="Clipboard" desc="Copy history, sync across devices">
+          <ToggleSwitch defaultOn />
+        </Row>
+        <Row icon="🔁" title="Shared experiences" desc="Continue tasks across devices">
+          <ToggleSwitch defaultOn />
+        </Row>
+        <Row icon="🖼️" title="Graphics Settings" desc="GPU preference, advanced graphics">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+        </Row>
+        <Row icon="🔋" title="Battery" desc="Battery saver, battery use">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
         </Row>
         <Row icon="ℹ️" title="About" desc="Device specifications, Windows specifications">
           <span style={{ fontSize: 12, color: '#0078D7' }}>View</span>
@@ -881,7 +910,13 @@ function SettingsPage(props: {
         <Row icon="🎭" title="Themes" desc="Install, save, switch">
           <span style={{ fontSize: 12, color: '#0078D7' }}>Browse</span>
         </Row>
+        <Row icon="🔤" title="Fonts" desc="Install, manage fonts">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Browse</span>
+        </Row>
         <Row icon="🚀" title="Start" desc="Layout, folders, recent apps">
+          <ToggleSwitch defaultOn />
+        </Row>
+        <Row icon="📊" title="Taskbar" desc="Lock, auto-hide, small buttons">
           <ToggleSwitch defaultOn />
         </Row>
       </>
@@ -928,6 +963,12 @@ function SettingsPage(props: {
         <Row icon="⌨️" title="Typing" desc="Autocorrect, suggestions">
           <ToggleSwitch on={props.typing} onToggle={props.onToggleTyping} />
         </Row>
+        <DisabledRow icon="✏️" title="Pen & Windows Ink" desc="Pen shortcuts, handwriting" />
+        <DisabledRow icon="💿" title="AutoPlay" desc="Choose what happens with media" />
+        <DisabledRow icon="🔌" title="USB" desc="USB settings, notifications" />
+        <DisabledRow icon="👆" title="Touch" desc="Touch sensitivity" />
+        <DisabledRow icon="⏺️" title="Wheel" desc="Surface Dial settings" />
+        <DisabledRow icon="📱" title="Mobile devices" desc="Link your phone" />
       </>
     )
   }
@@ -979,6 +1020,10 @@ function SettingsPage(props: {
         <Row icon="🌐" title="Proxy" desc="Proxy server settings">
           <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
         </Row>
+        <DisabledRow icon="📊" title="Data usage" desc="View data usage per app" />
+        <DisabledRow icon="☎️" title="Dial-up" desc="Set up a dial-up connection" />
+        <DisabledRow icon="📞" title="Wi-Fi calling" desc="Make calls over Wi-Fi" />
+        <DisabledRow icon="📶" title="Cellular & SIM" desc="Manage cellular data" />
       </>
     )
   }
@@ -997,8 +1042,17 @@ function SettingsPage(props: {
         <Row icon="🔧" title="Optional features" desc="Install, uninstall features">
           <span style={{ fontSize: 12, color: '#0078D7' }}>Add</span>
         </Row>
+        <Row icon="🌐" title="Apps for websites" desc="Choose apps that open websites">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
+        </Row>
+        <Row icon="🗺️" title="Offline Maps" desc="Download, manage maps">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Download maps</span>
+        </Row>
         <Row icon="🚀" title="Startup" desc="Apps that start automatically">
           <span style={{ fontSize: 12, color: '#0078D7' }}>Manage</span>
+        </Row>
+        <Row icon="🎬" title="Video playback" desc="HDR, battery options">
+          <ToggleSwitch defaultOn />
         </Row>
       </>
     )
@@ -1024,6 +1078,8 @@ function SettingsPage(props: {
         <Row icon="🔄" title="Sync your settings" desc="Sync across devices">
           <ToggleSwitch defaultOn />
         </Row>
+        <DisabledRow icon="💼" title="Access work or school" desc="Connect to workplace" />
+        <DisabledRow icon="🖥️" title="Set up a kiosk" desc="Single-app kiosk mode" />
       </>
     )
   }
@@ -1045,6 +1101,8 @@ function SettingsPage(props: {
         <Row icon="🖥️" title="Game bar settings" desc="Customize shortcuts, layout">
           <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
         </Row>
+        <DisabledRow icon="✅" title="TruePlay" desc="Anti-cheat, fair play" />
+        <DisabledRow icon="🌐" title="Xbox Networking" desc="Multiplayer connection" />
       </>
     )
   }
@@ -1069,6 +1127,11 @@ function SettingsPage(props: {
         <Row icon="🔊" title="Audio" desc="Closed captions, mono">
           <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
         </Row>
+        <DisabledRow icon="🎙️" title="Narrator" desc="Screen reader" />
+        <DisabledRow icon="🗣️" title="Speech recognition" desc="Voice control" />
+        <DisabledRow icon="👁️" title="Eye control" desc="Eye tracker settings" />
+        <DisabledRow icon="⌨️" title="Keyboard" desc="Sticky, filter keys" />
+        <DisabledRow icon="🖱️" title="Mouse" desc="Mouse keys, size" />
       </>
     )
   }
@@ -1096,6 +1159,21 @@ function SettingsPage(props: {
         <Row icon="📊" title="Account info" desc="App access to account info">
           <ToggleSwitch defaultOn={false} />
         </Row>
+        <DisabledRow icon="👥" title="Contacts" desc="App access to contacts" />
+        <DisabledRow icon="📅" title="Calendar" desc="App access to calendar" />
+        <DisabledRow icon="📞" title="Call history" desc="App access to call history" />
+        <DisabledRow icon="📧" title="Email" desc="App access to email" />
+        <DisabledRow icon="✅" title="Tasks" desc="App access to tasks" />
+        <DisabledRow icon="💬" title="Messaging" desc="App access to messages" />
+        <DisabledRow icon="📻" title="Radios" desc="Control radios" />
+        <DisabledRow icon="📲" title="Other devices" desc="Sync with devices" />
+        <DisabledRow icon="🔄" title="Background apps" desc="Apps running in background" />
+        <DisabledRow icon="🔬" title="App diagnostics" desc="Diagnostic info" />
+        <DisabledRow icon="📥" title="Automatic file downloads" desc="Auto file downloads" />
+        <DisabledRow icon="🗣️" title="Speech" desc="Online speech recognition" />
+        <DisabledRow icon="✍️" title="Inking & typing" desc="Inking & typing personalization" />
+        <DisabledRow icon="📊" title="Diagnostics & feedback" desc="Diagnostic data, feedback" />
+        <DisabledRow icon="🕐" title="Activity history" desc="Timeline activity" />
       </>
     )
   }
@@ -1120,8 +1198,26 @@ function SettingsPage(props: {
         <Row icon="↩️" title="Recovery" desc="Reset, restore, advanced startup">
           <span style={{ fontSize: 12, color: '#0078D7' }}>Configure</span>
         </Row>
+        <Row icon="🔑" title="Activation" desc="Windows activation status">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>View</span>
+        </Row>
+        <Row icon="📍" title="Find my device" desc="Locate your device">
+          <ToggleSwitch defaultOn />
+        </Row>
+        <Row icon="👨‍💻" title="For developers" desc="Developer mode, sideload">
+          <ToggleSwitch defaultOn={false} />
+        </Row>
+        <Row icon="📦" title="Delivery Optimization" desc="Download from other PCs">
+          <ToggleSwitch defaultOn />
+        </Row>
         <Row icon="🔐" title="Device security" desc="Security processor, isolation">
           <span style={{ fontSize: 12, color: '#0078D7' }}>View</span>
+        </Row>
+        <Row icon="🔒" title="Device encryption" desc="BitLocker, encryption">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>View</span>
+        </Row>
+        <Row icon="🧪" title="Windows Insider Program" desc="Get preview builds">
+          <span style={{ fontSize: 12, color: '#0078D7' }}>Get started</span>
         </Row>
       </>
     )
