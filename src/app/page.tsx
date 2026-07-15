@@ -2214,7 +2214,7 @@ export default function Home() {
     return () => clearInterval(t)
   }, [])
 
-  // ====== Mond Clock widget (draggable + localStorage) ======
+  // ====== Mond Clock widget (draggable + localStorage + settings) ======
   const [clockPos, setClockPos] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('clockPos')
@@ -2222,7 +2222,23 @@ export default function Home() {
     }
     return { x: 80, y: 80 }
   })
+  const [clockSettings, setClockSettings] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('clockSettings')
+      if (saved) { try { return JSON.parse(saved) } catch {} }
+    }
+    return { showDay: true, showDate: true, showTime: true, scale: 1 }
+  })
+  const [clockMenuOpen, setClockMenuOpen] = useState(false)
   const clockDragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null)
+
+  const updateClockSettings = (partial: Partial<typeof clockSettings>) => {
+    setClockSettings((prev) => {
+      const next = { ...prev, ...partial }
+      localStorage.setItem('clockSettings', JSON.stringify(next))
+      return next
+    })
+  }
 
   // บันทึกตำแหน่งนาฬิกาเมื่อปล่อยเมาส์
   const onClockDragEnd = useCallback(() => {
@@ -2265,8 +2281,8 @@ export default function Home() {
 
   // ปิด context menu เมื่อคลิกที่อื่น
   useEffect(() => {
-    const onClick = () => { setContextMenu(null) }
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { setContextMenu(null) } }
+    const onClick = () => { setContextMenu(null); setClockMenuOpen(false) }
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { setContextMenu(null); setClockMenuOpen(false) } }
     window.addEventListener('click', onClick)
     window.addEventListener('keydown', onKey)
     return () => { window.removeEventListener('click', onClick); window.removeEventListener('keydown', onKey) }
@@ -2626,37 +2642,90 @@ export default function Home() {
         onMouseMove={onClockDragMove}
         onMouseUp={onClockDragEnd}
         onMouseLeave={onClockDragEnd}
+        onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); setClockMenuOpen(true) }}
         style={{
           position: 'absolute', left: clockPos.x, top: clockPos.y,
           zIndex: 100, cursor: 'grab', userSelect: 'none',
           textAlign: 'center', pointerEvents: 'auto',
         }}
       >
-        {/* Day — Anurati font (จาก Mond skin), large, spaced */}
-        <div style={{
-          fontFamily: 'Anurati, "Segoe UI", sans-serif', fontSize: 32, fontWeight: 400,
-          color: '#fff', letterSpacing: 10, textShadow: '0 2px 8px rgba(0,0,0,0.5)',
-          marginBottom: 2,
-        }}>
-          {time.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase()}
-        </div>
-        {/* Date — Quicksand font (จาก Mond skin) */}
-        <div style={{
-          fontFamily: 'Quicksand, "Segoe UI", sans-serif', fontSize: 14, fontWeight: 400,
-          color: '#fff', textShadow: '0 1px 4px rgba(0,0,0,0.5)',
-          marginBottom: 4,
-        }}>
-          {time.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' })}
-        </div>
-        {/* Time — Quicksand font, large bold */}
-        <div style={{
-          fontFamily: 'Quicksand, "Segoe UI", sans-serif', fontSize: 42, fontWeight: 600,
-          color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,0.5)',
-          lineHeight: 1,
-        }}>
-          {timeStr}
-        </div>
+        {clockSettings.showDay && (
+          <div style={{
+            fontFamily: 'Anurati, "Segoe UI", sans-serif',
+            fontSize: 32 * clockSettings.scale, fontWeight: 400,
+            color: '#fff', letterSpacing: 10 * clockSettings.scale,
+            marginBottom: 2,
+          }}>
+            {time.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase()}
+          </div>
+        )}
+        {clockSettings.showDate && (
+          <div style={{
+            fontFamily: 'Quicksand, "Segoe UI", sans-serif',
+            fontSize: 14 * clockSettings.scale, fontWeight: 400,
+            color: '#fff', marginBottom: 4,
+          }}>
+            {time.toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' })}
+          </div>
+        )}
+        {clockSettings.showTime && (
+          <div style={{
+            fontFamily: 'Quicksand, "Segoe UI", sans-serif',
+            fontSize: 42 * clockSettings.scale, fontWeight: 600,
+            color: '#fff', lineHeight: 1,
+          }}>
+            {timeStr}
+          </div>
+        )}
       </div>
+
+      {/* ====== Clock Settings Menu ====== */}
+      {clockMenuOpen && (
+        <div
+          data-popup="clock-menu"
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            position: 'absolute', left: clockPos.x, top: clockPos.y + 100,
+            width: 220, backgroundColor: 'rgba(243, 243, 243, 0.98)',
+            border: '1px solid rgba(0, 0, 0, 0.15)',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+            padding: 16, zIndex: 3500,
+          }}
+        >
+          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: '#323130' }}>Clock Settings</div>
+
+          {/* Toggles */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#323130', cursor: 'pointer' }}>
+              <input type="checkbox" checked={clockSettings.showDay} onChange={(e) => updateClockSettings({ showDay: e.target.checked })} style={{ accentColor: '#E91E63' }} />
+              Show day
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#323130', cursor: 'pointer' }}>
+              <input type="checkbox" checked={clockSettings.showDate} onChange={(e) => updateClockSettings({ showDate: e.target.checked })} style={{ accentColor: '#E91E63' }} />
+              Show date
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#323130', cursor: 'pointer' }}>
+              <input type="checkbox" checked={clockSettings.showTime} onChange={(e) => updateClockSettings({ showTime: e.target.checked })} style={{ accentColor: '#E91E63' }} />
+              Show time
+            </label>
+          </div>
+
+          {/* Size slider */}
+          <div style={{ marginBottom: 12 }}>
+            <div style={{ fontSize: 13, color: '#323130', marginBottom: 4 }}>Size: {Math.round(clockSettings.scale * 100)}%</div>
+            <input
+              type="range" min={0.5} max={2} step={0.1} value={clockSettings.scale}
+              onChange={(e) => updateClockSettings({ scale: Number(e.target.value) })}
+              style={{ width: '100%', accentColor: '#E91E63' }}
+            />
+          </div>
+
+          {/* Close */}
+          <button onClick={() => setClockMenuOpen(false)} style={{ width: '100%', padding: '6px', fontSize: 13, border: '1px solid #ccc', backgroundColor: '#fff', cursor: 'pointer', borderRadius: 4 }}>
+            Close
+          </button>
+        </div>
+      )}
 
       {/* ====== Desktop right-click context menu ====== */}
       {contextMenu && (
