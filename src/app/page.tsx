@@ -724,11 +724,12 @@ function SettingsContent({
 
       {/* ====== Body: Home (grid) หรือ Sidebar + Content ====== */}
       {isHome ? (
-        // ====== Home page — grid ของ category tiles (เหมือน Win10 จริง) ======
-        <div style={{
+        // ====== Home page — app1 (ออกไปทางซ้าย) ======
+        <div key="home" style={{
           flex: 1, backgroundColor: 'transparent', overflowY: 'auto',
           padding: '24px 56px 32px', userSelect: 'none',
           display: 'flex', flexDirection: 'column',
+          animation: 'settingsIn 300ms cubic-bezier(0.16, 1, 0.3, 1)',
         }}>
           <div style={{
             display: 'grid',
@@ -778,8 +779,8 @@ function SettingsContent({
           <div style={{ marginTop: 'auto' }} />
         </div>
       ) : (
-        // ====== Category page — Sidebar + Content ======
-        <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+        // ====== Category page — app2 (เข้ามาจากขวา) ======
+        <div key="category" style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden', animation: 'settingsIn 300ms cubic-bezier(0.16, 1, 0.3, 1)' }}>
         {/* Sidebar — Win10 จริง: 280px, bg #F2F2F2, search bar ด้านบน */}
         <div
           style={{
@@ -2372,7 +2373,7 @@ export default function Home() {
       return (
         <img
           src={app.icon} alt={app.title} width={size} height={size}
-          style={{ objectFit: 'contain', pointerEvents: 'none' }} draggable={false}
+          style={{ objectFit: 'contain', pointerEvents: 'none', width: size, height: size }} draggable={false}
         />
       )
     }
@@ -2576,7 +2577,7 @@ export default function Home() {
                   onVolumeChange(newVol)
                 }}
               >
-                {renderAppIcon(app, 20)}
+                {renderAppIcon(app, app.iconType === 'img' ? 28 : 20)}
               </TaskbarIconButton>
             )
           })}
@@ -2791,6 +2792,10 @@ export default function Home() {
 
       {/* ====== Styles ====== */}
       <style>{`
+        @keyframes settingsIn {
+          from { opacity: 0; transform: scale(0.96); }
+          to   { opacity: 1; transform: scale(1); }
+        }
         @keyframes settingsSwitch {
           from { opacity: 0; transform: scale(0.96); }
           to   { opacity: 1; transform: scale(1); }
