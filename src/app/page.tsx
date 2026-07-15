@@ -1071,66 +1071,112 @@ function SettingsSubPage(props: {
   }
 
   // ====== Colors sub-page (ใช้งานได้จริง) ======
-  // ====== Background sub-page (wallpaper picker) ======
+  // ====== Background sub-page (wallpaper picker — เหมือน Win10 จริง) ======
   if (props.subPage === 'Background') {
+    const isSolidColor = props.wallpaper && !props.wallpaper.startsWith('/') && !props.wallpaper.startsWith('data:')
     return (
       <>
         <h1 style={titleStyle}>Background</h1>
 
-        <div style={sectionTitleStyle}>Preview</div>
-        <div style={{
-          width: '100%', maxWidth: 400, height: 200,
-          backgroundImage: props.wallpaper?.startsWith('data:') || props.wallpaper?.startsWith('/') ? `url(${props.wallpaper})` : 'none',
-          backgroundColor: props.wallpaper && !props.wallpaper.startsWith('data:') && !props.wallpaper.startsWith('/') ? props.wallpaper : '#ccc',
-          backgroundSize: 'cover', backgroundPosition: 'center',
-          border: '1px solid #ccc', borderRadius: 4, marginBottom: 16,
-        }} />
-
-        <div style={sectionTitleStyle}>Choose your picture</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 16 }}>
-          {WALLPAPER_PRESETS.map((wp) => (
-            <div
-              key={wp.src}
-              onClick={() => props.onWallpaperChange(wp.src)}
-              style={{
-                height: 80, backgroundImage: `url(${wp.src})`, backgroundSize: 'cover', backgroundPosition: 'center',
-                cursor: 'default', border: props.wallpaper === wp.src ? '3px solid #E91E63' : '1px solid #ccc',
-                borderRadius: 4,
-              }}
-              title={wp.name}
-            />
-          ))}
+        {/* Preview */}
+        <div style={{ ...rowStyle, borderBottom: 'none', alignItems: 'flex-start' }}>
+          <div style={{ fontSize: 14, color: '#323130', minWidth: 200 }}>Preview</div>
+          <div style={{
+            width: 320, height: 180,
+            backgroundImage: isSolidColor ? 'none' : `url(${props.wallpaper})`,
+            backgroundColor: isSolidColor ? props.wallpaper : 'transparent',
+            backgroundSize: 'cover', backgroundPosition: 'center',
+            border: '1px solid #ccc', borderRadius: 2,
+          }} />
         </div>
 
-        {/* Upload */}
-        <div style={{ marginBottom: 16 }}>
-          <label style={{ display: 'inline-block', padding: '8px 16px', backgroundColor: '#E91E63', color: '#fff', fontSize: 13, cursor: 'pointer', borderRadius: 4 }}>
-            Browse
-            <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
-              const file = e.target.files?.[0]
-              if (file) {
-                const reader = new FileReader()
-                reader.onload = () => props.onWallpaperChange(reader.result as string)
-                reader.readAsDataURL(file)
-              }
-            }} />
-          </label>
+        {/* Background type dropdown */}
+        <div style={{ ...rowStyle, borderBottom: '1px solid #F0F0F0' }}>
+          <div style={{ fontSize: 14, color: '#323130' }}>Background</div>
+          <select
+            value={isSolidColor ? 'solid' : 'picture'}
+            onChange={(e) => {
+              if (e.target.value === 'solid') props.onWallpaperChange('#0078D7')
+              else props.onWallpaperChange(WALLPAPER_PRESETS[0].src)
+            }}
+            style={{ padding: '4px 8px', fontSize: 13, border: '1px solid #ccc', borderRadius: 2, backgroundColor: '#fff', color: '#323130', cursor: 'default', minWidth: 120 }}
+          >
+            <option value="picture">Picture</option>
+            <option value="solid">Solid color</option>
+          </select>
         </div>
 
-        <div style={sectionTitleStyle}>Solid colors</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
-          {SOLID_COLORS.map((color) => (
-            <div
-              key={color}
-              onClick={() => props.onWallpaperChange(color)}
-              style={{
-                height: 60, backgroundColor: color, cursor: 'default',
-                border: props.wallpaper === color ? '3px solid #E91E63' : '1px solid #ccc',
-                borderRadius: 4,
-              }}
-            />
-          ))}
-        </div>
+        {/* Choose your picture (only when Picture mode) */}
+        {!isSolidColor && (
+          <>
+            <div style={{ ...rowStyle, borderBottom: '1px solid #F0F0F0', alignItems: 'flex-start' }}>
+              <div style={{ fontSize: 14, color: '#323130', minWidth: 200 }}>Choose your picture</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                {WALLPAPER_PRESETS.map((wp) => (
+                  <div
+                    key={wp.src}
+                    onClick={() => props.onWallpaperChange(wp.src)}
+                    style={{
+                      width: 90, height: 60, backgroundImage: `url(${wp.src})`, backgroundSize: 'cover', backgroundPosition: 'center',
+                      cursor: 'default', border: props.wallpaper === wp.src ? '3px solid #E91E63' : '1px solid #ccc',
+                      borderRadius: 2,
+                    }}
+                    title={wp.name}
+                  />
+                ))}
+                {/* Browse button */}
+                <label style={{
+                  width: 90, height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  border: '1px solid #ccc', borderRadius: 2, cursor: 'pointer', fontSize: 12, color: '#323130',
+                  backgroundColor: '#f3f3f3',
+                }}>
+                  Browse
+                  <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) {
+                      const reader = new FileReader()
+                      reader.onload = () => props.onWallpaperChange(reader.result as string)
+                      reader.readAsDataURL(file)
+                    }
+                  }} />
+                </label>
+              </div>
+            </div>
+
+            {/* Choose a fit */}
+            <div style={{ ...rowStyle, borderBottom: '1px solid #F0F0F0' }}>
+              <div style={{ fontSize: 14, color: '#323130' }}>Choose a fit</div>
+              <select style={{ padding: '4px 8px', fontSize: 13, border: '1px solid #ccc', borderRadius: 2, backgroundColor: '#fff', color: '#323130', cursor: 'default', minWidth: 120 }}>
+                <option>Fill</option>
+                <option>Fit</option>
+                <option>Stretch</option>
+                <option>Tile</option>
+                <option>Center</option>
+                <option>Span</option>
+              </select>
+            </div>
+          </>
+        )}
+
+        {/* Solid colors (only when Solid color mode) */}
+        {isSolidColor && (
+          <div style={{ ...rowStyle, borderBottom: '1px solid #F0F0F0', alignItems: 'flex-start' }}>
+            <div style={{ fontSize: 14, color: '#323130', minWidth: 200 }}>Choose your color</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {SOLID_COLORS.map((color) => (
+                <div
+                  key={color}
+                  onClick={() => props.onWallpaperChange(color)}
+                  style={{
+                    width: 60, height: 60, backgroundColor: color, cursor: 'default',
+                    border: props.wallpaper === color ? '3px solid #E91E63' : '1px solid #ccc',
+                    borderRadius: 2,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </>
     )
   }
