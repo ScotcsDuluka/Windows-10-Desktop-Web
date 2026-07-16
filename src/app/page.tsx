@@ -2653,98 +2653,6 @@ export default function Home() {
               )}
             </TaskbarIconButton>
 
-            {showVolumeSlider && (
-              <div
-                ref={volumePanelRef}
-                onWheel={(e) => {
-                  const delta = e.deltaY > 0 ? -5 : 5
-                  const newVol = Math.max(0, Math.min(100, volume + delta))
-                  onVolumeChange(newVol)
-                }}
-                style={{
-                  position: 'fixed',
-                  right: 0,
-                  bottom: 45, // ติด taskbar (ความสูง taskbar = 45)
-                  width: 400,
-                  height: 100,
-                  backgroundColor: '#f3f3f3',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
-                  borderRight: 'none',
-                  borderBottom: 'none',
-                  borderRadius: 0,
-                  boxShadow: '-3px 0 10px rgba(0, 0, 0, 0.18), 0 -3px 10px rgba(0, 0, 0, 0.18)',
-                  zIndex: 999, // อยู่หลัง taskbar (taskbar = 1000)
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  padding: '0 20px',
-                  gap: 14,
-                  animation: 'volumeFlyoutIn 500ms cubic-bezier(0.16, 1, 0.3, 1)',
-                }}
-              >
-                {/* Speaker icon at left — click to mute */}
-                <button
-                  onClick={toggleMute}
-                  aria-label={muted ? 'Unmute' : 'Mute'}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: 8,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                  }}
-                >
-                  {muted || volume === 0 ? (
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                      <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
-                      <path d="M16 9l5 6M21 9l-5 6" stroke="#1F1F1F" strokeWidth="1.8" strokeLinecap="round" />
-                    </svg>
-                  ) : volume < 50 ? (
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                      <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
-                      <path d="M15 9a3 3 0 010 6" stroke="#1F1F1F" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-                    </svg>
-                  ) : (
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                      <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
-                      <path d="M15 9a3 3 0 010 6M17.5 7a6 6 0 010 10" stroke="#1F1F1F" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-                    </svg>
-                  )}
-                </button>
-
-                {/* Horizontal slider */}
-                <input
-                  type="range"
-                  min={0} max={100}
-                  value={muted ? 0 : volume}
-                  onChange={(e) => onVolumeChange(Number(e.target.value))}
-                  aria-label="Volume level"
-                  style={{
-                    flex: 1,
-                    width: '100%',
-                    height: 4,
-                    accentColor: '#E91E63',
-                    cursor: 'pointer',
-                  }}
-                />
-
-                {/* Volume percentage text at right */}
-                <div style={{
-                  fontSize: 12,
-                  color: '#1F1F1F',
-                  fontWeight: 500,
-                  fontVariantNumeric: 'tabular-nums',
-                  minWidth: 36,
-                  textAlign: 'right',
-                  flexShrink: 0,
-                }}>
-                  {muted ? '0%' : `${volume}%`}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Clock */}
@@ -2762,6 +2670,100 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* ====== Volume Flyout (sibling of taskbar so z-index works) ====== */}
+      {showVolumeSlider && (
+        <div
+          ref={volumePanelRef}
+          onWheel={(e) => {
+            const delta = e.deltaY > 0 ? -5 : 5
+            const newVol = Math.max(0, Math.min(100, volume + delta))
+            onVolumeChange(newVol)
+          }}
+          style={{
+            position: 'fixed',
+            right: 0,
+            bottom: 45, // ติด taskbar (ความสูง taskbar = 45)
+            width: 400,
+            height: 100,
+            backgroundColor: '#f3f3f3',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderRight: 'none',
+            borderBottom: 'none',
+            borderRadius: 0,
+            boxShadow: '-3px 0 10px rgba(0, 0, 0, 0.18), 0 -3px 10px rgba(0, 0, 0, 0.18)',
+            zIndex: 999, // อยู่หลัง taskbar (taskbar = 1000)
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: '0 20px',
+            gap: 14,
+            animation: 'volumeFlyoutIn 500ms cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        >
+          {/* Speaker icon at left — click to mute */}
+          <button
+            onClick={toggleMute}
+            aria-label={muted ? 'Unmute' : 'Mute'}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 8,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            {muted || volume === 0 ? (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
+                <path d="M16 9l5 6M21 9l-5 6" stroke="#1F1F1F" strokeWidth="1.8" strokeLinecap="round" />
+              </svg>
+            ) : volume < 50 ? (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
+                <path d="M15 9a3 3 0 010 6" stroke="#1F1F1F" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+              </svg>
+            ) : (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
+                <path d="M15 9a3 3 0 010 6M17.5 7a6 6 0 010 10" stroke="#1F1F1F" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+              </svg>
+            )}
+          </button>
+
+          {/* Horizontal slider */}
+          <input
+            type="range"
+            min={0} max={100}
+            value={muted ? 0 : volume}
+            onChange={(e) => onVolumeChange(Number(e.target.value))}
+            aria-label="Volume level"
+            style={{
+              flex: 1,
+              width: '100%',
+              height: 4,
+              accentColor: '#E91E63',
+              cursor: 'pointer',
+            }}
+          />
+
+          {/* Volume percentage text at right */}
+          <div style={{
+            fontSize: 12,
+            color: '#1F1F1F',
+            fontWeight: 500,
+            fontVariantNumeric: 'tabular-nums',
+            minWidth: 36,
+            textAlign: 'right',
+            flexShrink: 0,
+          }}>
+            {muted ? '0%' : `${volume}%`}
+          </div>
+        </div>
+      )}
 
       {/* ====== Mond Clock Widget (draggable on desktop) ====== */}
       <div
