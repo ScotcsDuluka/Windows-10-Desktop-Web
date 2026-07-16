@@ -2764,7 +2764,7 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(function StartMenu(
         minHeight: 0,
         overflow: 'hidden',
         marginTop: 8,
-        animation: 'startMenuContentIn 300ms cubic-bezier(0.16, 1, 0.3, 1) 250ms both',
+        animation: 'startMenuContentIn 300ms cubic-bezier(0.16, 1, 0.3, 1)',
       }}>
       {/* Search bar at top */}
       <div style={{
