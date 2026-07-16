@@ -324,7 +324,7 @@ function AppWindow({
       style={{
         position: 'absolute', left: winLeft, top: winTop,
         width: winWidth, height: winHeight, zIndex: 500,
-        backgroundColor: 'rgba(255, 255, 255, 0.85)',
+        backgroundColor: 'rgba(255, 255, 255, 1)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         border: 'none',
@@ -2678,7 +2678,7 @@ export default function Home() {
         onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); setClockMenuOpen(true) }}
         style={{
           position: 'absolute', left: clockPos.x, top: clockPos.y,
-          zIndex: 100, cursor: 'grab', userSelect: 'none',
+          zIndex: 600, cursor: 'grab', userSelect: 'none',
           textAlign: 'center', pointerEvents: 'auto',
         }}
       >
