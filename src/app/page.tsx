@@ -398,7 +398,7 @@ function TaskbarIconButton({
 // AppWindow — generic window component
 // ============================================================
 function AppWindow({
-  state, tabletMode, taskbarBtnRef,
+  state, tabletMode, viewport, taskbarBtnRef,
   onMinimize, onMaximize, onClose, onFocus,
   onDragStart, onDragMove, onDragEnd,
   onResizeStart, onResizeMove, onResizeEnd,
@@ -406,6 +406,7 @@ function AppWindow({
 }: {
   state: WindowState
   tabletMode: boolean
+  viewport: { w: number; h: number }
   taskbarBtnRef: React.RefObject<HTMLButtonElement>
   onMinimize: () => void
   onMaximize: () => void
@@ -438,8 +439,8 @@ function AppWindow({
     }
   }, [state.opening, state.switchIn])
 
-  const winWidth = isMaximized ? window.innerWidth : state.size.w
-  const winHeight = isMaximized ? window.innerHeight - 45 : state.size.h
+  const winWidth = isMaximized ? viewport.w : state.size.w
+  const winHeight = isMaximized ? viewport.h - 45 : state.size.h
   const winLeft = isMaximized ? 0 : state.position.x
   const winTop = isMaximized ? 0 : state.position.y
 
@@ -2977,6 +2978,18 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(function StartMenu(
 // Main Page
 // ============================================================
 export default function Home() {
+  // Track viewport size so maximized/tablet-mode apps fill the actual
+  // browser window and update live on resize (instead of capturing
+  // window.innerWidth once at open time, which caused apps to not fill
+  // the screen properly after the browser was resized).
+  const [viewport, setViewport] = useState({ w: 1280, h: 720 })
+  useEffect(() => {
+    const update = () => setViewport({ w: window.innerWidth, h: window.innerHeight })
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
+
   const [wallpaper, setWallpaperState] = useState<WallpaperConfig>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('wallpaper')
@@ -3533,6 +3546,7 @@ export default function Home() {
             key={app.id}
             state={w}
             tabletMode={tabletMode}
+            viewport={viewport}
             taskbarBtnRef={{ current: taskbarBtnRefs.current[app.id] || null } as React.RefObject<HTMLButtonElement>}
             onMinimize={() => minimizeApp(app.id)}
             onMaximize={() => maximizeApp(app.id)}
