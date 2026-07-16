@@ -324,7 +324,7 @@ function AppWindow({
       style={{
         position: 'absolute', left: winLeft, top: winTop,
         width: winWidth, height: winHeight, zIndex: 500,
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        backgroundColor: 'rgba(255, 255, 255, 0.85)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         border: 'none',
