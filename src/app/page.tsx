@@ -2924,7 +2924,7 @@ export default function Home() {
           to { opacity: 1; transform: translateY(0); }
         }
         @keyframes volumeFlyoutIn {
-          from { opacity: 0; transform: translateY(-100px); }
+          from { opacity: 0; transform: translateY(100px); }
           to { opacity: 1; transform: translateY(0); }
         }
         input[aria-label="Search"]::placeholder { color: #555; }
