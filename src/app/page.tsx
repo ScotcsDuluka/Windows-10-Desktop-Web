@@ -2760,6 +2760,7 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(function StartMenu(
       <div style={{
         padding: '12px 16px 8px',
         backgroundColor: 'transparent',
+        animation: 'startMenuContentIn 300ms cubic-bezier(0.16, 1, 0.3, 1) 250ms both',
       }}>
         <input
           type="text"
@@ -2781,7 +2782,10 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(function StartMenu(
       </div>
 
       {/* Body: 2 columns */}
-      <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+      <div style={{
+        display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden',
+        animation: 'startMenuContentIn 300ms cubic-bezier(0.16, 1, 0.3, 1) 250ms both',
+      }}>
         {/* Left column: app list A-Z */}
         <div style={{
           width: 240,
@@ -2885,6 +2889,7 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(function StartMenu(
         backgroundColor: 'rgba(255, 255, 255, 0.6)',
         borderTop: '1px solid rgba(0, 0, 0, 0.08)',
         gap: 12,
+        animation: 'startMenuContentIn 300ms cubic-bezier(0.16, 1, 0.3, 1) 250ms both',
       }}>
         <div style={{
           width: 32,
@@ -4000,6 +4005,10 @@ export default function Home() {
         }
         @keyframes startMenuIn {
           from { opacity: 0; transform: translateY(100px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes startMenuContentIn {
+          from { opacity: 0; transform: translateY(8px); }
           to { opacity: 1; transform: translateY(0); }
         }
         input[aria-label="Search"]::placeholder { color: #555; }
