@@ -4008,8 +4008,8 @@ export default function Home() {
           to { opacity: 1; transform: translateY(0); }
         }
         @keyframes startMenuContentIn {
-          from { opacity: 0; transform: translateY(8px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { transform: translateY(8px); }
+          to { transform: translateY(0); }
         }
         input[aria-label="Search"]::placeholder { color: #555; }
         /* ปิด text selection ทั้งหน้า ยกเว้น input/textarea */
