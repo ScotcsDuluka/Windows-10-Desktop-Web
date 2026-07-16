@@ -2001,6 +2001,8 @@ export default function Home() {
   // timeout refs สำหรับล้าง timeout เก่าก่อนตั้งใหม่
   const animTimeoutsRef = useRef<Set<number>>(new Set())
   const isAnimatingRef = useRef<boolean>(false)
+  const volumeBtnRef = useRef<HTMLButtonElement>(null)
+  const volumePanelRef = useRef<HTMLDivElement>(null)
 
   // helper: setTimeout ที่ track ID เพื่อล้างได้
   const setTrackedTimeout = useCallback((fn: () => void, ms: number) => {
@@ -2319,6 +2321,22 @@ export default function Home() {
     return () => { window.removeEventListener('click', onClick); window.removeEventListener('keydown', onKey) }
   }, [])
 
+  // ปิด volume flyout เมื่อคลิกที่อื่น
+  useEffect(() => {
+    if (!showVolumeSlider) return
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node
+      if (
+        volumePanelRef.current && !volumePanelRef.current.contains(target) &&
+        volumeBtnRef.current && !volumeBtnRef.current.contains(target)
+      ) {
+        setShowVolumeSlider(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [showVolumeSlider])
+
   // ====== Volume control ======
   const applyVolume = (vol: number, isMuted: boolean) => {
     const effective = isMuted ? 0 : vol / 100
@@ -2606,12 +2624,17 @@ export default function Home() {
 
         {/* ====== RIGHT: Volume + Clock ====== */}
         <div style={{ display: 'flex', alignItems: 'center', height: '100%', flexShrink: 0, position: 'relative', zIndex: 1 }}>
-          <div
-            style={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center' }}
-            onMouseEnter={() => setShowVolumeSlider(true)}
-            onMouseLeave={() => setShowVolumeSlider(false)}
-          >
-            <TaskbarIconButton label="Volume" onClick={toggleMute}>
+          <div style={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center' }}>
+            <TaskbarIconButton
+              label="Volume"
+              onClick={() => setShowVolumeSlider((s) => !s)}
+              buttonRef={volumeBtnRef}
+              onWheel={(deltaY) => {
+                const delta = deltaY > 0 ? -5 : 5
+                const newVol = Math.max(0, Math.min(100, volume + delta))
+                onVolumeChange(newVol)
+              }}
+            >
               {muted || volume === 0 ? (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
@@ -2632,48 +2655,94 @@ export default function Home() {
 
             {showVolumeSlider && (
               <div
+                ref={volumePanelRef}
+                onWheel={(e) => {
+                  const delta = e.deltaY > 0 ? -5 : 5
+                  const newVol = Math.max(0, Math.min(100, volume + delta))
+                  onVolumeChange(newVol)
+                }}
                 style={{
-                  position: 'absolute', bottom: 50, right: 0,
-                  width: 200,
-                  backgroundColor: 'rgba(243, 243, 243, 0.95)',
-                  backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(0, 0, 0, 0.1)',
-                  borderRadius: 4,
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
-                  padding: '12px 16px',
-                  zIndex: 1001, animation: 'fadeInUp 0.15s ease-out',
-                  display: 'flex', alignItems: 'center', gap: 12,
+                  position: 'fixed',
+                  right: 0,
+                  bottom: 45, // ติด taskbar (ความสูง taskbar = 45)
+                  width: 100,
+                  height: 400,
+                  backgroundColor: '#f3f3f3',
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderRight: 'none',
+                  borderBottom: 'none',
+                  borderRadius: 0,
+                  boxShadow: '-3px 0 10px rgba(0, 0, 0, 0.18), 0 -3px 10px rgba(0, 0, 0, 0.18)',
+                  zIndex: 1001,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  padding: '14px 0 18px',
+                  gap: 6,
+                  animation: 'volumeFlyoutIn 0.18s ease-out',
                 }}
               >
-                {/* Speaker icon — click to mute */}
-                <svg
-                  width="20" height="20" viewBox="0 0 24 24" fill="none"
+                {/* Speaker icon at top — click to mute */}
+                <button
                   onClick={toggleMute}
-                  style={{ cursor: 'pointer', flexShrink: 0 }}
+                  aria-label={muted ? 'Unmute' : 'Mute'}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 8,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
                 >
                   {muted || volume === 0 ? (
-                    <>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                       <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
                       <path d="M16 9l5 6M21 9l-5 6" stroke="#1F1F1F" strokeWidth="1.8" strokeLinecap="round" />
-                    </>
+                    </svg>
                   ) : volume < 50 ? (
-                    <>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                       <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
                       <path d="M15 9a3 3 0 010 6" stroke="#1F1F1F" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-                    </>
+                    </svg>
                   ) : (
-                    <>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                       <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
                       <path d="M15 9a3 3 0 010 6M17.5 7a6 6 0 010 10" stroke="#1F1F1F" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-                    </>
+                    </svg>
                   )}
-                </svg>
-                {/* Horizontal slider — no text, just track */}
+                </button>
+
+                {/* Volume percentage text */}
+                <div style={{
+                  fontSize: 12,
+                  color: '#1F1F1F',
+                  fontWeight: 500,
+                  fontVariantNumeric: 'tabular-nums',
+                  marginBottom: 4,
+                }}>
+                  {muted ? '0%' : `${volume}%`}
+                </div>
+
+                {/* Vertical slider */}
                 <input
-                  type="range" min={0} max={100} value={muted ? 0 : volume}
+                  type="range"
+                  min={0} max={100}
+                  value={muted ? 0 : volume}
                   onChange={(e) => onVolumeChange(Number(e.target.value))}
-                  style={{ flex: 1, height: 4, cursor: 'pointer', accentColor: '#E91E63' }}
                   aria-label="Volume level"
+                  style={{
+                    writingMode: 'vertical-lr',
+                    direction: 'rtl',
+                    appearance: 'slider-vertical',
+                    WebkitAppearance: 'slider-vertical',
+                    width: 8,
+                    height: 260,
+                    accentColor: '#E91E63',
+                    cursor: 'pointer',
+                    flexShrink: 0,
+                  } as unknown as React.CSSProperties}
                 />
               </div>
             )}
@@ -2853,6 +2922,10 @@ export default function Home() {
         }
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(4px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes volumeFlyoutIn {
+          from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
         }
         input[aria-label="Search"]::placeholder { color: #555; }
