@@ -2678,7 +2678,7 @@ export default function Home() {
         onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); setClockMenuOpen(true) }}
         style={{
           position: 'absolute', left: clockPos.x, top: clockPos.y,
-          zIndex: 600, cursor: 'grab', userSelect: 'none',
+          zIndex: 50, cursor: 'grab', userSelect: 'none',
           textAlign: 'center', pointerEvents: 'auto',
         }}
       >
