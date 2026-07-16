@@ -2749,11 +2749,11 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(function StartMenu(
         borderBottom: 'none',
         borderRadius: 0,
         boxShadow: '0 -8px 32px rgba(0, 0, 0, 0.25)',
-        zIndex: 1500,
+        zIndex: 999, // อยู่หลัง taskbar (taskbar = 1000) เหมือน volume flyout
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
-        animation: 'startMenuIn 250ms cubic-bezier(0.16, 1, 0.3, 1)',
+        animation: 'startMenuIn 500ms cubic-bezier(0.16, 1, 0.3, 1)',
       }}
     >
       {/* Search bar at top */}
@@ -3999,8 +3999,8 @@ export default function Home() {
           to { opacity: 1; transform: translateY(0); }
         }
         @keyframes startMenuIn {
-          from { opacity: 0; transform: translateY(40px) scale(0.98); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
+          from { opacity: 0; transform: translateY(100px); }
+          to { opacity: 1; transform: translateY(0); }
         }
         input[aria-label="Search"]::placeholder { color: #555; }
         /* ปิด text selection ทั้งหน้า ยกเว้น input/textarea */
