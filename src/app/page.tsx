@@ -2258,7 +2258,7 @@ export default function Home() {
       const saved = localStorage.getItem('clockSettings')
       if (saved) { try { return JSON.parse(saved) } catch {} }
     }
-    return { showDay: true, showDate: true, showTime: true, scale: 1 }
+    return { showDay: true, showDate: true, showTime: true, scale: 1, center: false }
   })
   const [clockMenuOpen, setClockMenuOpen] = useState(false)
   const clockDragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null)
@@ -2677,7 +2677,10 @@ export default function Home() {
         onMouseLeave={onClockDragEnd}
         onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); setClockMenuOpen(true) }}
         style={{
-          position: 'absolute', left: clockPos.x, top: clockPos.y,
+          position: 'absolute',
+          left: clockSettings.center ? '50%' : clockPos.x,
+          top: clockSettings.center ? '50%' : clockPos.y,
+          transform: clockSettings.center ? 'translate(-50%, -50%)' : 'none',
           zIndex: 50, cursor: 'grab', userSelect: 'none',
           textAlign: 'center', pointerEvents: 'auto',
         }}
@@ -2740,6 +2743,10 @@ export default function Home() {
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#323130', cursor: 'pointer' }}>
               <input type="checkbox" checked={clockSettings.showTime} onChange={(e) => updateClockSettings({ showTime: e.target.checked })} style={{ accentColor: '#E91E63' }} />
               Show time
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#323130', cursor: 'pointer' }}>
+              <input type="checkbox" checked={clockSettings.center} onChange={(e) => updateClockSettings({ center: e.target.checked })} style={{ accentColor: '#E91E63' }} />
+              Center on screen
             </label>
           </div>
 
