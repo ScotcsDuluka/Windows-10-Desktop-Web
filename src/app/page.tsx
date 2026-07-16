@@ -2665,24 +2665,24 @@ export default function Home() {
                   position: 'fixed',
                   right: 0,
                   bottom: 45, // ติด taskbar (ความสูง taskbar = 45)
-                  width: 100,
-                  height: 400,
+                  width: 400,
+                  height: 100,
                   backgroundColor: '#f3f3f3',
                   border: '1px solid rgba(0, 0, 0, 0.12)',
                   borderRight: 'none',
                   borderBottom: 'none',
                   borderRadius: 0,
                   boxShadow: '-3px 0 10px rgba(0, 0, 0, 0.18), 0 -3px 10px rgba(0, 0, 0, 0.18)',
-                  zIndex: 1001,
+                  zIndex: 999, // อยู่หลัง taskbar (taskbar = 1000)
                   display: 'flex',
-                  flexDirection: 'column',
+                  flexDirection: 'row',
                   alignItems: 'center',
-                  padding: '14px 0 18px',
-                  gap: 6,
-                  animation: 'volumeFlyoutIn 0.18s ease-out',
+                  padding: '0 20px',
+                  gap: 14,
+                  animation: 'volumeFlyoutIn 500ms cubic-bezier(0.16, 1, 0.3, 1)',
                 }}
               >
-                {/* Speaker icon at top — click to mute */}
+                {/* Speaker icon at left — click to mute */}
                 <button
                   onClick={toggleMute}
                   aria-label={muted ? 'Unmute' : 'Mute'}
@@ -2694,6 +2694,7 @@ export default function Home() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    flexShrink: 0,
                   }}
                 >
                   {muted || volume === 0 ? (
@@ -2714,18 +2715,7 @@ export default function Home() {
                   )}
                 </button>
 
-                {/* Volume percentage text */}
-                <div style={{
-                  fontSize: 12,
-                  color: '#1F1F1F',
-                  fontWeight: 500,
-                  fontVariantNumeric: 'tabular-nums',
-                  marginBottom: 4,
-                }}>
-                  {muted ? '0%' : `${volume}%`}
-                </div>
-
-                {/* Vertical slider */}
+                {/* Horizontal slider */}
                 <input
                   type="range"
                   min={0} max={100}
@@ -2733,17 +2723,26 @@ export default function Home() {
                   onChange={(e) => onVolumeChange(Number(e.target.value))}
                   aria-label="Volume level"
                   style={{
-                    writingMode: 'vertical-lr',
-                    direction: 'rtl',
-                    appearance: 'slider-vertical',
-                    WebkitAppearance: 'slider-vertical',
-                    width: 8,
-                    height: 260,
+                    flex: 1,
+                    width: '100%',
+                    height: 4,
                     accentColor: '#E91E63',
                     cursor: 'pointer',
-                    flexShrink: 0,
-                  } as unknown as React.CSSProperties}
+                  }}
                 />
+
+                {/* Volume percentage text at right */}
+                <div style={{
+                  fontSize: 12,
+                  color: '#1F1F1F',
+                  fontWeight: 500,
+                  fontVariantNumeric: 'tabular-nums',
+                  minWidth: 36,
+                  textAlign: 'right',
+                  flexShrink: 0,
+                }}>
+                  {muted ? '0%' : `${volume}%`}
+                </div>
               </div>
             )}
           </div>
