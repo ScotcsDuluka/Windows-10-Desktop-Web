@@ -2634,70 +2634,47 @@ export default function Home() {
               <div
                 style={{
                   position: 'absolute', bottom: 50, right: 0,
-                  width: 280,
-                  backgroundColor: 'rgba(243, 243, 243, 0.97)',
-                  backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+                  width: 200,
+                  backgroundColor: 'rgba(243, 243, 243, 0.95)',
+                  backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
                   border: '1px solid rgba(0, 0, 0, 0.1)',
-                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
-                  padding: '16px 20px',
+                  borderRadius: 4,
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
+                  padding: '12px 16px',
                   zIndex: 1001, animation: 'fadeInUp 0.15s ease-out',
+                  display: 'flex', alignItems: 'center', gap: 12,
                 }}
               >
-                {/* Header: icon + name */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    {muted || volume === 0 ? (
-                      <>
-                        <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
-                        <path d="M16 9l5 6M21 9l-5 6" stroke="#1F1F1F" strokeWidth="1.8" strokeLinecap="round" />
-                      </>
-                    ) : volume < 50 ? (
-                      <>
-                        <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
-                        <path d="M15 9a3 3 0 010 6" stroke="#1F1F1F" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-                      </>
-                    ) : (
-                      <>
-                        <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
-                        <path d="M15 9a3 3 0 010 6M17.5 7a6 6 0 010 10" stroke="#1F1F1F" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-                      </>
-                    )}
-                  </svg>
-                  <span style={{ fontSize: 13, color: '#323130', fontWeight: 400 }}>Speakers (Realtek Audio)</span>
-                </div>
-
-                {/* Horizontal slider */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#666" />
-                  </svg>
-                  <input
-                    type="range" min={0} max={100} value={muted ? 0 : volume}
-                    onChange={(e) => onVolumeChange(Number(e.target.value))}
-                    style={{ flex: 1, height: 4, cursor: 'pointer', accentColor: '#E91E63' }}
-                    aria-label="Volume level"
-                  />
-                  <span style={{ fontSize: 12, color: '#666', minWidth: 36, textAlign: 'right' }}>{muted ? '0%' : `${volume}%`}</span>
-                </div>
-
-                {/* Mute toggle */}
-                <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: 12, color: '#666' }}>{muted ? 'Muted' : 'Volume'}</span>
-                  <div
-                    onClick={toggleMute}
-                    style={{
-                      width: 44, height: 22, borderRadius: 11, position: 'relative',
-                      backgroundColor: muted ? '#BDBDBD' : '#E91E63', cursor: 'pointer',
-                      transition: 'background-color 0.2s',
-                    }}
-                  >
-                    <div style={{
-                      position: 'absolute', top: 3, left: muted ? 3 : 25,
-                      width: 16, height: 16, backgroundColor: muted ? '#333' : '#fff',
-                      borderRadius: '50%', transition: 'left 0.2s',
-                    }} />
-                  </div>
-                </div>
+                {/* Speaker icon — click to mute */}
+                <svg
+                  width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  onClick={toggleMute}
+                  style={{ cursor: 'pointer', flexShrink: 0 }}
+                >
+                  {muted || volume === 0 ? (
+                    <>
+                      <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
+                      <path d="M16 9l5 6M21 9l-5 6" stroke="#1F1F1F" strokeWidth="1.8" strokeLinecap="round" />
+                    </>
+                  ) : volume < 50 ? (
+                    <>
+                      <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
+                      <path d="M15 9a3 3 0 010 6" stroke="#1F1F1F" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+                    </>
+                  ) : (
+                    <>
+                      <path d="M3 9v6h4l5 5V4L7 9H3z" fill="#1F1F1F" />
+                      <path d="M15 9a3 3 0 010 6M17.5 7a6 6 0 010 10" stroke="#1F1F1F" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+                    </>
+                  )}
+                </svg>
+                {/* Horizontal slider — no text, just track */}
+                <input
+                  type="range" min={0} max={100} value={muted ? 0 : volume}
+                  onChange={(e) => onVolumeChange(Number(e.target.value))}
+                  style={{ flex: 1, height: 4, cursor: 'pointer', accentColor: '#E91E63' }}
+                  aria-label="Volume level"
+                />
               </div>
             )}
           </div>
