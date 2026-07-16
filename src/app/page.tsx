@@ -2756,11 +2756,20 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(function StartMenu(
         animation: 'startMenuIn 500ms cubic-bezier(0.16, 1, 0.3, 1)',
       }}
     >
+      {/* Content wrapper — animates together, positioned slightly lower */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
+        minHeight: 0,
+        overflow: 'hidden',
+        marginTop: 8,
+        animation: 'startMenuContentIn 300ms cubic-bezier(0.16, 1, 0.3, 1) 250ms both',
+      }}>
       {/* Search bar at top */}
       <div style={{
         padding: '12px 16px 8px',
         backgroundColor: 'transparent',
-        animation: 'startMenuContentIn 300ms cubic-bezier(0.16, 1, 0.3, 1) 250ms both',
       }}>
         <input
           type="text"
@@ -2784,7 +2793,6 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(function StartMenu(
       {/* Body: 2 columns */}
       <div style={{
         display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden',
-        animation: 'startMenuContentIn 300ms cubic-bezier(0.16, 1, 0.3, 1) 250ms both',
       }}>
         {/* Left column: app list A-Z */}
         <div style={{
@@ -2889,7 +2897,6 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(function StartMenu(
         backgroundColor: 'rgba(255, 255, 255, 0.6)',
         borderTop: '1px solid rgba(0, 0, 0, 0.08)',
         gap: 12,
-        animation: 'startMenuContentIn 300ms cubic-bezier(0.16, 1, 0.3, 1) 250ms both',
       }}>
         <div style={{
           width: 32,
@@ -2960,6 +2967,7 @@ const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(function StartMenu(
             </div>
           )}
         </div>
+      </div>
       </div>
     </div>
   )
