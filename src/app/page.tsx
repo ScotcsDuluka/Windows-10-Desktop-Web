@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo, forwardRef } from 'react'
 
 // ====== Mond fonts (จาก Rainmeter skin) ======
 // โหลด font ที่นี่เพื่อให้ clock ใช้ได้
@@ -2645,6 +2645,322 @@ function CalculatorContent({
 }
 
 // ============================================================
+// Start Menu (Win10 style — 2 columns: app list + tiles)
+// ============================================================
+interface StartMenuProps {
+  apps: AppDef[]
+  search: string
+  onSearchChange: (s: string) => void
+  onOpenApp: (id: string) => void
+  onClose: () => void
+}
+
+const StartMenu = forwardRef<HTMLDivElement, StartMenuProps>(function StartMenu(
+  { apps, search, onSearchChange, onOpenApp, onClose },
+  ref,
+) {
+  const [powerOpen, setPowerOpen] = useState(false)
+
+  // alphabetical app list (sort by title)
+  const sortedApps = useMemo(() => [...apps].sort((a, b) => a.title.localeCompare(b.title)), [apps])
+
+  // group by first letter (A-Z + #)
+  const grouped: { letter: string; items: AppDef[] }[] = []
+  sortedApps.forEach((app) => {
+    const letter = app.title[0].toUpperCase()
+    const last = grouped[grouped.length - 1]
+    if (last && last.letter === letter) last.items.push(app)
+    else grouped.push({ letter, items: [app] })
+  })
+
+  // search filter
+  const filteredApps = useMemo(() => {
+    if (!search.trim()) return null
+    const q = search.toLowerCase()
+    return sortedApps.filter((a) => a.title.toLowerCase().includes(q))
+  }, [search, sortedApps])
+
+  // pinned tiles (subset of apps — bigger tiles for primary apps)
+  const tileApps = apps.filter((a) => ['settings', 'file-explorer', 'edge', 'notepad', 'calculator', 'paint', 'clock', 'photos'].includes(a.id))
+
+  // tile sizing: some apps wide, some medium
+  const wideTiles = new Set(['edge', 'file-explorer', 'settings'])
+
+  const tileColors: Record<string, string> = {
+    'settings': '#0078D7',
+    'file-explorer': '#FFB900',
+    'edge': '#0078D7',
+    'notepad': '#5C2D91',
+    'calculator': '#107C10',
+    'paint': '#E81123',
+    'clock': '#008272',
+    'photos': '#FF8C00',
+  }
+
+  const tileIcon: Record<string, string> = {
+    'settings': '⚙',
+    'file-explorer': '📁',
+    'edge': '🌐',
+    'notepad': '📝',
+    'calculator': '🧮',
+    'paint': '🎨',
+    'clock': '⏰',
+    'photos': '🖼️',
+  }
+
+  const renderAppIcon = (app: AppDef, size = 22) => {
+    if (app.iconType === 'img') {
+      return <img src={app.icon} alt={app.title} width={size} height={size} style={{ objectFit: 'contain', pointerEvents: 'none' }} draggable={false} />
+    }
+    return <span style={{ fontSize: size }}>{app.icon}</span>
+  }
+
+  const letterHeader: React.CSSProperties = {
+    padding: '8px 12px 4px',
+    fontSize: 12,
+    fontWeight: 600,
+    color: '#1F1F1F',
+    backgroundColor: 'transparent',
+  }
+  const appRow: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    padding: '6px 12px',
+    cursor: 'default',
+    fontSize: 13,
+    color: '#1F1F1F',
+    transition: 'background-color 0.1s',
+  }
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        position: 'fixed',
+        left: 0,
+        bottom: 45, // ติด taskbar
+        width: 640,
+        height: 600,
+        backgroundColor: 'rgba(243, 243, 243, 0.97)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        border: '1px solid rgba(0, 0, 0, 0.15)',
+        borderBottom: 'none',
+        borderRadius: 0,
+        boxShadow: '0 -8px 32px rgba(0, 0, 0, 0.25)',
+        zIndex: 1500,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        animation: 'startMenuIn 250ms cubic-bezier(0.16, 1, 0.3, 1)',
+      }}
+    >
+      {/* Search bar at top */}
+      <div style={{
+        padding: '12px 16px 8px',
+        backgroundColor: 'transparent',
+      }}>
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder="Type here to search"
+          autoFocus
+          style={{
+            width: '100%',
+            padding: '8px 14px',
+            border: '1px solid rgba(0, 0, 0, 0.2)',
+            backgroundColor: '#fff',
+            fontSize: 13,
+            outline: 'none',
+            borderRadius: 0,
+            boxSizing: 'border-box',
+          }}
+        />
+      </div>
+
+      {/* Body: 2 columns */}
+      <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+        {/* Left column: app list A-Z */}
+        <div style={{
+          width: 240,
+          overflowY: 'auto',
+          borderRight: '1px solid rgba(0, 0, 0, 0.08)',
+          padding: '4px 0',
+        }}>
+          {filteredApps ? (
+            // search results
+            <>
+              <div style={{ ...letterHeader, color: '#666' }}>Search results ({filteredApps.length})</div>
+              {filteredApps.length === 0 ? (
+                <div style={{ padding: '12px 16px', fontSize: 12, color: '#999' }}>No results found.</div>
+              ) : (
+                filteredApps.map((app) => (
+                  <div
+                    key={app.id}
+                    style={appRow}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.06)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                    onClick={() => onOpenApp(app.id)}
+                  >
+                    {renderAppIcon(app, 18)}
+                    <span>{app.title}</span>
+                  </div>
+                ))
+              )}
+            </>
+          ) : (
+            // A-Z grouped list
+            grouped.map((group) => (
+              <div key={group.letter}>
+                <div style={letterHeader}>{group.letter}</div>
+                {group.items.map((app) => (
+                  <div
+                    key={app.id}
+                    style={appRow}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.06)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                    onClick={() => onOpenApp(app.id)}
+                  >
+                    {renderAppIcon(app, 18)}
+                    <span>{app.title}</span>
+                  </div>
+                ))}
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Right column: tiles grid */}
+        <div style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: '12px 16px',
+        }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: 8,
+            gridAutoRows: 90,
+          }}>
+            {tileApps.map((app) => {
+              const isWide = wideTiles.has(app.id)
+              const color = tileColors[app.id] || '#666'
+              return (
+                <div
+                  key={app.id}
+                  onClick={() => onOpenApp(app.id)}
+                  style={{
+                    gridColumn: isWide ? 'span 2' : 'span 1',
+                    backgroundColor: color,
+                    color: '#fff',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    padding: 10,
+                    cursor: 'default',
+                    borderRadius: 2,
+                    fontSize: 12,
+                    transition: 'transform 0.1s, filter 0.1s',
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.02)'; e.currentTarget.style.filter = 'brightness(1.08)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.filter = 'brightness(1)' }}
+                >
+                  <div style={{ fontSize: 26, lineHeight: 1 }}>{tileIcon[app.id] || app.icon}</div>
+                  <div style={{ fontWeight: 500 }}>{app.title}</div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Footer: user + power */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        padding: '10px 16px',
+        backgroundColor: 'rgba(255, 255, 255, 0.6)',
+        borderTop: '1px solid rgba(0, 0, 0, 0.08)',
+        gap: 12,
+      }}>
+        <div style={{
+          width: 32,
+          height: 32,
+          borderRadius: '50%',
+          backgroundColor: '#E91E63',
+          color: '#fff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: 14,
+          fontWeight: 600,
+        }}>
+          U
+        </div>
+        <div style={{ flex: 1, fontSize: 13, color: '#1F1F1F' }}>User</div>
+
+        {/* Power button + dropdown */}
+        <div style={{ position: 'relative' }}>
+          <button
+            onClick={() => setPowerOpen((v) => !v)}
+            title="Power"
+            style={{
+              width: 32, height: 32,
+              border: 'none',
+              backgroundColor: 'transparent',
+              cursor: 'default',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#1F1F1F',
+              fontSize: 16,
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3v9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <path d="M6.5 6.5a8 8 0 1 0 11 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+            </svg>
+          </button>
+          {powerOpen && (
+            <div style={{
+              position: 'absolute',
+              bottom: 40,
+              right: 0,
+              backgroundColor: '#fff',
+              border: '1px solid rgba(0, 0, 0, 0.15)',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.18)',
+              zIndex: 10,
+              minWidth: 140,
+              padding: '4px 0',
+            }}>
+              {['Sleep', 'Shut down', 'Restart'].map((action) => (
+                <div
+                  key={action}
+                  onClick={() => { setPowerOpen(false); onClose() }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.06)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                  style={{
+                    padding: '8px 16px',
+                    fontSize: 13,
+                    color: '#1F1F1F',
+                    cursor: 'default',
+                  }}
+                >
+                  {action}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+})
+
+// ============================================================
 // Main Page
 // ============================================================
 export default function Home() {
@@ -2663,6 +2979,8 @@ export default function Home() {
   const [volume, setVolume] = useState(80)
   const [muted, setMuted] = useState(false)
   const [showVolumeSlider, setShowVolumeSlider] = useState(false)
+  const [showStartMenu, setShowStartMenu] = useState(false)
+  const [startSearch, setStartSearch] = useState('')
   const [tabletMode, setTabletMode] = useState(true) // Tablet Mode 100% by default
 
   // Settings state (ใช้งานได้จริง)
@@ -2723,6 +3041,8 @@ export default function Home() {
   const isAnimatingRef = useRef<boolean>(false)
   const volumeBtnRef = useRef<HTMLButtonElement>(null)
   const volumePanelRef = useRef<HTMLDivElement>(null)
+  const startBtnRef = useRef<HTMLButtonElement>(null)
+  const startMenuRef = useRef<HTMLDivElement>(null)
 
   // helper: setTimeout ที่ track ID เพื่อล้างได้
   const setTrackedTimeout = useCallback((fn: () => void, ms: number) => {
@@ -3057,6 +3377,38 @@ export default function Home() {
     return () => document.removeEventListener('mousedown', handler)
   }, [showVolumeSlider])
 
+  // ปิด Start Menu เมื่อคลิกที่อื่น
+  useEffect(() => {
+    if (!showStartMenu) return
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node
+      if (
+        startMenuRef.current && !startMenuRef.current.contains(target) &&
+        startBtnRef.current && !startBtnRef.current.contains(target)
+      ) {
+        setShowStartMenu(false)
+        setStartSearch('')
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setShowStartMenu(false); setStartSearch('') }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', handler)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [showStartMenu])
+
+  // ====== Open app from Start Menu (close menu first) ======
+  const openAppFromStart = useCallback((id: string) => {
+    setShowStartMenu(false)
+    setStartSearch('')
+    // slight delay to let menu close animation play before window opens
+    setTrackedTimeout(() => openApp(id), 80)
+  }, [openApp])
+
   // ====== Volume control ======
   const applyVolume = (vol: number, isMuted: boolean) => {
     const effective = isMuted ? 0 : vol / 100
@@ -3236,7 +3588,13 @@ export default function Home() {
         />
         {/* ====== LEFT: Start | Search | Task View ====== */}
         <div style={{ display: 'flex', alignItems: 'center', height: '100%', flexShrink: 0, position: 'relative', zIndex: 1 }}>
-          <TaskbarIconButton label="Start">
+          <TaskbarIconButton
+            label="Start"
+            onClick={() => { setShowStartMenu((s) => !s); setStartSearch('') }}
+            buttonRef={startBtnRef}
+            isOpen={showStartMenu}
+            centerStyle
+          >
             <img
               src="/win10-start-icon.png" alt="Start" width={20} height={20}
               style={{ objectFit: 'contain', transform: 'perspective(60px) rotateY(-12deg) translateX(-1px)', pointerEvents: 'none' }}
@@ -3369,6 +3727,18 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* ====== Start Menu (Win10 style — sibling of taskbar so z-index works) ====== */}
+      {showStartMenu && (
+        <StartMenu
+          ref={startMenuRef}
+          apps={APPS}
+          search={startSearch}
+          onSearchChange={setStartSearch}
+          onOpenApp={openAppFromStart}
+          onClose={() => { setShowStartMenu(false); setStartSearch('') }}
+        />
+      )}
 
       {/* ====== Volume Flyout (sibling of taskbar so z-index works) ====== */}
       {showVolumeSlider && (
@@ -3627,6 +3997,10 @@ export default function Home() {
         @keyframes volumeFlyoutIn {
           from { opacity: 0; transform: translateY(100px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes startMenuIn {
+          from { opacity: 0; transform: translateY(40px) scale(0.98); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
         }
         input[aria-label="Search"]::placeholder { color: #555; }
         /* ปิด text selection ทั้งหน้า ยกเว้น input/textarea */
