@@ -1,0 +1,43 @@
+{
+  "success": true,
+  "query": "Windows 10 volume slider flyout taskbar real screenshot",
+  "count": 5,
+  "ranked": true,
+  "results": [
+    {
+      "original_url": "https://sfile.chatglm.cn/images-ppt/9a3302a9c352.jpg",
+      "caption": "A Windows 11 desktop with a blue abstract wallpaper, a volume slider, and a taskbar with icons. suitable for background image",
+      "source": "PCMag",
+      "original_width": "2257px",
+      "original_height": "1270px"
+    },
+    {
+      "original_url": "https://sfile.chatglm.cn/images-ppt/6009924f0203.jpg",
+      "caption": "The image displays a Windows 7 style volume control interface with text: \"WINDOWS 7 STYLE VOLUME CONTROL\", \"Speakers (High Definition Audio Device)\", \"51\", \"TO\", and \"Mixer\". suitable for background image",
+      "source": "YouTube",
+      "original_width": "1280px",
+      "original_height": "720px"
+    },
+    {
+      "original_url": "https://sfile.chatglm.cn/images-ppt/33b1c9ac7f88.png",
+      "caption": "The image displays a Windows 11 desktop with the Start Menu and Quick Settings open, containing a large amount of text information.",
+      "source": "Reddit",
+      "original_width": "1920px",
+      "original_height": "1080px"
+    },
+    {
+      "original_url": "https://sfile.chatglm.cn/images-ppt/549fe5214aa3.png",
+      "caption": "A Windows 11 desktop screenshot with a blue abstract wallpaper, taskbar icons, and system information text.",
+      "source": "Wccftech",
+      "original_width": "2392px",
+      "original_height": "1594px"
+    },
+    {
+      "original_url": "https://sfile.chatglm.cn/images-ppt/f46043acf86d.jpg",
+      "caption": "The image displays a Windows 11 Start Menu with a \"Pocketlint\" watermark in the bottom right corner.",
+      "source": "Pocket-lint",
+      "original_width": "1500px",
+      "original_height": "844px"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://learn.microsoft.com/en-us/windows/apps/develop/ui/controls/slider",
+    "name": "Sliders - Windows apps | Microsoft Learn",
+    "snippet": "Learn how to implement a WinUI slider control that lets the user select from a range of values by moving a thumb control along a track. Missing: flyout | Show results with: flyout",
+    "host_name": "learn.microsoft.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://github.com/microsoft/PowerToys/issues/8580",
+    "name": "Implement new flyout menu for audio in Windows 10 · Issue #8580 - GitHub",
+    "snippet": "New flyout menu for audio interface on Windows 10. Replace audio interface that appears when hitting play/pause and using the volume slider on keyboard.",
+    "host_name": "github.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://medium.com/msft-space/windows-10-volume-control-makeover-b7f8c0dd4347",
+    "name": "Quickie #1: Giving the volume control a makeover in Windows 10 - Medium",
+    "snippet": "This is a pretty simple and modern UI that fits with almost everything else on Windows 10. Right now, the volume control feels out of place",
+    "host_name": "medium.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://learn.microsoft.com/mt-mt/windows/win32/multimedia/sliders",
+    "name": "Sliders (Windows Multimedia) - Win32 apps - Microsoft Learn",
+    "snippet": "The slider controls are typically horizontal controls that can be adjusted to the left or right. Slider Has a range of –32,768 through 32,767. ...",
+    "host_name": "learn.microsoft.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.thurrott.com/windows/windows-10/234475/windows-10s-volume-flyout-might-finally-get-a-much-needed-makeover",
+    "name": "Windows 10's Volume Flyout Might Finally Get a Much-Needed Makeover",
+    "snippet": "In the latest Insider build of Windows 10, there's a new design for the volume flyout which is accessible from the taskbar. The new feature is ...",
+    "host_name": "www.thurrott.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  }
+]
