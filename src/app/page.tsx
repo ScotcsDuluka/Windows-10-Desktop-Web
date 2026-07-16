@@ -73,6 +73,57 @@ const SWITCH_OUT_HOLD = 300 // App 1 คงที่ (visible เต็ม) 300m
 const SWITCH_IN_START = 300 // App 2 เริ่มตอน 300ms
 
 // ---------- App definitions ----------
+//
+// App Registry pattern:
+//   APPS is the single source of truth for every app.
+//   Each entry contains BOTH metadata (id, title, icon, size, position, pinned)
+//   AND a content renderer function that receives the window state + shared ctx.
+//   Any UI that needs the list of apps (taskbar, start menu, desktop shortcuts,
+//   settings) reads from APPS. Any UI that needs to open an app calls openApp(id).
+//
+//   To add a new app:
+//     1. Append entry to APPS with metadata + render function.
+//     2. That's it — taskbar / start menu / desktop will pick it up automatically.
+//
+interface AppContentProps {
+  state: WindowState
+  update: (partial: Partial<WindowState>) => void
+  // shared system context
+  ctx: AppContext
+}
+
+interface AppContext {
+  wallpaper: WallpaperConfig
+  setWallpaper: (wp: WallpaperConfig) => void
+  brightness: number
+  setBrightness: (v: number) => void
+  volume: number
+  onVolumeChange: (v: number) => void
+  nightLight: boolean
+  onToggleNightLight: () => void
+  autoTime: boolean
+  onToggleAutoTime: () => void
+  darkMode: boolean
+  onToggleDarkMode: () => void
+  tabletMode: boolean
+  onToggleTabletMode: () => void
+  wifi: boolean; onToggleWifi: () => void
+  bluetooth: boolean; onToggleBluetooth: () => void
+  airplane: boolean; onToggleAirplane: () => void
+  mobileHotspot: boolean; onToggleMobileHotspot: () => void
+  touchpad: boolean; onToggleTouchpad: () => void
+  typing: boolean; onToggleTyping: () => void
+  gameBar: boolean; onToggleGameBar: () => void
+  gameMode: boolean; onToggleGameMode: () => void
+  magnifier: boolean; onToggleMagnifier: () => void
+  highContrast: boolean; onToggleHighContrast: () => void
+  location: boolean; onToggleLocation: () => void
+  camera: boolean; onToggleCamera: () => void
+  microphone: boolean; onToggleMicrophone: () => void
+  backup: boolean; onToggleBackup: () => void
+  openApp: (id: string) => void
+}
+
 interface AppDef {
   id: string
   title: string
@@ -81,6 +132,8 @@ interface AppDef {
   defaultSize: { w: number; h: number }
   defaultPosition: { x: number; y: number }
   pinned: boolean  // แสดงใน taskbar เสมอ แม้ปิด
+  category: 'system' | 'productivity' | 'media' | 'web' | 'utility'  // สำหรับ Start Menu
+  content: (props: AppContentProps) => React.ReactNode
 }
 
 const APPS: AppDef[] = [
@@ -92,6 +145,43 @@ const APPS: AppDef[] = [
     defaultSize: { w: 760, h: 540 },
     defaultPosition: { x: 120, y: 80 },
     pinned: true,
+    category: 'system',
+    content: ({ state, update, ctx }) => (
+      <SettingsContent
+        category={state.data?.category || ''}
+        onCategoryChange={(c) => update({ data: { ...state.data, category: c, subPage: '' } })}
+        subPage={state.data?.subPage || ''}
+        onSubPageChange={(s) => update({ data: { ...state.data, subPage: s } })}
+        tabletMode={ctx.tabletMode}
+        onToggleTabletMode={ctx.onToggleTabletMode}
+        wallpaper={ctx.wallpaper.src}
+        onWallpaperChange={(wp, t) => ctx.setWallpaper({ type: (t as WallpaperType) || 'image', src: wp })}
+        brightness={ctx.brightness}
+        onBrightnessChange={ctx.setBrightness}
+        volume={ctx.volume}
+        onVolumeChange={ctx.onVolumeChange}
+        nightLight={ctx.nightLight}
+        onToggleNightLight={ctx.onToggleNightLight}
+        autoTime={ctx.autoTime}
+        onToggleAutoTime={ctx.onToggleAutoTime}
+        darkMode={ctx.darkMode}
+        onToggleDarkMode={ctx.onToggleDarkMode}
+        wifi={ctx.wifi} onToggleWifi={ctx.onToggleWifi}
+        bluetooth={ctx.bluetooth} onToggleBluetooth={ctx.onToggleBluetooth}
+        airplane={ctx.airplane} onToggleAirplane={ctx.onToggleAirplane}
+        mobileHotspot={ctx.mobileHotspot} onToggleMobileHotspot={ctx.onToggleMobileHotspot}
+        touchpad={ctx.touchpad} onToggleTouchpad={ctx.onToggleTouchpad}
+        typing={ctx.typing} onToggleTyping={ctx.onToggleTyping}
+        gameBar={ctx.gameBar} onToggleGameBar={ctx.onToggleGameBar}
+        gameMode={ctx.gameMode} onToggleGameMode={ctx.onToggleGameMode}
+        magnifier={ctx.magnifier} onToggleMagnifier={ctx.onToggleMagnifier}
+        highContrast={ctx.highContrast} onToggleHighContrast={ctx.onToggleHighContrast}
+        location={ctx.location} onToggleLocation={ctx.onToggleLocation}
+        camera={ctx.camera} onToggleCamera={ctx.onToggleCamera}
+        microphone={ctx.microphone} onToggleMicrophone={ctx.onToggleMicrophone}
+        backup={ctx.backup} onToggleBackup={ctx.onToggleBackup}
+      />
+    ),
   },
   {
     id: 'notepad',
@@ -101,6 +191,13 @@ const APPS: AppDef[] = [
     defaultSize: { w: 500, h: 400 },
     defaultPosition: { x: 200, y: 120 },
     pinned: true,
+    category: 'productivity',
+    content: ({ state, update }) => (
+      <NotepadContent
+        text={state.data?.text || ''}
+        onTextChange={(t) => update({ data: { ...state.data, text: t } })}
+      />
+    ),
   },
   {
     id: 'calculator',
@@ -110,8 +207,89 @@ const APPS: AppDef[] = [
     defaultSize: { w: 320, h: 480 },
     defaultPosition: { x: 300, y: 100 },
     pinned: true,
+    category: 'utility',
+    content: ({ state, update }) => (
+      <CalculatorContent
+        data={state.data?.calc || {}}
+        onDataChange={(d) => update({ data: { ...state.data, calc: d } })}
+      />
+    ),
   },
-  // เพิ่มแอปใหม่ตรงนี้
+  {
+    id: 'file-explorer',
+    title: 'File Explorer',
+    icon: '📁',
+    iconType: 'emoji',
+    defaultSize: { w: 760, h: 520 },
+    defaultPosition: { x: 140, y: 60 },
+    pinned: true,
+    category: 'system',
+    content: ({ state, update }) => (
+      <FileExplorerContent
+        data={state.data?.files || {}}
+        onDataChange={(d) => update({ data: { ...state.data, files: d } })}
+      />
+    ),
+  },
+  {
+    id: 'edge',
+    title: 'Microsoft Edge',
+    icon: '🌐',
+    iconType: 'emoji',
+    defaultSize: { w: 900, h: 600 },
+    defaultPosition: { x: 80, y: 40 },
+    pinned: true,
+    category: 'web',
+    content: ({ state, update }) => (
+      <EdgeBrowserContent
+        url={state.data?.url || ''}
+        onUrlChange={(u) => update({ data: { ...state.data, url: u } })}
+      />
+    ),
+  },
+  {
+    id: 'paint',
+    title: 'Paint',
+    icon: '🎨',
+    iconType: 'emoji',
+    defaultSize: { w: 700, h: 560 },
+    defaultPosition: { x: 100, y: 60 },
+    pinned: false,
+    category: 'media',
+    content: ({ state, update }) => (
+      <PaintContent
+        data={state.data?.paint || {}}
+        onDataChange={(d) => update({ data: { ...state.data, paint: d } })}
+      />
+    ),
+  },
+  {
+    id: 'clock',
+    title: 'Clock',
+    icon: '⏰',
+    iconType: 'emoji',
+    defaultSize: { w: 580, h: 460 },
+    defaultPosition: { x: 220, y: 80 },
+    pinned: false,
+    category: 'utility',
+    content: ({ state, update }) => (
+      <ClockContent
+        data={state.data?.clock || {}}
+        onDataChange={(d) => update({ data: { ...state.data, clock: d } })}
+      />
+    ),
+  },
+  {
+    id: 'photos',
+    title: 'Photos',
+    icon: '🖼️',
+    iconType: 'emoji',
+    defaultSize: { w: 720, h: 540 },
+    defaultPosition: { x: 160, y: 60 },
+    pinned: false,
+    category: 'media',
+    content: ({ ctx }) => <PhotosContent wallpaper={ctx.wallpaper.src} />,
+  },
 ]
 
 // ============================================================
@@ -1756,6 +1934,548 @@ function SettingsPage(props: {
 
 
 // ============================================================
+// File Explorer Content
+// ============================================================
+interface FileNode { type: 'folder' | 'file'; name: string; size?: string; modified?: string }
+
+const FILE_SYSTEM: Record<string, FileNode[]> = {
+  'This PC': [
+    { type: 'folder', name: 'Desktop', modified: '7/15/2026 9:00 AM' },
+    { type: 'folder', name: 'Documents', modified: '7/14/2026 3:22 PM' },
+    { type: 'folder', name: 'Downloads', modified: '7/15/2026 11:30 AM' },
+    { type: 'folder', name: 'Music', modified: '7/10/2026 8:15 AM' },
+    { type: 'folder', name: 'Pictures', modified: '7/15/2026 10:45 AM' },
+    { type: 'folder', name: 'Videos', modified: '7/12/2026 6:00 PM' },
+    { type: 'folder', name: 'Local Disk (C:)', modified: '7/15/2026 5:30 AM' },
+  ],
+  'Documents': [
+    { type: 'file', name: 'welcome.txt', size: '2 KB', modified: '7/14/2026 3:22 PM' },
+    { type: 'file', name: 'todo.txt', size: '1 KB', modified: '7/13/2026 8:00 PM' },
+    { type: 'file', name: 'notes.txt', size: '4 KB', modified: '7/12/2026 11:15 AM' },
+    { type: 'folder', name: 'Work', modified: '7/11/2026 9:00 AM' },
+  ],
+  'Pictures': [
+    { type: 'file', name: 'wallpaper-default.jpg', size: '2.4 MB', modified: '7/15/2026 10:45 AM' },
+    { type: 'file', name: 'win10-wallpaper.jpg', size: '3.1 MB', modified: '7/14/2026 2:30 PM' },
+    { type: 'folder', name: 'Screenshots', modified: '7/13/2026 4:00 PM' },
+    { type: 'folder', name: 'Camera Roll', modified: '7/10/2026 7:00 AM' },
+  ],
+  'Downloads': [
+    { type: 'file', name: 'setup.exe', size: '45 MB', modified: '7/15/2026 11:30 AM' },
+    { type: 'file', name: 'photo.png', size: '1.2 MB', modified: '7/14/2026 8:00 PM' },
+    { type: 'file', name: 'document.pdf', size: '890 KB', modified: '7/13/2026 1:00 PM' },
+  ],
+  'Music': [
+    { type: 'file', name: 'track1.mp3', size: '4.5 MB', modified: '7/10/2026 8:15 AM' },
+    { type: 'file', name: 'track2.mp3', size: '5.2 MB', modified: '7/10/2026 8:15 AM' },
+  ],
+  'Videos': [
+    { type: 'file', name: 'movie.mp4', size: '720 MB', modified: '7/12/2026 6:00 PM' },
+  ],
+}
+
+function FileExplorerContent({ data, onDataChange }: { data: { currentPath?: string }, onDataChange: (d: any) => void }) {
+  const currentPath = data.currentPath || 'This PC'
+  const items = FILE_SYSTEM[currentPath] || []
+  const sidebarItems = ['This PC', 'Desktop', 'Documents', 'Downloads', 'Music', 'Pictures', 'Videos']
+
+  const navTo = (path: string) => onDataChange({ currentPath: path })
+
+  const iconFor = (item: FileNode) => {
+    if (item.type === 'folder') return '📁'
+    if (item.name.endsWith('.txt')) return '📄'
+    if (item.name.endsWith('.jpg') || item.name.endsWith('.png')) return '🖼️'
+    if (item.name.endsWith('.mp3')) return '🎵'
+    if (item.name.endsWith('.mp4')) return '🎬'
+    if (item.name.endsWith('.exe')) return '⚙️'
+    if (item.name.endsWith('.pdf')) return '📕'
+    return '📄'
+  }
+
+  const btnHover = (e: React.MouseEvent) => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.06)' }
+  const btnLeave = (e: React.MouseEvent) => { e.currentTarget.style.backgroundColor = 'transparent' }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, backgroundColor: '#fff' }}>
+      {/* Toolbar */}
+      <div style={{ display: 'flex', alignItems: 'center', padding: '6px 10px', backgroundColor: '#f5f5f5', borderBottom: '1px solid #e5e5e5', gap: 6, fontSize: 12 }}>
+        <button onClick={() => navTo('This PC')} style={toolbarBtn}>←</button>
+        <button style={toolbarBtn}>↑</button>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', backgroundColor: '#fff', border: '1px solid #ccc', padding: '4px 8px', gap: 4 }}>
+          <span>📁</span>
+          <span style={{ color: '#444' }}>{currentPath}</span>
+        </div>
+        <input placeholder="Search" style={{ width: 160, padding: '4px 8px', border: '1px solid #ccc', fontSize: 12 }} />
+      </div>
+      <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
+        {/* Sidebar */}
+        <div style={{ width: 180, backgroundColor: '#fafafa', borderRight: '1px solid #e5e5e5', padding: '8px 4px', overflowY: 'auto', fontSize: 12 }}>
+          <div style={{ padding: '4px 8px', color: '#666', fontWeight: 600, fontSize: 11, textTransform: 'uppercase' }}>Quick access</div>
+          {sidebarItems.map((p) => (
+            <div key={p} onClick={() => navTo(p)} onMouseEnter={btnHover} onMouseLeave={btnLeave}
+              style={{ padding: '5px 10px', cursor: 'default', display: 'flex', alignItems: 'center', gap: 8, backgroundColor: currentPath === p ? 'rgba(0,0,0,0.06)' : 'transparent' }}>
+              <span>📁</span><span>{p}</span>
+            </div>
+          ))}
+        </div>
+        {/* File list */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
+          <div style={{ display: 'flex', padding: '4px 16px', fontSize: 11, color: '#666', borderBottom: '1px solid #eee', gap: 8 }}>
+            <div style={{ flex: 1 }}>Name</div>
+            <div style={{ width: 100 }}>Date modified</div>
+            <div style={{ width: 80 }}>Size</div>
+          </div>
+          {items.map((item) => (
+            <div key={item.name} onClick={() => item.type === 'folder' && navTo(item.name.replace(' (C:)', ''))} onMouseEnter={btnHover} onMouseLeave={btnLeave}
+              style={{ display: 'flex', padding: '5px 16px', fontSize: 13, cursor: 'default', gap: 8, alignItems: 'center' }}>
+              <span>{iconFor(item)}</span>
+              <div style={{ flex: 1 }}>{item.name}</div>
+              <div style={{ width: 100, color: '#666', fontSize: 12 }}>{item.modified || ''}</div>
+              <div style={{ width: 80, color: '#666', fontSize: 12 }}>{item.size || ''}</div>
+            </div>
+          ))}
+          {items.length === 0 && (
+            <div style={{ padding: 20, textAlign: 'center', color: '#999', fontSize: 13 }}>This folder is empty.</div>
+          )}
+        </div>
+      </div>
+      {/* Status bar */}
+      <div style={{ padding: '4px 12px', backgroundColor: '#f5f5f5', borderTop: '1px solid #e5e5e5', fontSize: 11, color: '#666' }}>
+        {items.length} item{items.length !== 1 ? 's' : ''}
+      </div>
+    </div>
+  )
+}
+const toolbarBtn: React.CSSProperties = { padding: '4px 8px', border: '1px solid #ccc', backgroundColor: '#fff', cursor: 'default', fontSize: 14 }
+
+
+// ============================================================
+// Edge Browser Content
+// ============================================================
+function EdgeBrowserContent({ url, onUrlChange }: { url: string; onUrlChange: (u: string) => void }) {
+  const [input, setInput] = useState(url)
+  const [history, setHistory] = useState<string[]>([])
+  const [historyIdx, setHistoryIdx] = useState(-1)
+
+  const navigate = (u: string) => {
+    let final = u.trim()
+    if (!final) return
+    if (!/^https?:\/\//.test(final) && !final.startsWith('about:')) {
+      // treat as search
+      if (final.includes('.') && !final.includes(' ')) final = 'https://' + final
+      else final = 'https://www.bing.com/search?q=' + encodeURIComponent(final)
+    }
+    onUrlChange(final)
+    setInput(final)
+    const newHist = [...history.slice(0, historyIdx + 1), final]
+    setHistory(newHist)
+    setHistoryIdx(newHist.length - 1)
+  }
+
+  const goBack = () => {
+    if (historyIdx > 0) {
+      const i = historyIdx - 1
+      setHistoryIdx(i)
+      onUrlChange(history[i])
+      setInput(history[i])
+    }
+  }
+  const goForward = () => {
+    if (historyIdx < history.length - 1) {
+      const i = historyIdx + 1
+      setHistoryIdx(i)
+      onUrlChange(history[i])
+      setInput(history[i])
+    }
+  }
+
+  const navBtn: React.CSSProperties = { padding: '6px 10px', border: 'none', backgroundColor: 'transparent', cursor: 'default', fontSize: 14, color: '#444' }
+  const isWelcome = !url || url === 'about:home'
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, backgroundColor: '#fff' }}>
+      {/* Tab strip */}
+      <div style={{ display: 'flex', alignItems: 'center', padding: '4px 8px 0', backgroundColor: '#f0f0f0', gap: 4 }}>
+        <div style={{ padding: '6px 12px', backgroundColor: '#fff', borderRadius: '4px 4px 0 0', fontSize: 12, display: 'flex', alignItems: 'center', gap: 6, borderBottom: '2px solid #E91E63' }}>
+          <span>🌐</span>
+          <span style={{ color: '#333' }}>{isWelcome ? 'New tab' : url.length > 30 ? url.slice(0, 30) + '...' : url}</span>
+          <span style={{ color: '#999', cursor: 'default' }}>×</span>
+        </div>
+        <div style={{ padding: '6px 8px', cursor: 'default', color: '#666' }}>+</div>
+      </div>
+      {/* Toolbar */}
+      <div style={{ display: 'flex', alignItems: 'center', padding: '6px 10px', backgroundColor: '#fff', borderBottom: '1px solid #e5e5e5', gap: 4 }}>
+        <button onClick={goBack} style={navBtn} disabled={historyIdx <= 0}>←</button>
+        <button onClick={goForward} style={navBtn} disabled={historyIdx >= history.length - 1}>→</button>
+        <button onClick={() => navigate(url || 'about:home')} style={navBtn}>⟳</button>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', backgroundColor: '#f5f5f5', borderRadius: 20, padding: '4px 12px', gap: 6 }}>
+          <span style={{ color: '#999', fontSize: 12 }}>🔒</span>
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') navigate(input) }}
+            placeholder="Search or enter web address"
+            style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontSize: 13, color: '#333' }}
+          />
+        </div>
+        <button style={navBtn}>⋯</button>
+      </div>
+      {/* Page content */}
+      <div style={{ flex: 1, overflow: 'auto' }}>
+        {isWelcome ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', padding: 40, gap: 24, backgroundColor: 'linear-gradient(180deg, #f8f8f8, #fff)' }}>
+            <div style={{ fontSize: 36, fontWeight: 200, color: '#333' }}>Microsoft Edge</div>
+            <div style={{ width: '100%', maxWidth: 560, display: 'flex', gap: 8 }}>
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') navigate(input) }}
+                placeholder="Search the web"
+                style={{ flex: 1, padding: '12px 18px', border: '1px solid #ddd', borderRadius: 24, fontSize: 14, outline: 'none' }}
+              />
+              <button onClick={() => navigate(input)} style={{ padding: '12px 20px', border: 'none', backgroundColor: '#E91E63', color: '#fff', borderRadius: 24, cursor: 'default', fontSize: 14 }}>Search</button>
+            </div>
+            <div style={{ display: 'flex', gap: 16, marginTop: 16 }}>
+              {['Bing', 'GitHub', 'YouTube', 'Wikipedia'].map((q) => (
+                <button key={q} onClick={() => navigate('https://www.' + q.toLowerCase() + '.com')} style={quickLinkBtn}>{q}</button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <iframe src={url} style={{ width: '100%', height: '100%', border: 'none' }} title="Edge" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
+        )}
+      </div>
+    </div>
+  )
+}
+const quickLinkBtn: React.CSSProperties = { padding: '8px 14px', border: '1px solid #ddd', borderRadius: 8, backgroundColor: '#fff', cursor: 'default', fontSize: 13, color: '#333' }
+
+
+// ============================================================
+// Paint Content
+// ============================================================
+function PaintContent({ data, onDataChange }: { data: any; onDataChange: (d: any) => void }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [drawing, setDrawing] = useState(false)
+  const [color, setColor] = useState(data.color || '#000000')
+  const [brushSize, setBrushSize] = useState(data.brushSize || 4)
+  const [tool, setTool] = useState<'brush' | 'eraser'>(data.tool || 'brush')
+  const lastPos = useRef<{ x: number; y: number } | null>(null)
+
+  // restore on mount
+  useEffect(() => {
+    const c = canvasRef.current
+    if (!c) return
+    const ctx = c.getContext('2d')
+    if (!ctx) return
+    if (data.image) {
+      const img = new Image()
+      img.onload = () => ctx.drawImage(img, 0, 0)
+      img.src = data.image
+    } else {
+      ctx.fillStyle = '#fff'
+      ctx.fillRect(0, 0, c.width, c.height)
+    }
+  }, [])
+
+  const saveImage = () => {
+    const c = canvasRef.current
+    if (!c) return
+    onDataChange({ ...data, color, brushSize, tool, image: c.toDataURL() })
+  }
+
+  const getPos = (e: React.MouseEvent) => {
+    const c = canvasRef.current
+    if (!c) return { x: 0, y: 0 }
+    const rect = c.getBoundingClientRect()
+    return {
+      x: (e.clientX - rect.left) * (c.width / rect.width),
+      y: (e.clientY - rect.top) * (c.height / rect.height),
+    }
+  }
+
+  const start = (e: React.MouseEvent) => {
+    setDrawing(true)
+    lastPos.current = getPos(e)
+    draw(e)
+  }
+  const stop = () => { setDrawing(false); lastPos.current = null; saveImage() }
+  const draw = (e: React.MouseEvent) => {
+    if (!drawing) return
+    const c = canvasRef.current
+    if (!c) return
+    const ctx = c.getContext('2d')
+    if (!ctx) return
+    const pos = getPos(e)
+    ctx.strokeStyle = tool === 'eraser' ? '#ffffff' : color
+    ctx.lineWidth = tool === 'eraser' ? brushSize * 3 : brushSize
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+    if (lastPos.current) {
+      ctx.beginPath()
+      ctx.moveTo(lastPos.current.x, lastPos.current.y)
+      ctx.lineTo(pos.x, pos.y)
+      ctx.stroke()
+    }
+    lastPos.current = pos
+  }
+
+  const clear = () => {
+    const c = canvasRef.current
+    if (!c) return
+    const ctx = c.getContext('2d')
+    if (!ctx) return
+    ctx.fillStyle = '#fff'
+    ctx.fillRect(0, 0, c.width, c.height)
+    saveImage()
+  }
+
+  const colors = ['#000000', '#7f7f7f', '#880015', '#ed1c24', '#ff7f27', '#fff200', '#22b14c', '#00a2e8', '#3f48cc', '#a349a4', '#ffffff', '#c3c3c3', '#b97a57', '#ffaec9', '#ffc90e', '#efe4b0', '#b5e61d', '#99d9ea', '#7092be', '#c8bfe7']
+
+  const toolBtn: React.CSSProperties = { padding: '6px 8px', border: '1px solid #ccc', backgroundColor: '#fff', cursor: 'default', fontSize: 13 }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, backgroundColor: '#fff' }}>
+      {/* Ribbon */}
+      <div style={{ display: 'flex', alignItems: 'center', padding: '6px 10px', backgroundColor: '#f5f5f5', borderBottom: '1px solid #e5e5e5', gap: 8, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 4 }}>
+          <button onClick={() => setTool('brush')} style={{ ...toolBtn, backgroundColor: tool === 'brush' ? '#e5e5e5' : '#fff' }} title="Brush">🖌️</button>
+          <button onClick={() => setTool('eraser')} style={{ ...toolBtn, backgroundColor: tool === 'eraser' ? '#e5e5e5' : '#fff' }} title="Eraser">🧽</button>
+          <button onClick={clear} style={toolBtn} title="Clear">🗑️</button>
+        </div>
+        <div style={{ width: 1, height: 24, backgroundColor: '#ccc' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}>
+          <span>Size:</span>
+          <input type="range" min={1} max={30} value={brushSize} onChange={(e) => setBrushSize(Number(e.target.value))} style={{ width: 100 }} />
+          <span style={{ width: 24 }}>{brushSize}</span>
+        </div>
+        <div style={{ width: 1, height: 24, backgroundColor: '#ccc' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ fontSize: 12 }}>Color:</span>
+          <div style={{ width: 24, height: 24, backgroundColor: color, border: '1px solid #666' }} />
+          <input type="color" value={color} onChange={(e) => setColor(e.target.value)} style={{ width: 30, height: 24, cursor: 'default', border: 'none' }} />
+        </div>
+      </div>
+      {/* Palette */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', padding: '4px 10px', backgroundColor: '#fafafa', borderBottom: '1px solid #e5e5e5', gap: 2 }}>
+        {colors.map((c) => (
+          <div key={c} onClick={() => setColor(c)} style={{ width: 18, height: 18, backgroundColor: c, border: '1px solid #999', cursor: 'default' }} />
+        ))}
+      </div>
+      {/* Canvas */}
+      <div style={{ flex: 1, overflow: 'auto', padding: 10, backgroundColor: '#888' }}>
+        <canvas
+          ref={canvasRef}
+          width={800}
+          height={500}
+          onMouseDown={start}
+          onMouseMove={draw}
+          onMouseUp={stop}
+          onMouseLeave={stop}
+          style={{ backgroundColor: '#fff', border: '1px solid #333', cursor: 'crosshair', display: 'block' }}
+        />
+      </div>
+    </div>
+  )
+}
+
+
+// ============================================================
+// Clock Content (Alarm, Timer, Stopwatch, World Clock)
+// ============================================================
+function ClockContent({ data, onDataChange }: { data: any; onDataChange: (d: any) => void }) {
+  const [tab, setTab] = useState<'alarm' | 'timer' | 'stopwatch' | 'world'>(data.tab || 'world')
+  const [now, setNow] = useState(new Date())
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  useEffect(() => { onDataChange({ ...data, tab }) }, [tab])
+
+  const tabBtn: React.CSSProperties = { padding: '8px 14px', border: 'none', backgroundColor: 'transparent', cursor: 'default', fontSize: 13, color: '#444', borderBottom: '2px solid transparent' }
+  const activeTab: React.CSSProperties = { ...tabBtn, borderBottom: '2px solid #E91E63', fontWeight: 600, color: '#1F1F1F' }
+
+  // Stopwatch state
+  const [swRunning, setSwRunning] = useState(false)
+  const [swElapsed, setSwElapsed] = useState(0)
+  useEffect(() => {
+    if (!swRunning) return
+    const id = setInterval(() => setSwElapsed((e) => e + 10), 10)
+    return () => clearInterval(id)
+  }, [swRunning])
+
+  // Timer state
+  const [timerSeconds, setTimerSeconds] = useState(data.timerSeconds || 60)
+  const [timerLeft, setTimerLeft] = useState(data.timerLeft ?? 60)
+  const [timerRunning, setTimerRunning] = useState(false)
+  useEffect(() => {
+    if (!timerRunning) return
+    const id = setInterval(() => {
+      setTimerLeft((l) => {
+        if (l <= 1) { setTimerRunning(false); return 0 }
+        return l - 1
+      })
+    }, 1000)
+    return () => clearInterval(id)
+  }, [timerRunning])
+
+  const fmtTime = (s: number) => {
+    const m = Math.floor(s / 60)
+    const sec = s % 60
+    return `${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`
+  }
+  const fmtSw = (ms: number) => {
+    const totalSec = Math.floor(ms / 1000)
+    const m = Math.floor(totalSec / 60)
+    const s = totalSec % 60
+    const cs = Math.floor((ms % 1000) / 10)
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}.${cs.toString().padStart(2, '0')}`
+  }
+
+  const cities = [
+    { name: 'Local', offset: 0 },
+    { name: 'New York', offset: -5 },
+    { name: 'London', offset: 1 },
+    { name: 'Paris', offset: 2 },
+    { name: 'Bangkok', offset: 7 },
+    { name: 'Tokyo', offset: 9 },
+    { name: 'Sydney', offset: 11 },
+  ]
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, backgroundColor: '#f3f3f3' }}>
+      {/* Tabs */}
+      <div style={{ display: 'flex', borderBottom: '1px solid #e5e5e5', backgroundColor: '#fff' }}>
+        <button onClick={() => setTab('alarm')} style={tab === 'alarm' ? activeTab : tabBtn}>Alarm</button>
+        <button onClick={() => setTab('world')} style={tab === 'world' ? activeTab : tabBtn}>World Clock</button>
+        <button onClick={() => setTab('timer')} style={tab === 'timer' ? activeTab : tabBtn}>Timer</button>
+        <button onClick={() => setTab('stopwatch')} style={tab === 'stopwatch' ? activeTab : tabBtn}>Stopwatch</button>
+      </div>
+      <div style={{ flex: 1, overflow: 'auto', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+        {tab === 'world' && (
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, width: '100%', maxWidth: 480 }}>
+            {cities.map((c) => {
+              const localTime = new Date(now.getTime() + (c.offset * 60 - now.getTimezoneOffset()) * 60 * 1000)
+              return (
+                <div key={c.name} style={{ backgroundColor: '#fff', padding: 16, borderRadius: 4, boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                  <div style={{ fontSize: 12, color: '#666' }}>{c.name}</div>
+                  <div style={{ fontSize: 24, fontWeight: 300, marginTop: 4 }}>{localTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}</div>
+                  <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>{localTime.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+        {tab === 'alarm' && (
+          <div style={{ width: '100%', maxWidth: 400 }}>
+            <div style={{ backgroundColor: '#fff', padding: 24, borderRadius: 4, textAlign: 'center' }}>
+              <div style={{ fontSize: 13, color: '#666' }}>Next alarm</div>
+              <div style={{ fontSize: 48, fontWeight: 200, margin: '8px 0' }}>07:00</div>
+              <div style={{ fontSize: 12, color: '#999' }}>Tomorrow, Monday</div>
+              <div style={{ marginTop: 16, padding: 8, backgroundColor: '#f5f5f5', borderRadius: 4, fontSize: 12, color: '#666' }}>
+                ⏰ Alarm set — Wake up!
+              </div>
+            </div>
+            <div style={{ marginTop: 12, fontSize: 11, color: '#999', textAlign: 'center' }}>
+              Demo alarm. In a real app, this would ring at 7:00 AM.
+            </div>
+          </div>
+        )}
+        {tab === 'timer' && (
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: 72, fontWeight: 200, fontFamily: 'Consolas, monospace', color: timerLeft === 0 ? '#E91E63' : '#1F1F1F' }}>
+              {fmtTime(timerLeft)}
+            </div>
+            <div style={{ marginTop: 16, display: 'flex', gap: 12, justifyContent: 'center' }}>
+              {!timerRunning ? (
+                <button onClick={() => { if (timerLeft === 0) setTimerLeft(timerSeconds); setTimerRunning(true) }} style={clockBtn}>▶ Start</button>
+              ) : (
+                <button onClick={() => setTimerRunning(false)} style={clockBtn}>⏸ Pause</button>
+              )}
+              <button onClick={() => { setTimerRunning(false); setTimerLeft(timerSeconds) }} style={clockBtn}>↺ Reset</button>
+            </div>
+            <div style={{ marginTop: 16, display: 'flex', gap: 6, justifyContent: 'center' }}>
+              {[30, 60, 180, 300, 600].map((s) => (
+                <button key={s} onClick={() => { setTimerSeconds(s); setTimerLeft(s); setTimerRunning(false) }} style={{ ...clockBtn, fontSize: 12, padding: '4px 10px' }}>
+                  {fmtTime(s)}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        {tab === 'stopwatch' && (
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: 72, fontWeight: 200, fontFamily: 'Consolas, monospace' }}>{fmtSw(swElapsed)}</div>
+            <div style={{ marginTop: 16, display: 'flex', gap: 12, justifyContent: 'center' }}>
+              {!swRunning ? (
+                <button onClick={() => setSwRunning(true)} style={clockBtn}>▶ Start</button>
+              ) : (
+                <button onClick={() => setSwRunning(false)} style={clockBtn}>⏸ Pause</button>
+              )}
+              <button onClick={() => setSwElapsed(0)} style={clockBtn}>↺ Reset</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+const clockBtn: React.CSSProperties = { padding: '8px 20px', border: '1px solid #ccc', backgroundColor: '#fff', cursor: 'default', fontSize: 14, color: '#333', borderRadius: 4 }
+
+
+// ============================================================
+// Photos Content
+// ============================================================
+function PhotosContent({ wallpaper }: { wallpaper: string }) {
+  const photos = [
+    { src: wallpaper, name: 'Current wallpaper', date: '7/15/2026' },
+    { src: '/wallpaper-default.jpg', name: 'Windows 10 default', date: '7/15/2026' },
+    { src: '/win10-wallpaper.jpg', name: 'Hero wallpaper', date: '7/14/2026' },
+  ]
+  const [selected, setSelected] = useState<number | null>(null)
+
+  if (selected !== null) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, backgroundColor: '#000' }}>
+        <div style={{ display: 'flex', alignItems: 'center', padding: '8px 12px', backgroundColor: '#1a1a1a', color: '#fff', fontSize: 13, gap: 8 }}>
+          <button onClick={() => setSelected(null)} style={{ color: '#fff', background: 'none', border: 'none', cursor: 'default' }}>← Back</button>
+          <span>{photos[selected].name}</span>
+        </div>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+          <img src={photos[selected].src} alt={photos[selected].name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, backgroundColor: '#fff' }}>
+      <div style={{ padding: '12px 16px', borderBottom: '1px solid #e5e5e5' }}>
+        <div style={{ fontSize: 18, fontWeight: 600, color: '#1F1F1F' }}>Photos</div>
+        <div style={{ fontSize: 12, color: '#666', marginTop: 2 }}>{photos.length} items · Collection</div>
+      </div>
+      <div style={{ flex: 1, overflowY: 'auto', padding: 16 }}>
+        <div style={{ fontSize: 12, color: '#666', fontWeight: 600, marginBottom: 8 }}>July 2026</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 8 }}>
+          {photos.map((p, i) => (
+            <div key={i} onClick={() => setSelected(i)} style={{ cursor: 'default', borderRadius: 4, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+              <img src={p.src} alt={p.name} style={{ width: '100%', height: 140, objectFit: 'cover', display: 'block' }} />
+              <div style={{ padding: '6px 8px', backgroundColor: '#f5f5f5', fontSize: 11, color: '#444' }}>
+                <div style={{ fontWeight: 500 }}>{p.name}</div>
+                <div style={{ color: '#999', marginTop: 1 }}>{p.date}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
+// ============================================================
 // Notepad Content
 // ============================================================
 function NotepadContent({ text, onTextChange }: { text: string; onTextChange: (t: string) => void }) {
@@ -2460,55 +3180,34 @@ export default function Home() {
             onResizeMove={() => {}}
             onResizeEnd={() => { resizeRef.current = null }}
           >
-            {app.id === 'settings' && (
-              <SettingsContent
-                category={w.data?.category || ''}
-                onCategoryChange={(c) => updateWindow(app.id, { data: { ...w.data, category: c, subPage: '' } })}
-                subPage={w.data?.subPage || ''}
-                onSubPageChange={(s) => updateWindow(app.id, { data: { ...w.data, subPage: s } })}
-                tabletMode={tabletMode}
-                onToggleTabletMode={() => setTabletMode((v) => !v)}
-                wallpaper={wallpaper.src}
-                onWallpaperChange={(wp, t) => setWallpaper({ type: (t as WallpaperType) || 'image', src: wp })}
-                brightness={brightness}
-                onBrightnessChange={setBrightness}
-                volume={volume}
-                onVolumeChange={onVolumeChange}
-                nightLight={nightLight}
-                onToggleNightLight={() => setNightLight((v) => !v)}
-                autoTime={autoTime}
-                onToggleAutoTime={() => setAutoTime((v) => !v)}
-                darkMode={darkMode}
-                onToggleDarkMode={() => setDarkMode((v) => !v)}
-                wifi={wifi} onToggleWifi={() => setWifi((v) => !v)}
-                bluetooth={bluetooth} onToggleBluetooth={() => setBluetooth((v) => !v)}
-                airplane={airplane} onToggleAirplane={() => setAirplane((v) => !v)}
-                mobileHotspot={mobileHotspot} onToggleMobileHotspot={() => setMobileHotspot((v) => !v)}
-                touchpad={touchpad} onToggleTouchpad={() => setTouchpad((v) => !v)}
-                typing={typing} onToggleTyping={() => setTyping((v) => !v)}
-                gameBar={gameBar} onToggleGameBar={() => setGameBar((v) => !v)}
-                gameMode={gameMode} onToggleGameMode={() => setGameMode((v) => !v)}
-                magnifier={magnifier} onToggleMagnifier={() => setMagnifier((v) => !v)}
-                highContrast={highContrast} onToggleHighContrast={() => setHighContrast((v) => !v)}
-                location={location} onToggleLocation={() => setLocation((v) => !v)}
-                camera={camera} onToggleCamera={() => setCamera((v) => !v)}
-                microphone={microphone} onToggleMicrophone={() => setMicrophone((v) => !v)}
-                backup={backup} onToggleBackup={() => setBackup((v) => !v)}
-              />
-            )}
-            {app.id === 'notepad' && (
-              <NotepadContent
-                text={w.data?.text || ''}
-                onTextChange={(t) => updateWindow(app.id, { data: { ...w.data, text: t } })}
-              />
-            )}
-            {app.id === 'calculator' && (
-              <CalculatorContent
-                data={w.data?.calc || {}}
-                onDataChange={(d) => updateWindow(app.id, { data: { ...w.data, calc: d } })}
-              />
-            )}
-            {/* เพิ่ม content ของแอปอื่น ๆ ตรงนี้ */}
+            {app.content({
+              state: w,
+              update: (partial) => updateWindow(app.id, partial),
+              ctx: {
+                wallpaper, setWallpaper,
+                brightness, setBrightness,
+                volume, onVolumeChange,
+                nightLight, onToggleNightLight: () => setNightLight((v) => !v),
+                autoTime, onToggleAutoTime: () => setAutoTime((v) => !v),
+                darkMode, onToggleDarkMode: () => setDarkMode((v) => !v),
+                tabletMode, onToggleTabletMode: () => setTabletMode((v) => !v),
+                wifi, onToggleWifi: () => setWifi((v) => !v),
+                bluetooth, onToggleBluetooth: () => setBluetooth((v) => !v),
+                airplane, onToggleAirplane: () => setAirplane((v) => !v),
+                mobileHotspot, onToggleMobileHotspot: () => setMobileHotspot((v) => !v),
+                touchpad, onToggleTouchpad: () => setTouchpad((v) => !v),
+                typing, onToggleTyping: () => setTyping((v) => !v),
+                gameBar, onToggleGameBar: () => setGameBar((v) => !v),
+                gameMode, onToggleGameMode: () => setGameMode((v) => !v),
+                magnifier, onToggleMagnifier: () => setMagnifier((v) => !v),
+                highContrast, onToggleHighContrast: () => setHighContrast((v) => !v),
+                location, onToggleLocation: () => setLocation((v) => !v),
+                camera, onToggleCamera: () => setCamera((v) => !v),
+                microphone, onToggleMicrophone: () => setMicrophone((v) => !v),
+                backup, onToggleBackup: () => setBackup((v) => !v),
+                openApp,
+              },
+            })}
           </AppWindow>
         )
       })}
@@ -2585,7 +3284,7 @@ export default function Home() {
 
         {/* ====== CENTER: App icons ====== */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', height: '100%', gap: 2, flexShrink: 0, position: 'relative', zIndex: 1 }}>
-          {APPS.filter((a) => a.pinned).map((app) => {
+          {APPS.filter((a) => a.pinned || windows[a.id]?.open).map((app) => {
             const w = windows[app.id]
             const isOpen = w?.open
             const isFocused = isOpen && w?.focused && !w?.minimized
